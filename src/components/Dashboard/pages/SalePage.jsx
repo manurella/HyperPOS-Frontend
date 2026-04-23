@@ -1,498 +1,178 @@
-// Imports : ( React , useState ) , ( Eye , SlidersHorizontal ) , ( saleData )
-import { useState , useEffect } from "react";
-
-import { Eye , SlidersHorizontal } from "lucide-react";
-
+import { useState, useEffect } from "react";
+import { Eye, SlidersHorizontal, X } from "lucide-react";
 import { getSaleData } from "../data/salesData";
-
 import FetchLoader from './FetchLoader';
 
-
-// Function : ( ViewModal )
-// Passing : ( sale - The data props. , onClose - To close the filter modal. )
-function ViewModal ( { sale , onClose } ) {
-
-  // Function to format date strings
-  const formatDate = ( dateString ) => {
-    if ( !dateString ) return "Not available";
-    const date = new Date ( dateString );
-    return date.toLocaleString ( );
-  };
-
+function ModalShell({ title, onClose, children, footer }) {
   return (
-
-    <div className = "fixed inset-0 top-14 sm:top-16 bg-black/70 backdrop-blur-sm flex justify-center items-center z-40 p-4 sm:p-8">
-
-      <div className = "bg-hyper-dark/90 rounded-xl shadow-2xl w-full max-w-md overflow-hidden relative border border-purple-500/30">
-        {/* Header */}
-        <div className = "px-4 sm:px-6 py-3 sm:py-4 border-b border-purple-500/30">
-          <div className = "w-full text-center">
-            <h2 className = "text-xl sm:text-2xl font-bold text-white hyper-text-glow">Sale Details</h2>
-          </div>
-          <button
-            onClick = { onClose }
-            className = "absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-xl cursor-pointer"
-          >
-            &times;
-          </button>
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-floating w-full max-w-lg overflow-hidden animate-fade-in">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <h2 className="text-base font-semibold text-slate-800">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"><X size={18} /></button>
         </div>
-
-        {/* Container with padding to create space for scrollbar */}
-        <div className = "px-2">
-          {/* Scrollable content area with purple-themed scrollbar */}
-          <div className = "max-h-[60vh] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-purple-900/30 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-purple-500/50 hover:[&::-webkit-scrollbar-thumb]:bg-purple-400/70 p-4 sm:p-6">
-            <div className = "space-y-4 sm:space-y-5">
-              {/* Invoice Information */}
-              <div className = "bg-purple-900/30 p-3 sm:p-4 rounded-xl border border-purple-500/30">
-                <h3 className = "text-md font-semibold text-purple-300 mb-2 sm:mb-3 text-center">Invoice Information</h3>
-                <div className = "grid grid-cols-2 gap-3 text-sm">
-                  <div className = "flex flex-col">
-                    <span className = "font-medium text-gray-400">Invoice ID</span>
-                    <span className = "p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{ sale.invoice.id }</span>
-                  </div>
-                  <div className = "flex flex-col">
-                    <span className = "font-medium text-gray-400">Customer ID</span>
-                    <span className = "p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{ sale.invoice.customerId }</span>
-                  </div>
-                  <div className = "flex flex-col">
-                    <span className = "font-medium text-gray-400">Payment Method</span>
-                    <span className = "p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{ sale.invoice.paymentMethod }</span>
-                  </div>
-                  <div className = "flex flex-col">
-                    <span className = "font-medium text-gray-400">Date</span>
-                    <span className = "p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{ formatDate(sale.invoice.updatedAt) }</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Financial Information */}
-              <div className = "bg-green-900/30 p-3 sm:p-4 rounded-xl border border-green-500/30">
-                <h3 className = "text-md font-semibold text-green-300 mb-2 sm:mb-3 text-center">Financial Information</h3>
-                <div className = "grid grid-cols-1 gap-3 text-sm">
-                  <div className = "flex flex-col">
-                    <span className = "font-medium text-gray-400">Total Value</span>
-                    <span className = "p-2 bg-hyper-dark/50 rounded-md shadow-sm font-semibold text-green-400">
-                      Rs { sale.invoice.total.toLocaleString() }
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Items Information */}
-              <div className = "bg-blue-900/30 p-3 sm:p-4 rounded-xl border border-blue-500/30">
-                <h3 className = "text-md font-semibold text-blue-300 mb-2 sm:mb-3 text-center">Items ({ sale.items.length })</h3>
-                <div className = "space-y-3">
-                  { sale.items.map((item) => (
-                    <div key = { item.id } className = "bg-hyper-dark/50 p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-blue-500/20">
-                      <div className = "flex justify-between items-center mb-2">
-                        <span className = "font-semibold text-blue-300">Item #{ item.id }</span>
-                        <span className = "text-xs px-2 py-1 bg-blue-900/50 text-blue-300 rounded-full border border-blue-500/30">
-                          Product #{ item.productId }
-                        </span>
-                      </div>
-                      <div className = "grid grid-cols-2 gap-2 text-sm">
-                        <div className = "flex items-center gap-1">
-                          <span className = "font-medium text-gray-400">Quantity:</span> 
-                          <span className = "ml-auto text-white">{ item.quantity }</span>
-                        </div>
-                        <div className = "flex items-center gap-1">
-                          <span className = "font-medium text-gray-400">Unit Price:</span> 
-                          <span className = "ml-auto text-white">Rs { item.unitPrice.toLocaleString() }</span>
-                        </div>
-                        <div className = "flex items-center gap-1">
-                          <span className = "font-medium text-gray-400">Discount:</span> 
-                          <span className = "ml-auto text-white">{ item.discount }%</span>
-                        </div>
-                        <div className = "flex items-center gap-1">
-                          <span className = "font-medium text-gray-400">Amount:</span> 
-                          <span className = "ml-auto font-semibold text-green-400">Rs { item.amount.toLocaleString() }</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className = "px-4 sm:px-6 py-3 sm:py-4 border-t border-purple-500/30">
-          <div className = "flex justify-center">
-            <button
-              onClick = { onClose }
-              className = "px-4 sm:px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition duration-200 cursor-pointer shadow-sm"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  );
-
-}
-
-// Function : ( FilterModal )
-// Passing : ( onClose - To close the filter modal. , onApply - To apply the filter. , customerList - To show the customer list. , currentFilters - To show the current filters. )
-function FilterModal ( { onClose, onApply, customerList, paymentMethods, currentFilters } ) {
-
-  // Using useState to store the values of the filters.
-  const [ customerId, setCustomerId ] = useState ( currentFilters.customerId || "" );
-  const [ paymentMethod, setPaymentMethod ] = useState ( currentFilters.paymentMethod || "" );
-  const [ minTotal, setMinTotal ] = useState ( currentFilters.minTotal || "" );
-  const [ maxTotal, setMaxTotal ] = useState ( currentFilters.maxTotal || "" );
-  const [ startDate, setStartDate ] = useState ( currentFilters.startDate || "" );
-  const [ endDate, setEndDate ] = useState ( currentFilters.endDate || "" );
-
-  // Arrow Function : ( handleApply )
-  const handleApply = ( ) => {
-
-    // Calling the onApply function to apply the filter.
-    onApply ( { customerId, paymentMethod, minTotal, maxTotal, startDate, endDate } );
-    // Calling the onClose function to close the modal.
-    onClose ( );
-
-  };
-
-  // Arrow Function : ( handleReset )
-  const handleReset = ( ) => {
-
-    // Setting the values of the filters to empty.
-    setCustomerId ( "" );
-    setPaymentMethod ( "" );
-    setMinTotal ( "" );
-    setMaxTotal ( "" );
-    setStartDate ( "" );
-    setEndDate ( "" );
-
-  };
-
-  return (
-
-    <div className = "fixed inset-0 top-14 sm:top-16 bg-black/70 backdrop-blur-sm flex justify-center items-center z-40">
-
-      <div className = "bg-hyper-dark/90 rounded-xl p-4 sm:p-6 w-full max-w-lg shadow-2xl relative max-h-[90vh] overflow-y-auto m-4 border border-purple-500/30">
-
-        <button
-          onClick = { onClose }
-          className = "absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-xl cursor-pointer"
-        >
-          &times;
-        </button>
-
-        <h2 className = "text-xl font-semibold text-white hyper-text-glow mb-4 text-center">Advanced Filters</h2>
-
-        {/* Customer Information */}
-        <div className = "mb-4">
-          <h3 className = "text-md font-medium text-purple-300 mb-2 text-center">Customer Information</h3>
-          <div className = "grid grid-cols-1 gap-4 text-sm">
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">Customer ID</label>
-              <select
-                value = { customerId }
-                onChange = { ( e ) => setCustomerId ( e.target.value ) }
-                className = "p-2 rounded-lg border bg-black text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50"
-              >
-                <option value = "">All</option>
-                { customerList.map ( ( id ) => (
-                  <option key = { id } value = { id }>{ id }</option>
-                ) ) }
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Payment Information */}
-        <div className = "mb-4">
-          <h3 className = "text-md font-medium text-purple-300 mb-2 text-center">Payment Information</h3>
-          <div className = "grid grid-cols-1 gap-4 text-sm">
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">Payment Method</label>
-              <select
-                value = { paymentMethod }
-                onChange = { ( e ) => setPaymentMethod ( e.target.value ) }
-                className = "p-2 rounded-lg border bg-black text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50"
-              >
-                <option value = "">All</option>
-                { paymentMethods.map ( ( method ) => (
-                  <option key = { method } value = { method }>{ method }</option>
-                ) ) }
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Financial Information */}
-        <div className = "mb-4">
-          <h3 className = "text-md font-medium text-purple-300 mb-2 text-center">Financial Information</h3>
-          <div className = "grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">Min Total (Rs)</label>
-              <input 
-                type = "number" 
-                className = "p-2 rounded-lg border bg-hyper-dark/50 text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { minTotal } 
-                onChange = { ( e ) => setMinTotal ( e.target.value ) } 
-              />
-            </div>
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">Max Total (Rs)</label>
-              <input 
-                type = "number" 
-                className = "p-2 rounded-lg border bg-hyper-dark/50 text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { maxTotal }
-                onChange = { ( e ) => setMaxTotal ( e.target.value ) } 
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Date Range */}
-        <div className = "mb-4">
-          <h3 className = "text-md font-medium text-purple-300 mb-2 text-center">Date Range</h3>
-          <div className = "grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">Start Date</label>
-              <input 
-                type = "date" 
-                className = "p-2 rounded-lg border bg-hyper-dark/50 text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { startDate } 
-                onChange = { ( e ) => setStartDate ( e.target.value ) } 
-              />
-            </div>
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">End Date</label>
-              <input 
-                type = "date" 
-                className = "p-2 rounded-lg border bg-hyper-dark/50 text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { endDate }
-                onChange = { ( e ) => setEndDate ( e.target.value ) } 
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="flex justify-center gap-4 mt-6">
-          <button 
-            onClick={handleReset} 
-            className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 cursor-pointer transition-colors"
-          >
-            Reset
-          </button>
-          <button 
-            onClick={handleApply}
-            className="px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 cursor-pointer transition-colors"
-          >
-            Apply
-          </button>
-        </div>
+        <div className="max-h-[65vh] overflow-y-auto px-6 py-5">{children}</div>
+        {footer && <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">{footer}</div>}
       </div>
     </div>
   );
 }
 
-// Function : ( SalePage )
-function SalePage ( ) {
+function InfoSection({ title, children }) {
+  return (
+    <div className="mb-5">
+      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-1 border-b border-slate-100">{title}</h3>
+      <div className="grid grid-cols-2 gap-3">{children}</div>
+    </div>
+  );
+}
 
-  // Using the useState to create a variable and then update it accordingly by the function.
-  const [ selectedSale, setSelectedSale ] = useState ( null );
-  const [ searchTerm, setSearchTerm ] = useState ( "" );
-  const [ showFilterModal, setShowFilterModal ] = useState ( false );
-  const [ filters, setFilters ] = useState ( {} );
-  const [ saleData, setSaleData ] = useState ( [] );
-  const [ loading, setLoading ] = useState ( true );
-  const [ error, setError ] = useState ( null );
-  const [ isFetching, setIsFetching ] = useState ( true );
+function InfoRow({ label, children, full }) {
+  return (
+    <div className={`flex flex-col gap-1 ${full ? "col-span-2" : ""}`}>
+      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{label}</span>
+      <div className="text-sm text-slate-700">{children}</div>
+    </div>
+  );
+}
 
-  // Function to format date for display in the table
-  const formatDate = ( dateString ) => {
-    if ( !dateString ) return "—";
-    const date = new Date ( dateString );
-    return date.toLocaleDateString ( );
-  };
+function ViewModal({ sale, onClose }) {
+  const fmt = (d) => d ? new Date(d).toLocaleString() : "—";
+  return (
+    <ModalShell title="Sale Details" onClose={onClose} footer={<button onClick={onClose} className="pos-btn-primary">Close</button>}>
+      <InfoSection title="Invoice">
+        <InfoRow label="Invoice ID">{sale.invoice.id}</InfoRow>
+        <InfoRow label="Customer ID">{sale.invoice.customerId}</InfoRow>
+        <InfoRow label="Payment">{sale.invoice.paymentMethod}</InfoRow>
+        <InfoRow label="Date">{fmt(sale.invoice.updatedAt)}</InfoRow>
+      </InfoSection>
+      <InfoSection title="Financial">
+        <InfoRow label="Total" full><span className="text-emerald-600 font-bold text-base">Rs {sale.invoice.total.toLocaleString()}</span></InfoRow>
+      </InfoSection>
+      <InfoSection title={`Items (${sale.items.length})`}>
+        {sale.items.map(item => (
+          <div key={item.id} className="col-span-2 bg-slate-50 border border-slate-200 rounded-lg p-3">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-indigo-600">Item #{item.id}</span>
+              <span className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full border border-indigo-100">Product #{item.productId}</span>
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs text-slate-600">
+              <span>Qty: <b>{item.quantity}</b></span>
+              <span>Unit: <b>Rs {item.unitPrice?.toLocaleString()}</b></span>
+              <span>Discount: <b>{item.discount}%</b></span>
+              <span>Amount: <b className="text-emerald-600">Rs {item.amount?.toLocaleString()}</b></span>
+            </div>
+          </div>
+        ))}
+      </InfoSection>
+    </ModalShell>
+  );
+}
 
-  // Fetch sale data from API when component mounts
-  useEffect ( ( ) => {
+function FilterModal({ onClose, onApply, customerList, paymentMethods, currentFilters }) {
+  const [customerId,    setCustomerId]    = useState(currentFilters.customerId    || "");
+  const [paymentMethod, setPaymentMethod] = useState(currentFilters.paymentMethod || "");
+  const [minTotal,      setMinTotal]      = useState(currentFilters.minTotal      || "");
+  const [maxTotal,      setMaxTotal]      = useState(currentFilters.maxTotal      || "");
+  const [startDate,     setStartDate]     = useState(currentFilters.startDate     || "");
+  const [endDate,       setEndDate]       = useState(currentFilters.endDate       || "");
+  const reset = () => { setCustomerId(""); setPaymentMethod(""); setMinTotal(""); setMaxTotal(""); setStartDate(""); setEndDate(""); };
+  return (
+    <ModalShell title="Filter Sales" onClose={onClose}
+      footer={<><button onClick={reset} className="pos-btn-secondary">Reset</button><button onClick={() => { onApply({ customerId, paymentMethod, minTotal, maxTotal, startDate, endDate }); onClose(); }} className="pos-btn-primary">Apply</button></>}>
+      <div className="grid grid-cols-2 gap-4">
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Customer ID</label>
+          <select value={customerId} onChange={e => setCustomerId(e.target.value)} className="pos-input">
+            <option value="">All</option>{customerList.map(id => <option key={id} value={id}>{id}</option>)}
+          </select>
+        </div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Payment</label>
+          <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} className="pos-input">
+            <option value="">All</option>{paymentMethods.map(m => <option key={m} value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Min Total</label><input type="number" value={minTotal} onChange={e => setMinTotal(e.target.value)} className="pos-input" placeholder="0" /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Max Total</label><input type="number" value={maxTotal} onChange={e => setMaxTotal(e.target.value)} className="pos-input" placeholder="Any" /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Start Date</label><input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="pos-input" /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">End Date</label><input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="pos-input" /></div>
+      </div>
+    </ModalShell>
+  );
+}
 
-    const fetchData = async ( ) => {
+function SalePage() {
+  const [selectedSale,    setSelectedSale]    = useState(null);
+  const [searchTerm,      setSearchTerm]      = useState("");
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filters,         setFilters]         = useState({});
+  const [saleData,        setSaleData]        = useState([]);
+  const [loading,         setLoading]         = useState(true);
+  const [error,           setError]           = useState(null);
+  const [isFetching,      setIsFetching]      = useState(true);
 
+  useEffect(() => {
+    (async () => {
       try {
+        setLoading(true); setIsFetching(true);
+        const data = await getSaleData();
+        setSaleData(data || []);
+      } catch (err) { setError("Failed to fetch sale data"); console.error(err); }
+      finally { setLoading(false); setTimeout(() => setIsFetching(false), 1500); }
+    })();
+  }, []);
 
-        setLoading ( true );
-        setIsFetching ( true );
-        const data = await getSaleData ( );
+  const customerList   = [...new Set(saleData.filter(s => s?.invoice?.customerId).map(s => s.invoice.customerId))];
+  const paymentMethods = [...new Set(saleData.filter(s => s?.invoice?.paymentMethod).map(s => s.invoice.paymentMethod))];
+  const fmt = (d) => d ? new Date(d).toLocaleDateString() : "—";
 
-        if ( data ) {
-
-          setSaleData ( data );
-
-        } else {
-
-          setError ( "No data returned from API" );
-
-        }
-
-      } catch ( err ) {
-
-        setError ( "Failed to fetch sale data" );
-        console.error ( "Error fetching sale data:", err );
-
-      } finally {
-
-        setLoading ( false );
-        setTimeout(() => {
-          setIsFetching ( false );
-        }, 1500); // Keep the fetch loader visible for at least 1.5 seconds
-
-      }
-
-    };
-
-    fetchData ( );
-
-  }, [] );
-
-  // Extract unique customer IDs and payment methods for filter dropdowns
-  const customerList = [...new Set(saleData
-    .filter(sale => sale && sale.invoice && sale.invoice.customerId)
-    .map(sale => sale.invoice.customerId))];
-
-  const paymentMethods = [...new Set(saleData
-    .filter(sale => sale && sale.invoice && sale.invoice.paymentMethod)
-    .map(sale => sale.invoice.paymentMethod))];
-
-  // Filtering the data based on the search term and other filters
-  const filteredData = saleData.filter((sale) => {
-    // Skip invalid entries
-    if (!sale || !sale.invoice) return false;
-
-    // Search across all fields
-    const searchFields = [
-      sale.invoice.id?.toString() || '',
-      sale.invoice.customerId?.toString() || '',
-      sale.invoice.total?.toString() || '',
-      sale.invoice.paymentMethod || ''
-    ];
-
-    const matchesSearch = searchFields.some(field => 
-      field.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    // Apply filters
-    const matchesCustomerId = !filters.customerId || 
-      sale.invoice.customerId?.toString() === filters.customerId;
-
-    const matchesPaymentMethod = !filters.paymentMethod || 
-      sale.invoice.paymentMethod === filters.paymentMethod;
-
-    const matchesTotal = 
-      (!filters.minTotal || (sale.invoice.total && sale.invoice.total >= Number(filters.minTotal))) && 
-      (!filters.maxTotal || (sale.invoice.total && sale.invoice.total <= Number(filters.maxTotal)));
-
-    const matchesDate = 
-      (!filters.startDate || !sale.invoice.updatedAt || new Date(sale.invoice.updatedAt) >= new Date(filters.startDate)) && 
-      (!filters.endDate || !sale.invoice.updatedAt || new Date(sale.invoice.updatedAt) <= new Date(filters.endDate + "T23:59:59"));
-
-    // Return true if all conditions are met
-    return matchesSearch && matchesCustomerId && matchesPaymentMethod && matchesTotal && matchesDate;
+  const filteredData = saleData.filter(sale => {
+    if (!sale?.invoice) return false;
+    const q = searchTerm.toLowerCase();
+    const s = [sale.invoice.id?.toString(), sale.invoice.customerId?.toString(), sale.invoice.total?.toString(), sale.invoice.paymentMethod].some(f => (f || "").toLowerCase().includes(q));
+    const mC = !filters.customerId    || sale.invoice.customerId?.toString() === filters.customerId;
+    const mP = !filters.paymentMethod || sale.invoice.paymentMethod === filters.paymentMethod;
+    const mT = (!filters.minTotal || sale.invoice.total >= +filters.minTotal) && (!filters.maxTotal || sale.invoice.total <= +filters.maxTotal);
+    const mD = (!filters.startDate || !sale.invoice.updatedAt || new Date(sale.invoice.updatedAt) >= new Date(filters.startDate)) &&
+               (!filters.endDate   || !sale.invoice.updatedAt || new Date(sale.invoice.updatedAt) <= new Date(filters.endDate + "T23:59:59"));
+    return s && mC && mP && mT && mD;
   });
 
   return (
-
-    <div className = "p-4 sm:p-6">
-      <h1 className = "text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white hyper-text-glow text-center">Sales Management</h1>
-
-      {/* Responsive search and filter controls */}
-      <div className = "flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-4 mb-6">
-        <input
-          type = "text"
-          placeholder = "Search..."
-          value = { searchTerm }
-          onChange = { ( e ) => setSearchTerm ( e.target.value ) }
-          className = "px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 w-full sm:w-auto bg-hyper-dark/50 text-white border-purple-500/30"
-        />
-        <button
-          onClick = { ( ) => setShowFilterModal ( true ) }
-          className = "px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 transition flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <SlidersHorizontal size = { 16 } /> Options
-        </button>
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-xl font-bold text-slate-800">Sales Management</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{saleData.length} total sales</p>
       </div>
-
-      {/* Responsive table container */}
-      <div className = "bg-white/5 backdrop-blur-sm rounded-xl shadow-md overflow-hidden border border-purple-500/20">
-        {isFetching ? (
-          <FetchLoader />
-        ) : loading ? (
-          <div className = "p-6 text-center text-gray-400">Loading sale data...</div>
-        ) : error ? (
-          <div className = "p-6 text-center text-red-500">{ error }</div>
-        ) : (
-          <div className = "relative">
-            <div className = "max-h-[70vh] overflow-y-auto overflow-x-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-purple-500/50 hover:[&::-webkit-scrollbar-thumb]:bg-purple-400/70">
-              <table className = "w-full text-sm text-left">
-                <thead className = "sticky top-0 z-10">
-                  <tr className = "bg-purple-900/70 text-white shadow-sm">
-                    <th className = "p-3 whitespace-nowrap rounded-tl-lg">Invoice ID</th>
-                    <th className = "p-3 whitespace-nowrap">Customer ID</th>
-                    <th className = "p-3 whitespace-nowrap">Total</th>
-                    <th className = "p-3 whitespace-nowrap hidden sm:table-cell">Payment</th>
-                    <th className = "p-3 whitespace-nowrap hidden md:table-cell">Items</th>
-                    <th className = "p-3 whitespace-nowrap hidden lg:table-cell">Date</th>
-                    <th className = "p-3 text-center whitespace-nowrap rounded-tr-lg">View</th>
+      <div className="flex flex-col sm:flex-row gap-3">
+        <input type="text" placeholder="Search sales…" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pos-input sm:max-w-xs" />
+        <button onClick={() => setShowFilterModal(true)} className="pos-btn-secondary flex items-center gap-2"><SlidersHorizontal size={15} /> Filters</button>
+      </div>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-card overflow-hidden">
+        {isFetching ? <FetchLoader /> : loading ? <div className="p-8 text-center text-slate-500">Loading…</div> : error ? <div className="p-8 text-center text-red-500">{error}</div> : (
+          <div className="overflow-x-auto">
+            <table className="pos-table">
+              <thead><tr><th>Invoice ID</th><th>Customer ID</th><th>Total</th><th className="hidden sm:table-cell">Payment</th><th className="hidden md:table-cell">Items</th><th className="hidden lg:table-cell">Date</th><th className="text-center">View</th></tr></thead>
+              <tbody>
+                {filteredData.length > 0 ? filteredData.map(sale => (
+                  <tr key={sale.invoice.id}>
+                    <td className="font-medium text-slate-500 text-xs">{sale.invoice.id}</td>
+                    <td className="text-slate-700">{sale.invoice.customerId}</td>
+                    <td className="font-semibold text-emerald-600">Rs {sale.invoice.total.toLocaleString()}</td>
+                    <td className="hidden sm:table-cell text-slate-500">{sale.invoice.paymentMethod}</td>
+                    <td className="hidden md:table-cell text-slate-500">{sale.items.length}</td>
+                    <td className="hidden lg:table-cell text-slate-500">{fmt(sale.invoice.updatedAt)}</td>
+                    <td className="text-center"><button onClick={() => setSelectedSale(sale)} className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors" aria-label="View"><Eye size={16} /></button></td>
                   </tr>
-                </thead>
-                <tbody>
-                  { filteredData.length > 0 ? (
-                    filteredData.map ( ( sale ) => (
-                      <tr key = { sale.invoice.id } className = "border-t border-purple-500/20 text-white hover:bg-white/5 transition duration-200 ease-in-out">
-                        <td className = "p-3 font-medium">{ sale.invoice.id }</td>
-                        <td className = "p-3">{ sale.invoice.customerId }</td>
-                        <td className = "p-3 font-semibold text-green-400">Rs { sale.invoice.total.toLocaleString() }</td>
-                        <td className = "p-3 hidden sm:table-cell">{ sale.invoice.paymentMethod }</td>
-                        <td className = "p-3 hidden md:table-cell">{ sale.items.length }</td>
-                        <td className = "p-3 hidden lg:table-cell">{ formatDate ( sale.invoice.updatedAt ) }</td>
-                        <td className = "p-3 text-center">
-                          <button
-                            onClick = { ( ) => setSelectedSale ( sale ) }
-                            className = "text-purple-400 hover:text-purple-300 cursor-pointer transition"
-                            aria-label = "View sale details"
-                          >
-                            <Eye size = { 18 } />
-                          </button>
-                        </td>
-                      </tr>
-                    ) )
-                  ) : (
-                    <tr>
-                      <td colSpan = "7" className = "p-3 text-center font-medium text-gray-400">No sales found</td>
-                    </tr>
-                  ) }
-                </tbody>
-              </table>
-            </div>
+                )) : <tr><td colSpan="7" className="py-12 text-center text-slate-400">No sales found</td></tr>}
+              </tbody>
+            </table>
           </div>
-        ) }
+        )}
       </div>
-
-      { selectedSale && <ViewModal sale = { selectedSale } onClose = { ( ) => setSelectedSale ( null ) } /> }
-      { showFilterModal && (
-        <FilterModal
-          customerList = { customerList }
-          paymentMethods = { paymentMethods }
-          currentFilters = { filters }
-          onClose = { ( ) => setShowFilterModal ( false ) }
-          onApply = { setFilters }
-        />
-      ) }
+      {selectedSale    && <ViewModal sale={selectedSale} onClose={() => setSelectedSale(null)} />}
+      {showFilterModal && <FilterModal customerList={customerList} paymentMethods={paymentMethods} currentFilters={filters} onClose={() => setShowFilterModal(false)} onApply={setFilters} />}
     </div>
-
   );
-
 }
 
-// Exporting the component
 export default SalePage;

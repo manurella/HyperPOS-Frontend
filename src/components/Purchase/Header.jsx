@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
+
 const Header = ({ grn, suppliers, setSupplier }) => {
   const [selectedSupplier, setSelectedSupplier] = useState(1);
 
@@ -20,32 +21,47 @@ const Header = ({ grn, suppliers, setSupplier }) => {
   };
 
   return (
-    <div className="flex justify-between items-center">
-      <div className="flex gap-2 items-center flex-row justify-between w-full">
-        <div className="flex flex-col">
-          <label>grn ID:</label>
+    <div className="bg-white border border-slate-200 rounded-xl p-5">
+      <h3 className="pos-section-title mb-4">Purchase / GRN</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            GRN ID
+          </label>
           <input
             type="text"
             value={grn?.id || ""}
             readOnly
-            className="bg-gray-800 p-1 rounded"
-          />{" "}
+            className="pos-input bg-slate-50"
+          />
         </div>
         <div>
-          <label>Customer:</label>
+          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            Supplier
+          </label>
           <Select
             options={supplierOptions}
             value={
               selectedSupplier
                 ? supplierOptions.find((c) => c.value === selectedSupplier)
-                : 1
+                : null
             }
             onChange={handleSupplierChange}
             placeholder="Select Supplier"
             isSearchable
             getOptionLabel={(e) => e.label}
             getOptionValue={(e) => e.value}
-            className=" text-black"
+            classNamePrefix="react-select"
+            styles={{
+              control: (base) => ({
+                ...base,
+                borderColor: "#e2e8f0",
+                borderRadius: "0.5rem",
+                minHeight: "2.5rem",
+                boxShadow: "none",
+                "&:hover": { borderColor: "#6366f1" },
+              }),
+            }}
           />
         </div>
       </div>

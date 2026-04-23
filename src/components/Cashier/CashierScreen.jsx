@@ -1,88 +1,56 @@
-import React, { useState, useEffect } from "react";
-import Header from "./Header";
+import { useState, useEffect } from "react";
+import Header        from "./Header";
 import ProductSearch from "./ProductSearch";
-import CartTable from "./CartTable";
+import CartTable     from "./CartTable";
 import SummaryFooter from "./SummaryFooter";
-import Controls from "./Controls";
-import "./styles.css";
-import { saveInvoice } from "../../API/APIInvoice";
-import { submitSale } from "../../API/APISale";
-import { getCustomers } from "../../API/APICustomer";
+import Controls      from "./Controls";
 import InvoicePreview from "./InvoicePreview";
 
+import { saveInvoice }  from "../../API/APIInvoice";
+import { submitSale }   from "../../API/APISale";
+import { getCustomers } from "../../API/APICustomer";
+
 const CashierScreen = () => {
-  const [cartItems, setCartItems] = useState([]);
-  const [cash, setCash] = useState(0);
-  const [change, setChange] = useState(0);
-  const [customer, setCustomer] = useState(1);
-  const [invoice, setInvoice] = useState({ customerId: 1, total: 0 });
-  const [printInvoice, setPrintInvoice] = useState(null);
-  const [ProductList, setProductList] = useState([]);
-  const [customerList, setCustomerList] = useState([]);
-  const [paymentMethod, setPaymentMethod] = useState("CASH");
+  const [cartItems,      setCartItems]      = useState([]);
+  const [cash,           setCash]           = useState(0);
+  const [change,         setChange]         = useState(0);
+  const [customer,       setCustomer]       = useState(1);
+  const [invoice,        setInvoice]        = useState({ customerId: 1, total: 0 });
+  const [printInvoice,   setPrintInvoice]   = useState(null);
+  const [productList,    setProductList]    = useState([]);
+  const [customerList,   setCustomerList]   = useState([]);
+  const [paymentMethod,  setPaymentMethod]  = useState("CASH");
 
   useEffect(() => {
-    if (!invoice?.id) {
-      alert("Please create a new invoice first !");
-    }
-    if (!customerList?.length) {
-      getCustomersList();
-    }
+    if (!invoice?.id) alert("Please create a new invoice first!");
+    getCustomersList();
   }, []);
 
-  useEffect(() => {
-    console.log("Cart Items:", cartItems);
-  }, [cartItems]);
+  const getCustomersList = async () => {
+    try { setCustomerList(await getCustomers()); }
+    catch (err) { console.error("Error fetching customers:", err); }
+  };
 
   const getNewInvoice = async () => {
     try {
-      const response = await saveInvoice({ customerId: 1, total: 0 });
-      setInvoice(response);
-    } catch (error) {
-      console.error("Error saving invoice:", error);
-    }
+      const res = await saveInvoice({ customerId: 1, total: 0 });
+      setInvoice(res);
+    } catch (err) { console.error("Error saving invoice:", err); }
   };
 
-  const getCustomersList = async () => {
-    try {
-      const response = await getCustomers();
-      setCustomerList(response);
-    } catch (error) {
-      console.error("Error fetching customers:", error);
-    }
-  };
-
-  // Ensure every cart item has a unique `id`
   const handleAddToCart = (product) => {
-    if (invoice == null) {
-      alert("Please create an invoice first!");
-      return;
-    }
-    const discountedPrice = product?.unitPrice * (1 - product?.discount / 100);
-
-    setCartItems((prev) => [
-      ...prev,
-      {
-        ...product,
-        id: product.id || product.productId, // always use id
-        amount: discountedPrice * product?.quantity,
-      },
-    ]);
+    if (!invoice) { alert("Please create an invoice first!"); return; }
+    const discountedPrice = product.unitPrice * (1 - product.discount / 100);
+    setCartItems(prev => [...prev, {
+      ...product,
+      id: product.id || product.productId,
+      amount: discountedPrice * product.quantity,
+    }]);
   };
 
-  // Remove by `id` (not productId)
-  const handleRemoveFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  // Update quantity by `id`
-  const handleQuantityChange = (id, quantity) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: parseInt(quantity) } : item
-      )
-    );
-  };
+  const handleRemoveFromCart  = id => setCartItems(prev => prev.filter(i => i.id !== id));
+  const handleQuantityChange  = (id, qty) =>
+    setCartItems(prev => prev.map(i => i.id === id ? { ...i, quantity: parseInt(qty) } : i));
 
   const handleNewInvoice = () => {
     getNewInvoice();
@@ -94,93 +62,76 @@ const CashierScreen = () => {
   };
 
   const handleSubmitInvoice = () => {
-    if (cartItems?.length === 0) {
-      alert("Please add items to the cart before submitting the invoice.");
+    if (!cartItems.length) {
+      alert("Please add items to the cart before submitting.");
       return;
     }
-
+    const totalAmount = cartItems.reduce(
+      (s, i) => s + i.unitPrice * i.quantity * (1 - i.discount / 100), 0
+    );
     const invoiceData = {
-      id: invoice.id,
-      paymentMethod: paymentMethod,
-      customerId: customer,
-      total: cartItems.reduce(
-        (sum, item) =>
-          sum + item?.unitPrice * item?.quantity * (1 - item?.discount / 100),
-        0
-      ),
-      cash: parseFloat(cash),
-      change:
-        parseFloat(cash) -
-        cartItems.reduce(
-          (sum, item) =>
-            sum + item?.unitPrice * item?.quantity * (1 - item?.discount / 100),
-          0
-        ),
+      id: invoice.id, paymentMethod, customerId: customer,
+      total: totalAmount, cash: parseFloat(cash),
+      change: parseFloat(cash) - totalAmount,
     };
     const salesData = {
-      invoice: invoiceData,
-      items: cartItems,
-      cash: parseFloat(cash),
-      change:
-        parseFloat(cash) -
-        cartItems.reduce(
-          (sum, item) =>
-            sum + item?.unitPrice * item?.quantity * (1 - item?.discount / 100),
-          0
-        ),
+      invoice: invoiceData, items: cartItems,
+      cash: parseFloat(cash), change: parseFloat(cash) - totalAmount,
     };
-    const submitSaleData = async () => {
-      if (cash < salesData.invoice.total) {
-        alert("Cash is not enough to pay the invoice.");
+    (async () => {
+      if (parseFloat(cash) < salesData.invoice.total) {
+        alert("Cash is insufficient to cover the invoice total.");
         return;
       }
       try {
-        const response = await submitSale(salesData);
-        handlePrintInvoice(response);
-        return response;
-      } catch (error) {
-        const errorMessage = error.response?.data?.message || error?.message;
-        alert(errorMessage);
-        console.error("Error:", errorMessage);
+        const res = await submitSale(salesData);
+        setPrintInvoice(res);
+      } catch (err) {
+        alert(err.response?.data?.message || err?.message);
       }
-    };
-    submitSaleData();
-  };
-
-  const handlePrintInvoice = (salesData) => {
-    setPrintInvoice(salesData);
+    })();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#201234] to-[#0e061c] text-white px-2 md:px-8 py-10 flex justify-center items-start">
-      <div className="w-full max-w-4xl mx-auto cashier-container space-y-8">
-        <Header
-          customers={customerList}
-          invoice={invoice}
-          setCustomer={setCustomer}
-        />
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-5">
 
+        {/* Page title */}
+        <div>
+          <h1 className="text-xl font-bold text-slate-800">Point of Sale</h1>
+          <p className="text-sm text-slate-500 mt-0.5">Create and process customer invoices</p>
+        </div>
+
+        {/* Invoice preview overlay */}
         {printInvoice && (
-          <div className="absolute w-full flex justify-center z-900">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-slate-900/50 backdrop-blur-sm p-4">
             <InvoicePreview
               invoice={printInvoice}
-              productList={ProductList}
+              productList={productList}
               setPrintInvoice={setPrintInvoice}
               close={handleNewInvoice}
             />
           </div>
         )}
 
+        <Header
+          customers={customerList}
+          invoice={invoice}
+          setCustomer={setCustomer}
+        />
+
         <ProductSearch
           onAdd={handleAddToCart}
           invoice={invoice}
           setProductList={setProductList}
         />
+
         <CartTable
           cartItems={cartItems}
           onRemove={handleRemoveFromCart}
           onQuantityChange={handleQuantityChange}
         />
+
         <SummaryFooter
           cartItems={cartItems}
           cash={cash}
@@ -192,11 +143,13 @@ const CashierScreen = () => {
           paymentMethod={paymentMethod}
           setPaymentMethod={setPaymentMethod}
         />
+
         <Controls
           onNewInvoice={handleNewInvoice}
           onSubmitInvoice={handleSubmitInvoice}
           invoice={invoice}
         />
+
       </div>
     </div>
   );

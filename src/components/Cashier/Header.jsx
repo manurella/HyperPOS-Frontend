@@ -1,5 +1,32 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
+import { Receipt } from "lucide-react";
+
+const selectStyles = {
+  control: (base, state) => ({
+    ...base,
+    background: "#ffffff",
+    borderColor: state.isFocused ? "#6366f1" : "#e2e8f0",
+    boxShadow: state.isFocused ? "0 0 0 3px rgba(99,102,241,0.1)" : "none",
+    borderRadius: "0.5rem",
+    minHeight: 40,
+    fontSize: "0.875rem",
+    "&:hover": { borderColor: "#6366f1" },
+  }),
+  singleValue: (base) => ({ ...base, color: "#0f172a" }),
+  menu: (base) => ({
+    ...base, background: "#ffffff", borderRadius: "0.5rem",
+    border: "1px solid #e2e8f0",
+    boxShadow: "0 4px 16px rgba(0,0,0,0.08)", zIndex: 20,
+  }),
+  option: (base, state) => ({
+    ...base,
+    backgroundColor: state.isFocused ? "#eef2ff" : "#ffffff",
+    color: state.isFocused ? "#4f46e5" : "#0f172a",
+    cursor: "pointer", fontSize: "0.875rem",
+  }),
+  placeholder: (base) => ({ ...base, color: "#94a3b8", fontSize: "0.875rem" }),
+};
 
 const Header = ({ invoice, customers, setCustomer }) => {
   const [selectedCustomer, setSelectedCustomer] = useState(1);
@@ -8,77 +35,52 @@ const Header = ({ invoice, customers, setCustomer }) => {
     if (invoice) setSelectedCustomer(invoice.customerId);
   }, [invoice]);
 
-  const customerOptions = customers.map((customer) => ({
-    label: `${customer?.name} (ID: ${customer?.id})`,
-    value: customer?.id,
+  const customerOptions = customers.map(c => ({
+    label: `${c?.name} (ID: ${c?.id})`,
+    value: c?.id,
   }));
 
-  const handleCustomerChange = (selectedOption) => {
-    setSelectedCustomer(selectedOption.value);
-    setCustomer(selectedOption.value);
+  const handleCustomerChange = (opt) => {
+    setSelectedCustomer(opt.value);
+    setCustomer(opt.value);
   };
 
   return (
-    <div className="rounded-2xl bg-black/40 border border-[#f472b6]/20 shadow-lg p-6 flex flex-col md:flex-row gap-6 md:gap-10 justify-between items-center w-full">
-      <div className="w-full md:w-1/2 flex flex-col gap-2">
-        <label className="text-purple-200 text-xs">Invoice ID:</label>
-        <input
-          type="text"
-          value={invoice?.id || ""}
-          readOnly
-          className="bg-[#0f0326]/80 border border-[#f472b6]/30 text-white rounded-lg px-3 py-2 text-center focus:outline-none focus:border-[#f472b6] transition-all shadow-inner"
-        />
+    <div className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+
+      {/* Invoice ID */}
+      <div className="flex-1 min-w-0">
+        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+          Invoice ID
+        </label>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center flex-shrink-0">
+            <Receipt size={15} className="text-indigo-500" />
+          </div>
+          <input
+            type="text"
+            value={invoice?.id || "—"}
+            readOnly
+            className="flex-1 px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm font-semibold text-slate-700 outline-none cursor-default"
+          />
+        </div>
       </div>
-      <div className="w-full md:w-1/2 flex flex-col gap-2">
-        <label className="text-purple-200 text-xs">Customer:</label>
+
+      {/* Customer selector */}
+      <div className="flex-1 min-w-0 w-full">
+        <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+          Customer
+        </label>
         <Select
           options={customerOptions}
-          value={customerOptions.find((c) => c.value === selectedCustomer) || null}
+          value={customerOptions.find(c => c.value === selectedCustomer) || null}
           onChange={handleCustomerChange}
-          placeholder="Select Customer"
+          placeholder="Select customer…"
           isSearchable
-          className="text-black rounded-xl"
-          styles={{
-            control: (base, state) => ({
-              ...base,
-              background: "rgba(15,3,38,0.7)",
-              borderColor: state.isFocused ? "#f472b6" : "#f472b6aa",
-              boxShadow: state.isFocused
-                ? "0 0 0 2px #f472b6cc"
-                : "0 1px 3px #f472b6",
-              borderRadius: "0.75rem",
-              color: "#fff",
-              minHeight: 44,
-              fontSize: "1rem",
-            }),
-            singleValue: (base) => ({
-              ...base,
-              color: "#fff",
-            }),
-            menu: (base) => ({
-              ...base,
-              background: "#1c0e41e0",
-              color: "#fff",
-              borderRadius: "0.75rem",
-              zIndex: 20,
-            }),
-            option: (base, state) => ({
-              ...base,
-              backgroundColor: state.isFocused
-                ? "#f472b6cc"
-                : "rgba(44,17,56,0.7)",
-              color: state.isFocused ? "#fff" : "#f472b6",
-              fontWeight: state.isSelected ? 700 : 500,
-              cursor: "pointer",
-            }),
-            placeholder: (base) => ({
-              ...base,
-              color: "#f472b6aa",
-              fontWeight: 400,
-            }),
-          }}
+          styles={selectStyles}
         />
       </div>
+
     </div>
   );
 };

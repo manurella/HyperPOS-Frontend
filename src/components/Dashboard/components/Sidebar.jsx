@@ -1,270 +1,214 @@
-import { useState , useEffect , useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-import { Link , useLocation , useNavigate } from "react-router-dom";
-
-import { 
-  Home, 
-  FileText, 
-  Users, 
-  ShoppingCart, 
-  Package, 
-  BarChart2, 
-  Building,
+import {
+  LayoutDashboard,
+  FileText,
+  Users,
+  ShoppingCart,
+  Package,
+  BarChart2,
+  Building2,
   UserPlus,
   Truck,
   ChevronRight,
-  PlusCircle
+  PlusCircle,
+  ClipboardList,
+  ArrowLeftRight,
+  X,
 } from "lucide-react";
 
-import ParticleBackground from "../../UI/ParticleBackground";
+function Sidebar({ onCloseMobile, isMobileOpen }) {
 
-function Sidebar ( { onCloseMobile , isMobileOpen } ) {
+  const location  = useLocation();
+  const navigate  = useNavigate();
+  const user      = JSON.parse(localStorage?.getItem("user")) || { username: "Admin" };
 
-  const location = useLocation ( );
-  const navigate = useNavigate ( );
-  const user = JSON.parse ( localStorage?.getItem ( "user" ) ) || { username : "Admin" };
-  
-  const [ expandedCategory , setExpandedCategory ] = useState ( null );
+  const [expandedCategory, setExpandedCategory] = useState(null);
 
   const dashboardItem = {
     title : "Dashboard",
-    icon : <Home size = { 20 } />,
-    path : "/dashboard",
-    exact : true
+    icon  : <LayoutDashboard size={18} />,
+    path  : "/dashboard",
+    exact : true,
   };
 
-  // Group menu items by category.
-  const menuCategories = useCallback ( () => ( {
-    "Documents" : [
-      {
-        title : "GRNs",
-        icon : <FileText size = { 20 } />,
-        path : "/dashboard/grn"
-      },
-      {
-        title : "Invoices",
-        icon : <FileText size = { 20 } />,
-        path : "/dashboard/invoices"
-      }
+  const menuCategories = useCallback(() => ({
+    "Documents": [
+      { title: "GRNs",      icon: <ClipboardList size={16} />, path: "/dashboard/grn" },
+      { title: "Invoices",  icon: <FileText size={16} />,      path: "/dashboard/invoices" },
     ],
-    "People" : [
-      {
-        title : "Users",
-        icon : <Users size = { 20 } />,
-        path : "/dashboard/users"
-      },
-      {
-        title : "Customers",
-        icon : <Users size = { 20 } />,
-        path : "/dashboard/customers"
-      },
-      {
-        title : "Add Customer",
-        icon : <UserPlus size = { 20 } />,
-        path : "/dashboard/customerregister"
-      }
+    "People": [
+      { title: "Users",        icon: <Users size={16} />,    path: "/dashboard/users" },
+      { title: "Customers",    icon: <Users size={16} />,    path: "/dashboard/customers" },
+      { title: "Add Customer", icon: <UserPlus size={16} />, path: "/dashboard/customerregister" },
     ],
-    "Inventory" : [
-      {
-        title : "Products",
-        icon : <Package size = { 20 } />,
-        path : "/dashboard/products"
-      },
-      {
-        title : "Add Product",
-        icon : <Package size = { 20 } />,
-        path : "/dashboard/addproduct"
-      },
-      {
-        title : "Purchase",
-        icon : <Package size = { 20 } />,
-        path : "/dashboard/purchase"
-      },
-      {
-        title : "GRN Return",
-        icon : <FileText size = { 20 } />,
-        path : "/dashboard/grnreturn"
-      }
+    "Inventory": [
+      { title: "Products",    icon: <Package size={16} />,       path: "/dashboard/products" },
+      { title: "Add Product", icon: <PlusCircle size={16} />,    path: "/dashboard/addproduct" },
+      { title: "Purchase",    icon: <ShoppingCart size={16} />,  path: "/dashboard/purchase" },
+      { title: "GRN Return",  icon: <ArrowLeftRight size={16} />,path: "/dashboard/grnreturn" },
     ],
-    "Transactions" : [
-      {
-        title : "Sales",
-        icon : <BarChart2 size = { 20 } />,
-        path : "/dashboard/sales"
-      },
-      {
-        title : "Invoice Return",
-        icon : <FileText size = { 20 } />,
-        path : "/dashboard/invoicereturn"
-      }
+    "Transactions": [
+      { title: "Sales",           icon: <BarChart2 size={16} />,      path: "/dashboard/sales" },
+      { title: "Invoice Return",  icon: <ArrowLeftRight size={16} />, path: "/dashboard/invoicereturn" },
     ],
-    "Business" : [
-      {
-        title : "Add Supplier",
-        icon : <Truck size = { 20 } />,
-        path : "/dashboard/supplierregister"
-      },
-      // {
-      //   title : "Organizations",
-      //   icon : <Building size = { 20 } />,
-      //   path : "/dashboard/organizations"
-      // },
-      {
-        title : "Organization",
-        icon : <PlusCircle size = { 20 } />,
-        path : "/dashboard/organization"
-      }
-    ]
-  } ) , [] );
+    "Business": [
+      { title: "Add Supplier",  icon: <Truck size={16} />,    path: "/dashboard/supplierregister" },
+      { title: "Organization",  icon: <Building2 size={16} />, path: "/dashboard/organization" },
+    ],
+  }), []);
 
-  // Toggle category expansion.
-  const toggleCategory = ( category ) => {
-    if ( expandedCategory === category ) {
-      setExpandedCategory ( null );
-    } else {
-      setExpandedCategory ( category );
-    }
+  const toggleCategory = (category) => {
+    setExpandedCategory(prev => prev === category ? null : category);
   };
 
-  // Defining isActive as a memoized function to avoid recreating it on every render.
-  const isActive = useCallback ( ( path , exact = false ) => {
-    if ( exact ) {
-      return location.pathname === path;
-    }
-    return location.pathname.startsWith ( path );
-  } , [ location.pathname ] );
+  const isActive = useCallback((path, exact = false) => {
+    if (exact) return location.pathname === path;
+    return location.pathname.startsWith(path);
+  }, [location.pathname]);
 
-  // Check if any menu item in a category is active.
-  const isCategoryActive = useCallback ( ( categoryItems ) => {
-    return categoryItems.some ( item => isActive ( item.path , item.exact ) );
-  } , [ isActive ] );
+  const isCategoryActive = useCallback((items) => {
+    return items.some(item => isActive(item.path, item.exact));
+  }, [isActive]);
 
-  // Handle navigation with proper timing.
-  const handleNavigation = ( path , e ) => {
-    e.preventDefault ( );
-    
-    navigate ( path );
-    
-    setTimeout ( () => {
-      onCloseMobile ( );
-    } , 150 );
+  const handleNavigation = (path, e) => {
+    e.preventDefault();
+    navigate(path);
+    setTimeout(() => { onCloseMobile(); }, 150);
   };
 
-  useEffect ( () => {
-    
-    const categories = menuCategories ( );
-    for ( const [ category , items ] of Object.entries ( categories ) ) {
-      if ( isCategoryActive ( items ) ) {
-        setExpandedCategory ( category );
+  useEffect(() => {
+    const categories = menuCategories();
+    for (const [category, items] of Object.entries(categories)) {
+      if (isCategoryActive(items)) {
+        setExpandedCategory(category);
         break;
       }
     }
-    
-  } , [ isCategoryActive , menuCategories ] );
+  }, [isCategoryActive, menuCategories]);
 
   return (
-    <div className = { `fixed lg:relative h-screen inset-y-0 left-0 flex flex-col overflow-hidden hyper-bg z-30
-      ${ isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0' }
-      transition-all duration-300 w-64 sm:w-72` } 
-         style = { {
-           background : "linear-gradient( 180deg , #0f0326 0% , #1a0a40 50% , #3b0764 100% )",
-         } }>
-      
-      {/* Particle background */}
-      <ParticleBackground count = { 20 } />
-      
-      {/* Scanline effect */}
-      <div className = "hyper-scanline"></div>
-      
-      {/* Navigation menu */}
-      <nav className = "flex-1 overflow-y-auto py-4 relative z-10 hyper-scrollbar">
-        <ul className = "space-y-2 px-3">
-          
-          {/* Dashboard item. */}
-          <li className = "hyper-menu-item mb-2">
-            <Link
-              to = { dashboardItem.path }
-              className = { `flex items-center px-4 py-3 rounded-md transition-all duration-300 ${
-                isActive ( dashboardItem.path , dashboardItem.exact )
-                  ? "text-white hyper-menu-active"
-                  : "text-purple-200 hover:text-white"
-              }` }
-              onClick = { ( e ) => handleNavigation ( dashboardItem.path , e ) }
-            >
-              <span className = { `mr-3 ${ isActive ( dashboardItem.path , dashboardItem.exact ) ? "text-pink-300 hyper-icon" : "text-purple-300" }` }>
-                { dashboardItem.icon }
-              </span>
-              <span className = { isActive ( dashboardItem.path , dashboardItem.exact ) ? "hyper-text" : "" }>
-                { dashboardItem.title }
-              </span>
-            </Link>
-          </li>
-          
-          {/* Divider. */}
-          <li className = "border-t border-purple-800/30 my-2"></li>
-          
-          {/* Collapsible categories. */}
-          { Object.entries ( menuCategories ( ) ).map ( ( [ category , items ] ) => (
-            <li key = { category } className = "mb-2">
-              
-              {/* Category headers.*/}
-              <div 
-                className = { `flex items-center justify-between px-3 py-2 text-xs uppercase font-semibold tracking-wider cursor-pointer ${
-                  isCategoryActive ( items ) ? 'text-pink-300' : 'text-gray-400'
-                } hover:text-pink-300 transition-colors` }
-                onClick = { ( ) => toggleCategory ( category ) }
+
+    <aside
+      className={`fixed lg:relative h-screen inset-y-0 left-0 flex flex-col z-30 w-64
+        transition-transform duration-300 ease-in-out
+        ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      style={{ background: "var(--sidebar-bg, #0a0f1e)" }}
+    >
+
+      {/* ── Brand area ── */}
+      <div className="flex items-center justify-between h-16 px-5 flex-shrink-0"
+           style={{ borderBottom: "1px solid var(--sidebar-border, rgba(255,255,255,0.06))" }}>
+
+        <Link to="/dashboard" className="flex items-center gap-2.5">
+          <img src="/HyperPOS.svg" alt="HyperPOS" className="w-8 h-8 object-contain" />
+          <span className="text-white font-bold text-base tracking-tight">HyperPOS</span>
+        </Link>
+
+        {/* Mobile close */}
+        <button
+          onClick={onCloseMobile}
+          className="lg:hidden p-1.5 rounded-md text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+          aria-label="Close sidebar"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
+      {/* ── Navigation ── */}
+      <nav className="flex-1 overflow-y-auto py-4 px-3 hyper-scrollbar">
+
+        {/* ─ Dashboard ─ */}
+        <div className="mb-1">
+          <Link
+            to={dashboardItem.path}
+            onClick={(e) => handleNavigation(dashboardItem.path, e)}
+            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 ${
+              isActive(dashboardItem.path, dashboardItem.exact)
+                ? "bg-indigo-500/[0.15] text-indigo-400"
+                : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+            }`}
+          >
+            <span className={isActive(dashboardItem.path, dashboardItem.exact) ? "text-indigo-400" : "text-slate-500"}>
+              {dashboardItem.icon}
+            </span>
+            {dashboardItem.title}
+          </Link>
+        </div>
+
+        {/* ─ Divider ─ */}
+        <div className="my-3 mx-1" style={{ borderTop: "1px solid var(--sidebar-border, rgba(255,255,255,0.06))" }} />
+
+        {/* ─ Collapsible categories ─ */}
+        <div className="space-y-0.5">
+          {Object.entries(menuCategories()).map(([category, items]) => (
+            <div key={category}>
+
+              {/* Category header */}
+              <button
+                onClick={() => toggleCategory(category)}
+                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors duration-150 ${
+                  isCategoryActive(items)
+                    ? "text-indigo-400"
+                    : "text-slate-500 hover:text-slate-300"
+                }`}
               >
-                <span>{ category }</span>
-                <ChevronRight 
-                  size = { 14 } 
-                  className = { `transform transition-transform duration-200 ${
-                    expandedCategory === category ? 'rotate-90' : ''
-                  }` } 
+                <span>{category}</span>
+                <ChevronRight
+                  size={13}
+                  className={`transition-transform duration-200 ${expandedCategory === category ? "rotate-90" : ""}`}
                 />
-              </div>
-              
-              {/* Menu items. */}
-              <ul className = { `mt-1 space-y-1 overflow-hidden transition-all duration-300 ${
-                expandedCategory === category ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-              }` }>
-                { items.map ( ( item , idx ) => (
-                  <li key = { idx } className = "hyper-menu-item pl-2">
+              </button>
+
+              {/* Menu items */}
+              <div className={`overflow-hidden transition-all duration-200 ${
+                expandedCategory === category ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+              }`}>
+                <div className="ml-2 mt-0.5 space-y-0.5">
+                  {items.map((item, idx) => (
                     <Link
-                      to = { item.path }
-                      className = { `flex items-center px-4 py-3 rounded-md transition-all duration-300 ${
-                        isActive ( item.path , item.exact )
-                          ? "text-white hyper-menu-active"
-                          : "text-purple-200 hover:text-white"
-                      }` }
-                      onClick = { ( e ) => handleNavigation ( item.path , e ) }
+                      key={idx}
+                      to={item.path}
+                      onClick={(e) => handleNavigation(item.path, e)}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
+                        isActive(item.path, item.exact)
+                          ? "bg-indigo-500/[0.15] text-indigo-400 font-medium"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
+                      }`}
                     >
-                      <span className = { `mr-3 ${ isActive ( item.path , item.exact ) ? "text-pink-300 hyper-icon" : "text-purple-300" }` }>
-                        { item.icon }
+                      <span className={isActive(item.path, item.exact) ? "text-indigo-400" : "text-slate-500"}>
+                        {item.icon}
                       </span>
-                      <span className = { isActive ( item.path , item.exact ) ? "hyper-text" : "" }>
-                        { item.title }
-                      </span>
+                      {item.title}
                     </Link>
-                  </li>
-                ) ) }
-              </ul>
-              
-            </li>
-          ) ) }
-          
-        </ul>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          ))}
+        </div>
+
       </nav>
-      
-      {/* Welcome Message. */}
-      <div className = "p-4 mt-auto border-t border-purple-800/30 relative z-10">
-        <div className = "text-center hyper-text">
-          Welcome, <span className = "text-pink-300">{ user.username }</span>
+
+      {/* ── User footer ── */}
+      <div className="flex-shrink-0 px-4 py-4"
+           style={{ borderTop: "1px solid var(--sidebar-border, rgba(255,255,255,0.06))" }}>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center flex-shrink-0">
+            <span className="text-indigo-400 text-xs font-bold uppercase">
+              {user.username?.[0] || "A"}
+            </span>
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-slate-200 truncate">{user.username || "Admin"}</p>
+            <p className="text-xs text-slate-500 truncate">Administrator</p>
+          </div>
         </div>
       </div>
-      
-      <div className = "hyper-glow-bottom"></div>
-      
-    </div>
+
+    </aside>
   );
 }
 

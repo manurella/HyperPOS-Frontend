@@ -1,499 +1,160 @@
-// Imports : ( useEffect , useState ) , ( Eye , SlidersHorizontal ) , ( grnData )
 import { useState, useEffect } from "react";
-
-import { Eye, SlidersHorizontal } from "lucide-react";
-
+import { Eye, SlidersHorizontal, X } from "lucide-react";
 import { getGRNData } from "../data/grnData";
-
 import FetchLoader from './FetchLoader';
 
-// Function : ( ViewModal )
-// Passing : ( grn - The data props. , onClose - To close the filter modal. )
-function ViewModal ( { grn, onClose } ) {
-
-  // Function to format date strings
-  const formatDate = ( dateString ) => {
-    if ( !dateString ) return "Not available";
-    const date = new Date ( dateString );
-    return date.toLocaleString ( );
-  };
-
+function ModalShell({ title, onClose, children, footer }) {
   return (
-
-    <div className = "fixed inset-0 top-14 sm:top-16 bg-black/70 backdrop-blur-sm flex justify-center items-center z-40 p-4">
-
-      <div className = "bg-hyper-dark/90 rounded-xl p-4 sm:p-6 w-full max-w-md shadow-2xl max-h-[90vh] overflow-y-auto border border-purple-500/30">
-
-        <div className = "flex justify-between items-center mb-4 border-b border-purple-500/30 pb-3">
-
-          <div className = "w-full text-center">
-            <h2 className = "text-xl sm:text-2xl font-bold text-white hyper-text-glow">GRN Details</h2>
-          </div>
-
-          <button
-            onClick = { onClose }
-            className = "absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-xl cursor-pointer"
-          >
-            &times;
-          </button>
-
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-floating w-full max-w-lg overflow-hidden animate-fade-in">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <h2 className="text-base font-semibold text-slate-800">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"><X size={18} /></button>
         </div>
-
-        <div className = "space-y-4">
-
-          {/* Basic Information */}
-          <div className = "bg-purple-900/30 p-3 rounded-lg border border-purple-500/30">
-
-            <h3 className = "text-md font-semibold text-purple-300 mb-2 text-center">Basic Information</h3>
-
-            <div className = "grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-
-              <div className = "flex flex-col">
-                <span className = "font-medium text-gray-400">GRN ID</span>
-                <span className = "p-2 bg-hyper-dark/50 rounded-md text-white">{ grn.id }</span>
-              </div>
-
-              <div className = "flex flex-col">
-                <span className = "font-medium text-gray-400">Supplier ID</span>
-                <span className = "p-2 bg-hyper-dark/50 rounded-md text-white">{ grn.supplierId }</span>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* Financial Details */}
-          <div className = "bg-green-900/30 p-3 rounded-lg border border-green-500/30">
-
-            <h3 className = "text-md font-semibold text-green-300 mb-2 text-center">Financial Details</h3>
-
-            <div className = "grid grid-cols-1 gap-3 text-sm">
-
-              <div className = "flex flex-col">
-                <span className = "font-medium text-gray-400">Total Amount</span>
-                <span className = "p-2 bg-hyper-dark/50 rounded-md font-semibold text-green-300">
-                  Rs { grn.total.toLocaleString ( ) }
-                </span>
-              </div>
-
-            </div>
-
-          </div>
-
-          {/* Date Information */}
-          <div className = "bg-amber-900/30 p-3 rounded-lg border border-amber-500/30 text-black">
-
-            <h3 className = "text-md font-semibold text-amber-300 mb-2 text-center">Date Information</h3>
-
-            <div className = "grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-
-              <div className = "flex flex-col">
-                <span className = "font-medium text-gray-400">Created At</span>
-                <span className = "p-2 bg-hyper-dark/50 rounded-md text-white">
-                  { formatDate ( grn.createdAt ) }
-                </span>
-              </div>
-
-              <div className = "flex flex-col">
-                <span className = "font-medium text-gray-400">Updated At</span>
-                <span className = "p-2 bg-hyper-dark/50 rounded-md text-white">
-                  { formatDate ( grn.updatedAt ) }
-                </span>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div className = "mt-6 flex justify-center border-t border-purple-500/30 pt-4">
-
-          <button
-            onClick = { onClose }
-            className = "px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 transition duration-200 cursor-pointer"
-          >
-            Close
-          </button>
-        </div>
-
+        <div className="max-h-[65vh] overflow-y-auto px-6 py-5">{children}</div>
+        {footer && <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">{footer}</div>}
       </div>
-
     </div>
-
   );
-
 }
 
-// Function : ( FilterModal )
-// Passing : ( onClose - To close the filter modal. , onApply - To apply the filter. , supplierList - To show the supplier list. , currentFilters - To show the current filters. )
-function FilterModal ( { onClose, onApply, supplierList, currentFilters } ) {
-
-  // Using useState to store the values of the filters.
-  const [ supplierId, setSupplierId ] = useState ( currentFilters.supplierId || "" );
-  const [ minTotal, setMinTotal ] = useState ( currentFilters.minTotal || "" );
-  const [ maxTotal, setMaxTotal ] = useState ( currentFilters.maxTotal || "" );
-  const [ startDate, setStartDate ] = useState ( currentFilters.startDate || "" );
-  const [ endDate, setEndDate ] = useState ( currentFilters.endDate || "" );
-
-  // Arrow Function : ( handleApply )
-  const handleApply = ( ) => {
-
-    // Calling the onApply function to apply the filter.
-    onApply ( {
-      supplierId, 
-      minTotal, 
-      maxTotal, 
-      startDate, 
-      endDate
-    } );
-    // Calling the onClose function to close the modal.
-    onClose ( );
-
-  };
-
-  // Arrow Function : ( handleReset )
-  const handleReset = ( ) => {
-
-    // Setting the values of the filters to empty.
-    setSupplierId ( "" );
-    setMinTotal ( "" );
-    setMaxTotal ( "" );
-    setStartDate ( "" );
-    setEndDate ( "" );
-
-  };
-
+function InfoSection({ title, children }) {
   return (
-
-    <div className = "fixed inset-0 top-14 sm:top-16 bg-black/70 backdrop-blur-sm flex justify-center items-center z-40">
-
-      <div className = "bg-hyper-dark/90 rounded-xl p-4 sm:p-6 w-full max-w-lg shadow-2xl relative max-h-[90vh] overflow-y-auto m-4 border border-purple-500/30">
-
-        <button
-          onClick = { onClose }
-          className = "absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-xl cursor-pointer"
-        >
-          &times;
-        </button>
-
-        <h2 className = "text-xl font-semibold text-white hyper-text-glow mb-4 text-center">Advanced Filters</h2>
-
-        {/* Basic Information Section */}
-        <div className = "mb-4">
-
-          <h3 className = "text-md font-medium text-purple-300 mb-2 text-center">Basic Information</h3>
-
-          <div className = "grid grid-cols-1 gap-4 text-sm">
-
-            <div className = "flex flex-col">
-
-              <label className = "text-gray-400 mb-1">Supplier ID</label>
-              <select
-                value = { supplierId }
-                onChange = { ( e ) => setSupplierId ( e.target.value ) }
-                className = "p-2 rounded-lg border bg-black text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50"
-              >
-                <option value = "">All</option>
-                { supplierList.map ( ( id ) => (
-                  <option key = { id } value = { id }>{ id }</option>
-                ) ) }
-              </select>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Amount Section */}
-        <div className = "mb-4">
-
-          <h3 className = "text-md font-medium text-purple-300 mb-2 text-center">Total Amount</h3>
-
-          <div className = "grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-
-            <div className = "flex flex-col">
-
-              <label className = "text-gray-400 mb-1">Min Total</label>
-              <input 
-                type = "number" 
-                className = "p-2 rounded-lg border bg-trasparent text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { minTotal } 
-                onChange = { ( e ) => setMinTotal ( e.target.value ) } 
-              />
-
-            </div>
-
-            <div className = "flex flex-col">
-
-              <label className = "text-gray-400 mb-1">Max Total</label>
-              <input 
-                type = "number" 
-                className = "p-2 rounded-lg border bg-trasparent text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { maxTotal } 
-                onChange = { ( e ) => setMaxTotal ( e.target.value ) } 
-              />
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* Date Section */}
-        <div className = "mb-4">
-
-          <h3 className = "text-md font-medium text-purple-300 mb-2 text-center">Date Range</h3>
-
-          <div className = "grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">Start Date</label>
-              <input 
-                type = "date" 
-                className = "p-2 rounded-lg border bg-trasparent text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { startDate } 
-                onChange = { ( e ) => setStartDate ( e.target.value ) } 
-              />
-            </div>
-
-            <div className = "flex flex-col">
-              <label className = "text-gray-400 mb-1">End Date</label>
-              <input 
-                type = "date" 
-                className = "p-2 rounded-lg border bg-trasparent text-white border-purple-500/30 focus:outline-none focus:border-pink-500/50" 
-                value = { endDate } 
-                onChange = { ( e ) => setEndDate ( e.target.value ) } 
-              />
-            </div>
-
-          </div>
-
-        </div>
-
-        <div className = "flex justify-center gap-4 mt-6 border-t border-purple-500/30 pt-4">
-          <button 
-            onClick = { handleReset } 
-            className = "px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 cursor-pointer transition-colors"
-          >
-            Reset
-          </button>
-          <button 
-            onClick = { handleApply } 
-            className = "px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 cursor-pointer transition-colors"
-          >
-            Apply
-          </button>
-        </div>
-
-      </div>
-
+    <div className="mb-5">
+      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-1 border-b border-slate-100">{title}</h3>
+      <div className="grid grid-cols-2 gap-3">{children}</div>
     </div>
-
   );
-
 }
 
+function InfoRow({ label, children, full }) {
+  return (
+    <div className={`flex flex-col gap-1 ${full ? "col-span-2" : ""}`}>
+      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{label}</span>
+      <div className="text-sm text-slate-700">{children}</div>
+    </div>
+  );
+}
 
-// Function : ( GRNPage )
-function GRNPage ( ) {
+function ViewModal({ grn, onClose }) {
+  const fmt = (d) => d ? new Date(d).toLocaleString() : "—";
+  return (
+    <ModalShell title="GRN Details" onClose={onClose} footer={<button onClick={onClose} className="pos-btn-primary">Close</button>}>
+      <InfoSection title="Basic">
+        <InfoRow label="GRN ID">{grn.id}</InfoRow>
+        <InfoRow label="Supplier ID">{grn.supplierId}</InfoRow>
+      </InfoSection>
+      <InfoSection title="Financial">
+        <InfoRow label="Total Amount" full><span className="text-emerald-600 font-bold text-base">Rs {grn.total.toLocaleString()}</span></InfoRow>
+      </InfoSection>
+      <InfoSection title="Timestamps">
+        <InfoRow label="Created">{fmt(grn.createdAt)}</InfoRow>
+        <InfoRow label="Updated">{fmt(grn.updatedAt)}</InfoRow>
+      </InfoSection>
+    </ModalShell>
+  );
+}
 
-  // Using the useState to create a variable and then update it accordingly by the function.
-  const [ selectedGRN, setSelectedGRN ] = useState ( null );
-  const [ searchTerm, setSearchTerm ] = useState ( "" );
-  const [ showFilterModal, setShowFilterModal ] = useState ( false );
-  const [ filters, setFilters ] = useState ( {} );
-  const [ grnData, setGRNData ] = useState ( [] );
-  const [ loading, setLoading ] = useState ( true );
-  const [ error, setError ] = useState ( null );
-  const [ isFetching, setIsFetching ] = useState ( true );
+function FilterModal({ onClose, onApply, supplierList, currentFilters }) {
+  const [supplierId, setSupplierId] = useState(currentFilters.supplierId || "");
+  const [minTotal,   setMinTotal]   = useState(currentFilters.minTotal   || "");
+  const [maxTotal,   setMaxTotal]   = useState(currentFilters.maxTotal   || "");
+  const [startDate,  setStartDate]  = useState(currentFilters.startDate  || "");
+  const [endDate,    setEndDate]    = useState(currentFilters.endDate    || "");
+  const reset = () => { setSupplierId(""); setMinTotal(""); setMaxTotal(""); setStartDate(""); setEndDate(""); };
+  return (
+    <ModalShell title="Filter GRNs" onClose={onClose}
+      footer={<><button onClick={reset} className="pos-btn-secondary">Reset</button><button onClick={() => { onApply({ supplierId, minTotal, maxTotal, startDate, endDate }); onClose(); }} className="pos-btn-primary">Apply</button></>}>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="col-span-2"><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Supplier ID</label>
+          <select value={supplierId} onChange={e => setSupplierId(e.target.value)} className="pos-input">
+            <option value="">All</option>{supplierList.map(id => <option key={id} value={id}>{id}</option>)}
+          </select>
+        </div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Min Total</label><input type="number" value={minTotal} onChange={e => setMinTotal(e.target.value)} className="pos-input" placeholder="0" /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Max Total</label><input type="number" value={maxTotal} onChange={e => setMaxTotal(e.target.value)} className="pos-input" placeholder="Any" /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Start Date</label><input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="pos-input" /></div>
+        <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">End Date</label><input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="pos-input" /></div>
+      </div>
+    </ModalShell>
+  );
+}
 
-  // Fetch GRN data from API when component mounts
-  useEffect ( ( ) => {
+function GRNPage() {
+  const [selectedGRN,     setSelectedGRN]     = useState(null);
+  const [searchTerm,      setSearchTerm]      = useState("");
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filters,         setFilters]         = useState({});
+  const [grnData,         setGRNData]         = useState([]);
+  const [loading,         setLoading]         = useState(true);
+  const [error,           setError]           = useState(null);
+  const [isFetching,      setIsFetching]      = useState(true);
 
-    const fetchData = async ( ) => {
-
+  useEffect(() => {
+    (async () => {
       try {
+        setLoading(true); setIsFetching(true);
+        const data = await getGRNData();
+        setGRNData(data || []);
+      } catch (err) { setError("Failed to fetch GRN data"); console.error(err); }
+      finally { setLoading(false); setTimeout(() => setIsFetching(false), 1500); }
+    })();
+  }, []);
 
-        setLoading ( true );
-        setIsFetching ( true );
-        const data = await getGRNData ( );
+  const supplierList = [...new Set(grnData.map(g => g.supplierId))];
+  const fmt = (d) => d ? new Date(d).toLocaleDateString() : "—";
 
-        if ( data ) {
-
-          setGRNData ( data );
-
-        } else {
-
-          setError ( "No data returned from API" );
-
-        }
-
-      } catch ( err ) {
-
-        setError ( "Failed to fetch GRN data" );
-        console.error ( "Error fetching GRN data:", err );
-
-      } finally {
-
-        setLoading ( false );
-        setTimeout(() => {
-          setIsFetching ( false );
-        }, 1500);
-
-      }
-
-    };
-
-    fetchData ( );
-
-  }, [] );
-
-  const supplierList = [ ...new Set ( grnData.map ( ( g ) => g.supplierId ) ) ];
-
-  // Function to format date for display in the table
-  const formatDate = ( dateString ) => {
-    if ( !dateString ) return "—";
-    const date = new Date ( dateString );
-    return date.toLocaleDateString ( );
-  };
-
-  // Filtering the data based on the search term and other filters
-  const filteredData = grnData.filter ( ( g ) => {
-
-    // Search across all fields
-    const searchFields = [
-      g.id.toString ( ),
-      g.supplierId?.toString() || "",
-      g.total?.toString() || ""
-    ];
-
-    const matchesSearch = searchFields.some ( field => 
-      field.toLowerCase ( ).includes ( searchTerm.toLowerCase ( ) )
-    );
-
-    // Apply filters
-    const matchesSupplier = !filters.supplierId || g.supplierId?.toString() === filters.supplierId;
-
-    const matchesTotal = 
-      ( !filters.minTotal || g.total >= +filters.minTotal ) && 
-      ( !filters.maxTotal || g.total <= +filters.maxTotal );
-
-    // Date filtering
-    let matchesDate = true;
-    if ( filters.startDate || filters.endDate ) {
-      const grnDate = g.updatedAt ? new Date ( g.updatedAt ) : null;
-
-      if ( !grnDate ) {
-        matchesDate = false;
-      } else {
-        if ( filters.startDate ) {
-          const startDate = new Date ( filters.startDate );
-          startDate.setHours ( 0, 0, 0, 0 );
-          if ( grnDate < startDate ) matchesDate = false;
-        }
-
-        if ( filters.endDate ) {
-          const endDate = new Date ( filters.endDate );
-          endDate.setHours ( 23, 59, 59, 999 );
-          if ( grnDate > endDate ) matchesDate = false;
-        }
+  const filteredData = grnData.filter(g => {
+    const q = searchTerm.toLowerCase();
+    const s = [g.id?.toString(), g.supplierId?.toString(), g.total?.toString()].some(f => (f || "").toLowerCase().includes(q));
+    const mS = !filters.supplierId || g.supplierId?.toString() === filters.supplierId;
+    const mT = (!filters.minTotal || g.total >= +filters.minTotal) && (!filters.maxTotal || g.total <= +filters.maxTotal);
+    let mD = true;
+    if (filters.startDate || filters.endDate) {
+      const d = g.updatedAt ? new Date(g.updatedAt) : null;
+      if (!d) mD = false;
+      else {
+        if (filters.startDate) { const sd = new Date(filters.startDate); sd.setHours(0,0,0,0); if (d < sd) mD = false; }
+        if (filters.endDate)   { const ed = new Date(filters.endDate);   ed.setHours(23,59,59,999); if (d > ed) mD = false; }
       }
     }
-
-    // Return true if all conditions are met
-    return matchesSearch && matchesSupplier && matchesTotal && matchesDate;
-
-  } );
+    return s && mS && mT && mD;
+  });
 
   return (
-
-    <div className = "p-4 sm:p-6">
-
-      <h1 className = "text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-white hyper-text-glow text-center">Goods Received Notes</h1>
-
-      {/* Responsive search and filter controls */}
-      <div className="flex flex-col sm:flex-row justify-center items-stretch sm:items-center gap-3 sm:gap-4 mb-6">
-        <input
-          type="text"
-          placeholder="Search GRNs..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 w-full sm:w-auto bg-hyper-dark/50 text-white border-purple-500/30"
-        />
-        <button
-          onClick={() => setShowFilterModal(true)}
-          className="px-4 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 transition flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <SlidersHorizontal size={16} /> Options
-        </button>
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-xl font-bold text-slate-800">Goods Received Notes</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{grnData.length} total GRNs</p>
       </div>
-
-      {/* Responsive table container */}
-      <div className="bg-hyper-dark/30 backdrop-blur-sm rounded-xl shadow-md overflow-hidden border border-purple-500/20">
-        {isFetching ? (
-          <FetchLoader />
-        ) : loading ? (
-          <div className="p-6 text-center text-white">Loading GRN data...</div>
-        ) : error ? (
-          <div className="p-6 text-center text-red-400">{error}</div>
-        ) : (
-          <div className="relative">
-            <div className="max-h-[70vh] overflow-y-auto overflow-x-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-purple-500/50 hover:[&::-webkit-scrollbar-thumb]:bg-purple-400/70">
-              <table className="w-full text-sm text-left">
-                <thead className="sticky top-0 z-10">
-                  <tr className="bg-purple-900/70 text-white shadow-sm">
-                    <th className="p-3 whitespace-nowrap rounded-tl-lg">GRN ID</th>
-                    <th className="p-3 whitespace-nowrap">Supplier ID</th>
-                    <th className="p-3 whitespace-nowrap">Total</th>
-                    <th className="p-3 whitespace-nowrap hidden md:table-cell">Date</th>
-                    <th className="p-3 text-center whitespace-nowrap rounded-tr-lg">View</th>
+      <div className="flex flex-col sm:flex-row gap-3">
+        <input type="text" placeholder="Search GRNs…" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pos-input sm:max-w-xs" />
+        <button onClick={() => setShowFilterModal(true)} className="pos-btn-secondary flex items-center gap-2"><SlidersHorizontal size={15} /> Filters</button>
+      </div>
+      <div className="bg-white border border-slate-200 rounded-xl shadow-card overflow-hidden">
+        {isFetching ? <FetchLoader /> : loading ? <div className="p-8 text-center text-slate-500">Loading…</div> : error ? <div className="p-8 text-center text-red-500">{error}</div> : (
+          <div className="overflow-x-auto">
+            <table className="pos-table">
+              <thead><tr><th>GRN ID</th><th>Supplier ID</th><th>Total</th><th className="hidden md:table-cell">Date</th><th className="text-center">View</th></tr></thead>
+              <tbody>
+                {filteredData.length > 0 ? filteredData.map(g => (
+                  <tr key={g.id}>
+                    <td className="font-medium text-slate-500 text-xs">{g.id}</td>
+                    <td className="text-slate-700">{g.supplierId}</td>
+                    <td className="font-semibold text-emerald-600">Rs {g.total.toLocaleString()}</td>
+                    <td className="hidden md:table-cell text-slate-500">{fmt(g.updatedAt)}</td>
+                    <td className="text-center"><button onClick={() => setSelectedGRN(g)} className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors" aria-label="View"><Eye size={16} /></button></td>
                   </tr>
-                </thead>
-                <tbody>
-                  {filteredData.length > 0 ? (
-                    filteredData.map((grn) => (
-                      <tr key={grn.id} className="border-t border-purple-500/20 text-white hover:bg-white/5 transition duration-200 ease-in-out">
-                        <td className="p-3 font-medium">{grn.id}</td>
-                        <td className="p-3">{grn.supplierId}</td>
-                        <td className="p-3 font-semibold text-green-300">Rs {grn.total.toLocaleString()}</td>
-                        <td className="p-3 hidden md:table-cell">{formatDate(grn.updatedAt)}</td>
-                        <td className="p-3 text-center">
-                          <button
-                            onClick={() => setSelectedGRN(grn)}
-                            className="text-purple-400 hover:text-purple-300 cursor-pointer transition"
-                            aria-label="View GRN details"
-                          >
-                            <Eye size={18} />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" className="p-3 text-center font-medium text-gray-400">No GRNs found</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                )) : <tr><td colSpan="5" className="py-12 text-center text-slate-400">No GRNs found</td></tr>}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
-
-      {selectedGRN && <ViewModal grn={selectedGRN} onClose={() => setSelectedGRN(null)} />}
-      {showFilterModal && (
-        <FilterModal
-          supplierList={supplierList}
-          currentFilters={filters}
-          onClose={() => setShowFilterModal(false)}
-          onApply={setFilters}
-        />
-      )}
+      {selectedGRN    && <ViewModal grn={selectedGRN} onClose={() => setSelectedGRN(null)} />}
+      {showFilterModal && <FilterModal supplierList={supplierList} currentFilters={filters} onClose={() => setShowFilterModal(false)} onApply={setFilters} />}
     </div>
   );
 }
 
-// Exporting the component
 export default GRNPage;

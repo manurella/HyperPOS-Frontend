@@ -1,21 +1,29 @@
-const Controls = ({ onNewInvoice,onSubmitInvoice,invoice }) => (
-  <div className="flex justify-between items-center mt-4">
+import { FilePlus, CheckCircle } from "lucide-react";
+
+const Controls = ({ onNewInvoice, onSubmitInvoice, invoice }) => (
+  <div className="flex items-center justify-between gap-4 pt-1">
+
     <button
-      className={`bg-blue-600 px-4 cursor-pointer py-2 rounded-xl font-bold shadow hover:bg-blue-700 transition-all ${
-        invoice?.id ? "" : " animate-pulse shadow-blue-400 shadow-lg "
-      }`}
       onClick={onNewInvoice}
+      className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border transition-all duration-150 ${
+        invoice?.id
+          ? "bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600 hover:bg-indigo-50"
+          : "bg-indigo-50 border-indigo-300 text-indigo-600 animate-pulse"
+      }`}
     >
+      <FilePlus size={16} />
       New Invoice
     </button>
+
     <button
-      className="bg-green-700 px-4 py-2 rounded-xl font-bold shadow cursor-pointer hover:bg-green-800 transition-all"
-      onClick={() => onSubmitInvoice()}
+      onClick={onSubmitInvoice}
+      className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold shadow-sm transition-colors duration-150"
     >
+      <CheckCircle size={16} />
       Submit Invoice
     </button>
+
   </div>
 );
 
 export default Controls;
-

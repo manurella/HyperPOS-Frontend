@@ -73,55 +73,80 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
   };
 
   return (
-    <div className="w-full mb-6">
-      <div className="search-section space-y-2">
-        <input
-          type="text"
-          placeholder="Search Item by Name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-1 rounded w-full"
-        />
-
-        <input
-          type="text"
-          placeholder="Scan or Enter Barcode..."
-          value={barcode}
-          onChange={(e) => setBarcode(e.target.value)}
-          className="border p-1 rounded w-full "
-        />
-
-        {suggestions.length > 0 && searchTerm && (
-          <ul className="suggestions-list border border-gray-300 bg-purple-900 max-h-40 overflow-y-auto rounded shadow-md mt-1 absolute">
-            {suggestions.map((product) => (
-              <li
-                key={product?.id}
-                className="cursor-pointer hover:bg-purple-500 px-2 py-1 flex justify-between"
-                onClick={() => {
-                  setSelectedProductId(product?.id);
-                  setSearchTerm(product?.name);
-                  setBarcode(product?.barcode);
-                  setUnitCost(product?.cost);
-                }}
-              >
-                <span>{product?.name}</span>
-                <span>| {product?.stock}</span>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <div className="product-info mt-2 flex flex-col md:flex-row justify-between mt-10">
-          <div className="flex flex-row justify-between w-full">
-            <p>Unit: {unit}</p>
-            <p>Cost: Rs. {unitCost?.toFixed(2)}</p>
-            <p>Discount: {discount}%</p>
-            <p>Total: Rs. {amount}</p>
+    <div className="bg-white border border-slate-200 rounded-xl p-5">
+      <h3 className="pos-section-title mb-4">Add Item</h3>
+      <div className="space-y-4">
+        {/* Search & Barcode */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Search by Name
+            </label>
+            <input
+              type="text"
+              placeholder="Type product name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pos-input"
+            />
+            {suggestions.length > 0 && searchTerm && (
+              <ul className="absolute z-20 left-0 right-1/2 bg-white border border-slate-200 rounded-xl shadow-lg mt-1 max-h-44 overflow-y-auto">
+                {suggestions.map((product) => (
+                  <li
+                    key={product?.id}
+                    className="cursor-pointer hover:bg-indigo-50 px-3 py-2 flex justify-between text-sm text-slate-700"
+                    onClick={() => {
+                      setSelectedProductId(product?.id);
+                      setSearchTerm(product?.name);
+                      setBarcode(product?.barcode);
+                      setUnitCost(product?.cost);
+                    }}
+                  >
+                    <span className="font-medium">{product?.name}</span>
+                    <span className="text-slate-400">Stock: {product?.stock}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Barcode
+            </label>
+            <input
+              type="text"
+              placeholder="Scan or enter barcode..."
+              value={barcode}
+              onChange={(e) => setBarcode(e.target.value)}
+              className="pos-input"
+            />
           </div>
         </div>
 
-        <div className="add-controls mt-4 flex gap-2 items-center w-full flex-col">
-          <div className="flex items-center gap-2 w-full">
+        {/* Product Info chips */}
+        {selectedProduct && (
+          <div className="flex flex-wrap gap-2">
+            <span className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-600">
+              Unit: <span className="text-slate-800 font-semibold">{unit}</span>
+            </span>
+            <span className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-600">
+              Cost: <span className="text-slate-800 font-semibold">Rs. {unitCost?.toFixed(2)}</span>
+            </span>
+            <span className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-600">
+              Discount: <span className="text-slate-800 font-semibold">{discount}%</span>
+            </span>
+            <span className="bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2 text-xs font-medium text-indigo-600">
+              Total: <span className="font-semibold">Rs. {amount}</span>
+            </span>
+          </div>
+        )}
+
+        {/* Controls row */}
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
+          <div className="sm:col-span-2">
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Select Item
+            </label>
             <select
               value={selectedProductId}
               onChange={(e) => {
@@ -131,55 +156,64 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
                     ?.cost || 0
                 );
               }}
-              className="border p-1 rounded w-full"
+              className="pos-input"
             >
               <option value="">Select Item</option>
               {products.map((product) => (
                 <option key={product?.id} value={product?.id}>
-                  {product?.name} | ( {product?.stock} )
+                  {product?.name} | ({product?.stock})
                 </option>
               ))}
             </select>
-            <div className="gap-2 flex items-center">
-              Qty
-              <input
-                type="number"
-                min="1"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
-                className="border p-2 w-20 rounded"
-              />
-            </div>
           </div>
-          <div className="flex flex-row justify-between w-full">
-            <div className="gap-2 flex items-center">
-              Cost Rs.
-              <input
-                type="number"
-                min="1"
-                value={unitCost}
-                onChange={(e) => setUnitCost(parseInt(e.target.value))}
-                className="border p-2 w-20 rounded"
-              />
-            </div>
-            <div className="gap-2 flex items-center">
-              <input
-                type="number"
-                min="0"
-                max="100"
-                value={discount}
-                onChange={(e) => setDiscount(parseInt(e.target.value))}
-                className="border p-2 w-20 rounded"
-              />{" "}
-              %
-            </div>
-
-            <button
-              className="bg-blue-600 text-white px-3 py-2 rounded"
-              onClick={handleAdd}
-            >
-              Add
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Qty
+            </label>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(parseInt(e.target.value))}
+              className="pos-input"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              &nbsp;
+            </label>
+            <button className="pos-btn-primary w-full flex items-center justify-center gap-2" onClick={handleAdd}>
+              Add to Cart
             </button>
+          </div>
+        </div>
+
+        {/* Cost & Discount row */}
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Unit Cost (Rs.)
+            </label>
+            <input
+              type="number"
+              min="1"
+              value={unitCost}
+              onChange={(e) => setUnitCost(parseInt(e.target.value))}
+              className="pos-input"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Discount (%)
+            </label>
+            <input
+              type="number"
+              min="0"
+              max="100"
+              value={discount}
+              onChange={(e) => setDiscount(parseInt(e.target.value))}
+              className="pos-input"
+            />
           </div>
         </div>
       </div>

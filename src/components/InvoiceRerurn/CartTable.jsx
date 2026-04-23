@@ -5,77 +5,70 @@ const CartTable = ({ cartItems, onQuantityChange, productList }) => {
   };
 
   return (
-    <div className="w-full my-6 overflow-x-auto rounded-xl border border-[#f472b6]/40 bg-black/30 shadow-2xl backdrop-blur-md">
-      <table className="min-w-full text-sm text-left text-purple-100">
-        <thead className="bg-[#f472b6]/80 text-white uppercase">
-          <tr>
-            <th className="px-4 py-2 text-center">#</th>
-            <th className="px-4 py-2">Product</th>
-            <th className="px-4 py-2">Price</th>
-            <th className="px-4 py-2">Qty</th>
-            <th className="px-4 py-2">Unit</th>
-            <th className="px-4 py-2">Discount</th>
-            <th className="px-4 py-2">Total</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-purple-200/30 bg-white/10">
-          {cartItems?.length > 0 ? (
-            cartItems.map((item, index) => {
-              const itemTotal = calculateTotal(
-                item?.unitPrice,
-                item?.quantity,
-                item?.discount
-              );
-              return (
-                <tr key={index} className="hover:bg-[#f472b6]/10 transition">
-                  <td className="px-4 py-2 text-center">{index + 1}</td>
-                  <td className="px-4 py-2">
-                    {
-                      productList?.find(
-                        (product) => product.id === item?.productId
-                      )?.name
-                    }
-                  </td>
-                  <td className="px-4 py-2">
-                    Rs. {Number(item?.unitPrice).toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">
-                    <input
-                      type="number"
-                      min="0"
-                      value={item?.quantity}
-                      onChange={(e) =>
-                        onQuantityChange(
-                          item?.id,
-                          parseInt(e.target.value, 10) || 0
-                        )
-                      }
-                      className="w-16 p-1 border border-[#f472b6]/40 rounded bg-gray-100 text-center text-black"
-                    />
-                  </td>
-                  <td className="px-4 py-2">
-                    {
-                      productList?.find(
-                        (product) => product?.id === item?.productId
-                      )?.unit
-                    }
-                  </td>
-                  <td className="px-4 py-2">{item?.discount}%</td>
-                  <td className="px-4 py-2">
-                    Rs. {Number(itemTotal).toFixed(2)}
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
+    <div className="bg-white border border-slate-200 rounded-xl p-5">
+      <h3 className="pos-section-title mb-4">Return Items</h3>
+      <div className="overflow-x-auto">
+        <table className="pos-table">
+          <thead>
             <tr>
-              <td className="px-4 py-2 text-center" colSpan="8">
-                No items in cart.
-              </td>
+              <th>#</th>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Return Qty</th>
+              <th>Unit</th>
+              <th>Discount</th>
+              <th>Total</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {cartItems?.length > 0 ? (
+              cartItems.map((item, index) => {
+                const itemTotal = calculateTotal(
+                  item?.unitPrice,
+                  item?.quantity,
+                  item?.discount
+                );
+                return (
+                  <tr key={index}>
+                    <td className="text-center">{index + 1}</td>
+                    <td className="font-medium">
+                      {productList?.find((product) => product.id === item?.productId)?.name}
+                    </td>
+                    <td>Rs. {Number(item?.unitPrice).toFixed(2)}</td>
+                    <td>
+                      <input
+                        type="number"
+                        min="0"
+                        value={item?.quantity}
+                        onChange={(e) =>
+                          onQuantityChange(
+                            item?.id,
+                            parseInt(e.target.value, 10) || 0
+                          )
+                        }
+                        className="w-16 px-2 py-1 border border-slate-200 rounded-lg bg-slate-50 text-center text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </td>
+                    <td>
+                      {productList?.find((product) => product?.id === item?.productId)?.unit}
+                    </td>
+                    <td>{item?.discount}%</td>
+                    <td className="font-semibold text-slate-800">
+                      Rs. {Number(itemTotal).toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="7" className="text-center py-8 text-slate-400">
+                  Search for an invoice above to load return items.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

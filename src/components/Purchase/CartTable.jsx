@@ -7,75 +7,78 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
   };
 
   return (
-    <div className="w-full my-6 overflow-x-auto rounded-lg border border-purple-300 shadow-md">
-      <table className="min-w-full text-sm text-left text-gray-800 min-h-[15vh] max-h-[20vh]">
-        <thead className="bg-purple-700 text-white">
-          <tr>
-            <th className="px-4 py-2 text-center">#</th>
-            <th className="px-4 py-2">Product</th>
-            <th className="px-4 py-2">Cost</th>
-            <th className="px-4 py-2">Qty</th>
-            <th className="px-4 py-2">Unit</th>
-            <th className="px-4 py-2">Discount</th>
-            <th className="px-4 py-2">Total</th>
-            <th className="px-4 py-2">Action</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-purple-100 bg-white">
-          {cartItems.length > 0 ? (
-            cartItems.map((item, index) => {
-              const itemTotal = calculateTotal(
-                item.unitCost,
-                item.quantity,
-                item.discount
-              );
-
-              return (
-                <tr key={index} className="hover:bg-purple-50">
-                  <td className="px-4 py-2 text-center">{index + 1}</td>
-                  <td className="px-4 py-2">{item.name}</td>
-                  <td className="px-4 py-2">
-                    Rs. {Number(item.unitCost).toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">
-                    <input
-                      type="number"
-                      min="1"
-                      value={item.quantity}
-                      onChange={(e) =>
-                        onQuantityChange(
-                          item.id,
-                          parseInt(e.target.value, 10) || 1
-                        )
-                      }
-                      className="w-16 p-1 border border-purple-300 rounded bg-gray-100 text-center"
-                    />
-                  </td>
-                  <td className="px-4 py-2">{item.unit}</td>
-                  <td className="px-4 py-2">{item.discount}%</td>
-                  <td className="px-4 py-2">
-                    Rs. {Number(itemTotal).toFixed(2)}
-                  </td>
-                  <td className="px-4 py-2">
-                    <button
-                      onClick={() => onRemove(item.productId)}
-                      className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
-                    >
-                      Remove
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          ) : (
+    <div className="bg-white border border-slate-200 rounded-xl p-5">
+      <h3 className="pos-section-title mb-4">Cart Items</h3>
+      <div className="overflow-x-auto">
+        <table className="pos-table">
+          <thead>
             <tr>
-              <td className="px-4 py-2 text-center" colSpan="8">
-                No items in cart.
-              </td>
+              <th>#</th>
+              <th>Product</th>
+              <th>Cost</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th>Discount</th>
+              <th>Total</th>
+              <th>Action</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {cartItems.length > 0 ? (
+              cartItems.map((item, index) => {
+                const itemTotal = calculateTotal(
+                  item.unitCost,
+                  item.quantity,
+                  item.discount
+                );
+                return (
+                  <tr key={index}>
+                    <td className="text-center">{index + 1}</td>
+                    <td className="font-medium">{item.name}</td>
+                    <td>Rs. {Number(item.unitCost).toFixed(2)}</td>
+                    <td>
+                      <input
+                        type="number"
+                        min="1"
+                        value={item.quantity}
+                        onChange={(e) =>
+                          onQuantityChange(
+                            item.id,
+                            parseInt(e.target.value, 10) || 1
+                          )
+                        }
+                        className="w-16 px-2 py-1 border border-slate-200 rounded-lg bg-slate-50 text-center text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                    </td>
+                    <td>{item.unit}</td>
+                    <td>{item.discount}%</td>
+                    <td className="font-semibold text-slate-800">
+                      Rs. {Number(itemTotal).toFixed(2)}
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => onRemove(item.productId)}
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        title="Remove"
+                      >
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr>
+                <td colSpan="8" className="text-center py-8 text-slate-400">
+                  No items in cart. Add products above.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

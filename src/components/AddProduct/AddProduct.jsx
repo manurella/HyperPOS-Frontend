@@ -176,26 +176,26 @@ const AddProduct = () => {
       <div className="absolute inset-0 hyper-bg -z-10"></div>
 
       <div className="relative w-full max-w-sm md:max-w-2xl mx-auto z-10">
-        <div className="relative bg-black/40 backdrop-blur-md p-6 sm:p-8 rounded-lg border border-[#f472b6]/30 shadow-lg overflow-hidden">
+        <div className="relative bg-white backdrop-blur-md p-6 sm:p-8 rounded-lg border border-slate-200 shadow-lg overflow-hidden">
           <div className="text-center mb-6">
-            <h2 className="text-3xl sm:text-4xl font-bold hyper-text-glow text-white mb-1 sm:mb-2">
+            <h2 className="text-3xl sm:text-4xl font-bold hyper-text-glow text-slate-800 mb-1 sm:mb-2">
               {isUpdate ? "UPDATE" : "ADD"} <span className="text-[#f472b6]">PRODUCT</span>
             </h2>
-            <p className="text-purple-300/70 text-xs tracking-wider">
+            <p className="text-slate-700/70 text-xs tracking-wider">
               Fill the product details below
             </p>
           </div>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Product Select */}
             <div>
-              <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                 SELECT PRODUCT (For update)
               </label>
               <select
                 name="id"
                 value={form.id || "New Product"}
                 onChange={setProductToUpdate}
-                className="w-full px-3 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white focus:outline-none focus:border-[#f472b6] transition-all"
+                className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               >
                 <option value="New Product">New Product</option>
                 {products.map((product) => (
@@ -207,7 +207,7 @@ const AddProduct = () => {
             </div>
             {/* Barcode */}
             <div>
-              <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                 BARCODE
               </label>
               <div className="relative">
@@ -221,14 +221,14 @@ const AddProduct = () => {
                   onKeyDown={(e) => {
                     if (e.key === "Enter") e.preventDefault();
                   }}
-                  className="w-full px-10 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white placeholder-purple-300/50 focus:outline-none focus:border-[#f472b6] transition-all"
+                  className="w-full px-10 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 <BiBarcode
                   className="absolute left-3 top-3 text-xl text-purple-400 cursor-pointer"
                   onClick={() => barcodeRef.current?.focus()}
                 />
                 <span
-                  className="absolute right-3 top-2.5 text-xs bg-[#f472b6] px-3 py-1 rounded-full text-white cursor-pointer hover:bg-pink-600"
+                  className="absolute right-3 top-2.5 text-xs bg-[#f472b6] px-3 py-1 rounded-full text-slate-800 cursor-pointer hover:bg-pink-600"
                   onClick={() => barcodeRef.current?.focus()}
                 >
                   Scan
@@ -241,7 +241,7 @@ const AddProduct = () => {
             {/* Name & Unit */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                   PRODUCT NAME
                 </label>
                 <input
@@ -250,21 +250,21 @@ const AddProduct = () => {
                   placeholder="Enter Product Name"
                   value={form.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white placeholder-purple-300/50 focus:outline-none focus:border-[#f472b6] transition-all"
+                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 {errors.name && (
                   <p className="hyper-warning-text text-xs mt-1">{errors.name}</p>
                 )}
               </div>
               <div>
-                <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                   UNIT
                 </label>
                 <select
                   name="unit"
                   value={form.unit}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white focus:outline-none focus:border-[#f472b6] transition-all"
+                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 >
                   <option value="">Select unit</option>
                   {unitList.map((unit) => (
@@ -281,7 +281,7 @@ const AddProduct = () => {
             {/* Price & Discount */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                   PRICE
                 </label>
                 <input
@@ -290,14 +290,14 @@ const AddProduct = () => {
                   placeholder="Enter Price"
                   value={form.price}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white placeholder-purple-300/50 focus:outline-none focus:border-[#f472b6] transition-all"
+                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 {errors.price && (
                   <p className="hyper-warning-text text-xs mt-1">{errors.price}</p>
                 )}
               </div>
               <div>
-                <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                   DISCOUNT (%)
                 </label>
                 <input
@@ -306,7 +306,7 @@ const AddProduct = () => {
                   placeholder="Enter discount"
                   value={form.discount}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white placeholder-purple-300/50 focus:outline-none focus:border-[#f472b6] transition-all"
+                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 {errors.discount && (
                   <p className="hyper-warning-text text-xs mt-1">{errors.discount}</p>
@@ -315,14 +315,14 @@ const AddProduct = () => {
             </div>
             {/* Category */}
             <div>
-              <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                 CATEGORY
               </label>
               <select
                 name="categoryId"
                 value={form.categoryId}
                 onChange={handleChange}
-                className="w-full px-3 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white focus:outline-none focus:border-[#f472b6] transition-all"
+                className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               >
                 <option value="">Choose the Category</option>
                 {categories.map((category) => (
@@ -337,7 +337,7 @@ const AddProduct = () => {
             </div>
             {/* Description */}
             <div>
-              <label className="hyper-text text-purple-300 text-sm font-medium mb-1 block">
+              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
                 DESCRIPTION
               </label>
               <textarea
@@ -346,7 +346,7 @@ const AddProduct = () => {
                 value={form.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-3 py-2.5 rounded-sm bg-[#0f0326]/70 border border-[#f472b6]/30 text-white placeholder-purple-300/50 focus:outline-none focus:border-[#f472b6] transition-all"
+                className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
               ></textarea>
               {errors.description && (
                 <p className="hyper-warning-text text-xs mt-1">{errors.description}</p>
@@ -390,7 +390,7 @@ const AddProduct = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="hyper-button w-full py-2.5 text-white uppercase tracking-wider text-sm font-medium relative overflow-hidden"
+                className="hyper-button w-full py-2.5 text-slate-800 uppercase tracking-wider text-sm font-medium relative overflow-hidden"
               >
                 <span className="relative z-10 flex items-center justify-center">
                   {isLoading ? (

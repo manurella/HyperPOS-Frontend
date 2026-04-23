@@ -26,7 +26,7 @@ const HyperPOSInput = ( {
     <div className = { `mb-4 ${ className }` }>
       
       { label && (
-        <label className = "block mb-2 text-sm hyper-text text-hyper-accent">
+        <label className = "block mb-2 text-sm text-slate-700 font-medium">
           { label }
         </label>
       ) }
@@ -38,14 +38,9 @@ const HyperPOSInput = ( {
           value = { value }
           onChange = { onChange }
           placeholder = { placeholder }
-          className = "w-full bg-hyper-dark/50 border border-hyper-pink/30 text-white p-2 rounded focus:outline-none focus:border-hyper-pink focus:ring-1 focus:ring-hyper-pink/50"
-          style = { {
-            boxShadow : 'inset 0 0 5px rgba( 192, 38, 211, 0.2 )'
-          } }
+          className = "w-full bg-white border border-slate-300 text-slate-800 p-2 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           { ...props }
         />
-        
-        <div className = "absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-hyper-pink via-transparent to-hyper-pink opacity-50"></div>
         
       </div>
       

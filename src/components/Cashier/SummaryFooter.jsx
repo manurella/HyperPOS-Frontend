@@ -1,124 +1,89 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { CreditCard, Smartphone, Banknote } from "lucide-react";
+
+const PAYMENT_METHODS = [
+  { value: "CASH",           label: "Cash",     icon: <Banknote size={15} /> },
+  { value: "CARD",           label: "Card",     icon: <CreditCard size={15} /> },
+  { value: "MOBILE_BANKING", label: "M-Banking", icon: <Smartphone size={15} /> },
+];
 
 const SummaryFooter = ({
-  cartItems,
-  cash,
-  setCash,
-  change,
-  setChange,
-  paymentMethod,
-  setPaymentMethod,
+  cartItems, cash, setCash, change, setChange, paymentMethod, setPaymentMethod,
 }) => {
   const grandTotal = cartItems.reduce((sum, item) => {
-    const total = item.unitPrice * item.quantity - (item.discount || 0);
-    return sum + (total > 0 ? total : 0);
+    const t = item.unitPrice * item.quantity * (1 - (item.discount || 0) / 100);
+    return sum + Math.max(t, 0);
   }, 0);
 
   useEffect(() => {
-    const parsedCash = parseFloat(cash);
-    setChange(parsedCash - grandTotal || 0);
-    console.log("Change:", change);
+    setChange(parseFloat(cash) - grandTotal || 0);
   }, [cash, grandTotal]);
 
-  const handleCashChange = (e) => {
-    setCash(e.target.value);
-  };
-
-  const handlePaymentMethodChange = (e) => {
-    setPaymentMethod(e.target.value);
-  };
   return (
-    <div className="my-4 w-full">
-      <div className="flex justify-between text-lg font-semibold">
-        <span>Grand Total:</span>
-        <span>Rs. {grandTotal.toFixed(2)}</span>
-      </div>
+    <div className="bg-white border border-slate-200 rounded-xl p-5">
+      <h3 className="pos-section-title mb-5">Payment Summary</h3>
 
-      <div className="flex gap-4 mt-2">
-        <div className="flex items-center gap-2">
-          <label>Cash:</label>
-          <input
-            type="number"
-            value={Number(cash || 0)}
-            onChange={handleCashChange}
-            className="bg-red-700 p-1 rounded w-20 text-white"
-          />
+      <div className="space-y-5">
+
+        {/* Grand total */}
+        <div className="flex items-center justify-between bg-indigo-50 border border-indigo-100 rounded-xl px-5 py-4">
+          <span className="text-sm font-semibold text-slate-600">Grand Total</span>
+          <span className="text-2xl font-bold text-indigo-700">Rs {grandTotal.toFixed(2)}</span>
         </div>
 
-        <div className="flex items-center gap-2">
-          <label>Change:</label>
-          <input
-            type="text"
-            readOnly
-            value={(change || 0).toFixed(2)}
-            className="bg-green-700 p-1 rounded w-20 text-white"
-          />
-        </div>
-      </div>
-      <div className="flex gap-4 mt-2">
-        <div className="flex items-center gap-2">
-          <label>Payment Method:</label>
-          <div className="flex gap-2">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="CASH"
-                checked={paymentMethod === "CASH"}
-                onChange={handlePaymentMethodChange}
-                className="hidden"
-              />
-              <span
-                className={
-                  "px-3 py-1 rounded cursor-pointer text-white hover:bg-red-500 " +
-                  (paymentMethod === "CASH" ? "bg-red-700 " : " bg-blue-900 ")
-                }
-              >
-                Cash
-              </span>
+        {/* Cash + Change */}
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Cash Received
             </label>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="CARD"
-                checked={paymentMethod === "CARD"}
-                onChange={handlePaymentMethodChange}
-                className="hidden"
-              />
-              <span
-                className={
-                  "px-3 py-1 rounded cursor-pointer text-white hover:bg-red-500 " +
-                  (paymentMethod === "CARD" ? "bg-red-700 " : " bg-blue-900 ")
-                }
-              >
-                Card
-              </span>
+            <input
+              type="number" min="0"
+              value={Number(cash || 0)}
+              onChange={e => setCash(e.target.value)}
+              className="pos-input"
+              placeholder="0.00"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              Change
             </label>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="MOBILE_BANKING"
-                checked={paymentMethod === "MOBILE_BANKING"}
-                onChange={handlePaymentMethodChange}
-                className="hidden"
-              />
-              <span
-                className={
-                  "px-3 py-1 rounded cursor-pointer text-white hover:bg-red-500 " +
-                  (paymentMethod === "MOBILE_BANKING"
-                    ? "bg-red-700 "
-                    : " bg-blue-900 ")
-                }
-              >
-                M_Banking
-              </span>
-            </label>
+            <div className={`w-full px-3.5 py-2.5 rounded-lg border text-sm font-bold transition-all ${
+              (change || 0) < 0
+                ? "border-red-200 bg-red-50 text-red-600"
+                : "border-emerald-200 bg-emerald-50 text-emerald-700"
+            }`}>
+              Rs {(change || 0).toFixed(2)}
+            </div>
           </div>
         </div>
+
+        {/* Payment method */}
+        <div>
+          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">
+            Payment Method
+          </label>
+          <div className="flex gap-2">
+            {PAYMENT_METHODS.map(({ value, label, icon }) => (
+              <button
+                key={value} type="button"
+                onClick={() => setPaymentMethod(value)}
+                className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium border transition-all ${
+                  paymentMethod === value
+                    ? "bg-indigo-600 border-indigo-600 text-white shadow-sm"
+                    : "bg-white border-slate-200 text-slate-600 hover:border-indigo-300 hover:text-indigo-600"
+                }`}
+              >
+                {icon} {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
 };
+
 export default SummaryFooter;

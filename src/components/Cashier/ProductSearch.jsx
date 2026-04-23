@@ -1,194 +1,167 @@
 import { useState, useEffect, useRef } from "react";
+import { Search, Barcode, Plus } from "lucide-react";
 import { getProductStock } from "../../API/APIProducts";
 
 const ProductSearch = ({ onAdd, invoice, setProductList }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [barcode, setBarcode] = useState("");
+  const [searchTerm,        setSearchTerm]        = useState("");
+  const [barcode,           setBarcode]           = useState("");
   const [selectedProductId, setSelectedProductId] = useState("");
-  const [quantity, setQuantity] = useState(1);
-  const [suggestions, setSuggestions] = useState([]);
-  const [products, setProducts] = useState([]);
+  const [quantity,          setQuantity]          = useState(1);
+  const [suggestions,       setSuggestions]       = useState([]);
+  const [products,          setProducts]          = useState([]);
   const suggestionsRef = useRef(null);
 
-  // Load all products on mount
   useEffect(() => {
-    getProducts();
-    // eslint-disable-next-line
+    (async () => {
+      try {
+        const res = await getProductStock();
+        setProducts(res);
+        setProductList(res);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+      }
+    })();
   }, []);
-  const getProducts = async () => {
-    try {
-      const response = await getProductStock();
-      setProducts(response);
-      setProductList(response);
-    } catch (error) {
-      console.error("Error fetching product stock:", error);
-    }
-  };
 
-  // Update suggestion list as searchTerm changes
   useEffect(() => {
-    if (searchTerm) {
-      const filtered = products?.filter((p) =>
-        p?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
-      );
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
+    setSuggestions(searchTerm
+      ? products.filter(p => p?.name?.toLowerCase().includes(searchTerm.toLowerCase()))
+      : []);
   }, [searchTerm, products]);
 
-  // Update selected product from barcode
   useEffect(() => {
     if (barcode) {
-      const found = products?.find((p) => p?.barcode === barcode.trim());
-      if (found) {
-        setSelectedProductId(found?.id.toString());
-        setSearchTerm(found?.name);
-      }
+      const found = products.find(p => p?.barcode === barcode.trim());
+      if (found) { setSelectedProductId(found.id.toString()); setSearchTerm(found.name); }
     }
-    // eslint-disable-next-line
   }, [barcode]);
 
-  // Get selected product details
-  const selectedProduct = products?.find(
-    (p) => p?.id === parseInt(selectedProductId)
-  );
-  const unit = selectedProduct?.unit || "";
-  const price = selectedProduct?.price || 0;
-  const discount = selectedProduct?.discount || 0;
-  const stock = selectedProduct?.stock ?? "";
-  const amount = (price * quantity * (1 - discount / 100)).toFixed(2);
+  useEffect(() => {
+    const handler = e => {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(e.target))
+        setSuggestions([]);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
-  // Handle add product to cart
+  const selectedProduct = products.find(p => p?.id === parseInt(selectedProductId));
+  const unit     = selectedProduct?.unit || "—";
+  const price    = selectedProduct?.price || 0;
+  const discount = selectedProduct?.discount || 0;
+  const stock    = selectedProduct?.stock ?? "—";
+  const amount   = (price * quantity * (1 - discount / 100)).toFixed(2);
+
   const handleAdd = () => {
     if (selectedProduct && quantity > 0) {
       onAdd({
-        invoiceId: invoice?.id,
-        productId: selectedProduct?.id,
-        name: selectedProduct?.name,
-        unitPrice: selectedProduct?.price,
-        costPrice: selectedProduct?.cost,
-        unit: selectedProduct?.unit,
+        invoiceId:  invoice?.id,
+        productId:  selectedProduct.id,
+        name:       selectedProduct.name,
+        unitPrice:  selectedProduct.price,
+        costPrice:  selectedProduct.cost,
+        unit:       selectedProduct.unit,
         quantity,
-        discount: selectedProduct?.discount,
-        amount: parseFloat(amount),
+        discount:   selectedProduct.discount,
+        amount:     parseFloat(amount),
       });
-
-      setSearchTerm("");
-      setSelectedProductId("");
-      setQuantity(1);
-      setBarcode("");
-      setSuggestions([]);
+      setSearchTerm(""); setSelectedProductId(""); setQuantity(1);
+      setBarcode(""); setSuggestions([]);
     }
   };
 
-  // Handle click outside suggestions to close list
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target)
-      ) {
-        setSuggestions([]);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
-    <div className="bg-black/40 border border-[#f472b6]/20 rounded-2xl p-6 shadow-lg mt-6 mb-4">
-      <div className="space-y-3 relative">
-        {/* Name/Barcode Search */}
-        <div className="flex flex-col md:flex-row gap-2 w-full">
-          <input
-            type="text"
-            placeholder="Search Item by Name..."
-            value={searchTerm}
-            autoComplete="off"
-            onChange={(e) => {
-              setSearchTerm(e.target.value);
-              setSelectedProductId(""); // reset if typing new name
-            }}
-            className="border border-[#f472b6]/30 bg-[#0f0326]/80 text-white rounded-xl p-2 w-full focus:border-[#f472b6] shadow-inner transition placeholder-purple-300/70"
-          />
+    <div className="bg-white border border-slate-200 rounded-xl p-5">
+      <h3 className="pos-section-title mb-4">Add Product</h3>
 
-          <input
-            type="text"
-            placeholder="Scan or Enter Barcode..."
-            value={barcode}
-            onChange={(e) => setBarcode(e.target.value)}
-            className="border border-[#f472b6]/30 bg-[#0f0326]/80 text-white rounded-xl p-2 w-full focus:border-[#f472b6] shadow-inner transition placeholder-purple-300/70"
-          />
+      <div className="space-y-4">
+
+        {/* Search + Barcode row */}
+        <div className="flex flex-col sm:flex-row gap-3 relative" ref={suggestionsRef}>
+          <div className="relative flex-1">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text" placeholder="Search by name…"
+              value={searchTerm} autoComplete="off"
+              onChange={e => { setSearchTerm(e.target.value); setSelectedProductId(""); }}
+              className="pos-input pl-9"
+            />
+            {/* Dropdown */}
+            {suggestions.length > 0 && (
+              <ul className="absolute z-20 top-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                {suggestions.map(p => (
+                  <li key={p.id}
+                    onClick={() => { setSelectedProductId(p.id.toString()); setSearchTerm(p.name); setBarcode(p.barcode || ""); setSuggestions([]); }}
+                    className="flex items-center justify-between px-3 py-2.5 hover:bg-indigo-50 hover:text-indigo-700 cursor-pointer text-sm text-slate-700 transition-colors border-b border-slate-50 last:border-0">
+                    <span className="font-medium">{p.name}</span>
+                    <span className="text-xs text-slate-400 ml-4">Stock: {p.stock}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="relative sm:w-52">
+            <Barcode size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text" placeholder="Scan barcode…"
+              value={barcode}
+              onChange={e => setBarcode(e.target.value)}
+              className="pos-input pl-9"
+            />
+          </div>
         </div>
 
-        {/* Suggestions dropdown */}
-        {suggestions?.length > 0 && searchTerm && (
-          <ul
-            ref={suggestionsRef}
-            className="absolute z-20 left-0 right-0 border border-[#f472b6]/30 bg-[#1c0e41] max-h-48 overflow-y-auto rounded-xl shadow-lg mt-1"
-          >
-            {suggestions?.map((product) => (
-              <li
-                key={product?.id}
-                className="cursor-pointer hover:bg-[#f472b6]/40 px-3 py-2 flex justify-between text-white font-medium"
-                onClick={() => {
-                  setSelectedProductId(product?.id.toString());
-                  setSearchTerm(product?.name);
-                  setBarcode(product?.barcode);
-                  setSuggestions([]);
-                }}
-              >
-                <span>{product?.name}</span>
-                <span className="text-xs text-purple-300">
-                  | Stock: {product?.stock}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {/* Product quick info */}
-        <div className="mt-2 flex flex-col md:flex-row justify-between bg-[#1c0e41]/40 rounded-xl p-2 text-purple-200 text-sm font-semibold gap-2">
-          <span>Unit: <span className="text-white">{unit}</span></span>
-          <span>Price: <span className="text-white">Rs. {price?.toFixed(2)}</span></span>
-          <span>Discount: <span className="text-white">{discount}%</span></span>
-          <span>Stock: <span className="text-white">{stock}</span></span>
-          <span>Total: <span className="text-[#f472b6] font-bold">Rs. {amount}</span></span>
+        {/* Product details banner */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {[
+            { label: "Unit",     value: unit },
+            { label: "Price",    value: `Rs ${price.toFixed(2)}` },
+            { label: "Discount", value: `${discount}%` },
+            { label: "Stock",    value: stock },
+            { label: "Amount",   value: `Rs ${amount}`, highlight: true },
+          ].map(({ label, value, highlight }) => (
+            <div key={label} className={`rounded-lg px-3 py-2 ${highlight ? "bg-indigo-50 border border-indigo-100" : "bg-slate-50 border border-slate-200"}`}>
+              <p className={`text-xs font-semibold uppercase tracking-wide mb-0.5 ${highlight ? "text-indigo-500" : "text-slate-400"}`}>{label}</p>
+              <p className={`text-sm font-semibold ${highlight ? "text-indigo-700" : "text-slate-700"}`}>{value}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Select + Quantity + Add */}
-        <div className="mt-2 flex flex-col md:flex-row gap-2 w-full">
-          <select
-            value={selectedProductId}
-            onChange={(e) => setSelectedProductId(e.target.value)}
-            className="border border-[#f472b6]/30 bg-[#0f0326]/80 text-white rounded-xl p-2 w-full focus:border-[#f472b6] shadow-inner transition"
-          >
-            <option value="">Select Item</option>
-            {products?.map((product) => (
-              <option key={product?.id} value={product?.id}>
-                {product?.name} | Stock: {product?.stock}
-              </option>
-            ))}
-          </select>
+        {/* Select + Qty + Add */}
+        <div className="flex flex-col sm:flex-row gap-3 items-end">
+          <div className="flex-1">
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Product</label>
+            <select
+              value={selectedProductId}
+              onChange={e => setSelectedProductId(e.target.value)}
+              className="pos-input"
+            >
+              <option value="">Select product…</option>
+              {products.map(p => (
+                <option key={p.id} value={p.id}>{p.name} (Stock: {p.stock})</option>
+              ))}
+            </select>
+          </div>
 
-          <input
-            type="number"
-            min="1"
-            value={quantity}
-            onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-            className="border border-[#f472b6]/30 bg-[#0f0326]/80 text-white rounded-xl p-2 w-24 focus:border-[#f472b6] shadow-inner transition text-center"
-          />
+          <div className="sm:w-28">
+            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Quantity</label>
+            <input
+              type="number" min="1" value={quantity}
+              onChange={e => setQuantity(parseInt(e.target.value) || 1)}
+              className="pos-input text-center"
+            />
+          </div>
 
           <button
-            className="bg-[#f472b6] text-white px-4 py-2 rounded-xl font-bold hover:bg-pink-700 shadow transition w-full md:w-40"
-            onClick={handleAdd}
-            type="button"
+            onClick={handleAdd} type="button"
+            className="pos-btn-primary flex items-center gap-2 sm:self-end"
           >
-            Add
+            <Plus size={16} />
+            Add to Cart
           </button>
         </div>
+
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
+import { TrendingUp, ShoppingCart, Users, Package } from "lucide-react";
 
 import SummaryCard from "../components/SummaryCard";
 import SalesTrendChart from "../components/SalesTrendChart";
@@ -11,303 +12,227 @@ import TopSuppliersChart from "../components/TopSuppliersChart";
 import SalesPurchasesComparisonChart from "../components/SalesPurchasesComparisonChart";
 import UserActivity from "../components/UserActivity";
 import RecentPurchases from "../components/RecentPurchases";
-import ParticleBackground from "../../UI/ParticleBackground";
 import RevenueGrowthChart from "../components/RevenueGrowthChart";
 
-import { getInvoiceData } from "../data/invoiceData";
-import { getProductData } from "../data/productData";
+import { getInvoiceData }  from "../data/invoiceData";
+import { getProductData }  from "../data/productData";
 import { getCustomerData } from "../data/customerData";
-import { getSaleData } from "../data/salesData";
-import { getGRNData } from "../data/grnData";
+import { getSaleData }     from "../data/salesData";
+import { getGRNData }      from "../data/grnData";
 import { getPurchaseData } from "../data/purchaseData";
-import { getUserData } from "../data/userData";
+import { getUserData }     from "../data/userData";
 
 import HyperPOSLoader from "../../UI/HyperPOSLoader";
 
-function DashboardHome ( ) {
+/* ── Reusable section card ─────────────────────────────────── */
+function ChartCard({ title, children, className = "" }) {
+  return (
+    <div className={`bg-white border border-slate-200 rounded-xl shadow-card p-5 sm:p-6 ${className}`}>
+      <h2 className="pos-section-title mb-4">{title}</h2>
+      {children}
+    </div>
+  );
+}
 
-  // useStates for filtering data..
-  const [ dateRange , setDateRange ] = useState ( { startDate : "" , endDate : "" } );
-  const [ customerData , setCustomerData ] = useState ( [] );
-  const [ productData , setProductData ] = useState ( [] );
-  const [ , setSaleData ] = useState ( [] );
-  const [ invoiceData , setInvoiceData ] = useState ( [] );
-  const [ grnData , setGRNData ] = useState ( [] );
-  const [ , setPurchaseData ] = useState ( [] );
-  const [ userData , setUserData ] = useState ( [] );
-  const [ isLoading , setIsLoading ] = useState ( true );
+/* ── Main component ────────────────────────────────────────── */
+function DashboardHome() {
 
-  useEffect ( () => {
-    
-    const fetchData = async ( ) => {
-      
+  const [dateRange,    setDateRange]    = useState({ startDate: "", endDate: "" });
+  const [customerData, setCustomerData] = useState([]);
+  const [productData,  setProductData]  = useState([]);
+  const [,             setSaleData]     = useState([]);
+  const [invoiceData,  setInvoiceData]  = useState([]);
+  const [grnData,      setGRNData]      = useState([]);
+  const [,             setPurchaseData] = useState([]);
+  const [userData,     setUserData]     = useState([]);
+  const [isLoading,    setIsLoading]    = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
       try {
-        
-        setIsLoading ( true );
-        
-        // Fetching the data.
-        const customerResponse = await getCustomerData ();
-        setCustomerData ( customerResponse || [] );
-        
-        const productResponse = await getProductData ();
-        setProductData ( productResponse || [] );
-        
-        const saleResponse = await getSaleData ();
-        setSaleData ( saleResponse || [] );
-        
-        const invoiceResponse = await getInvoiceData ();
-        setInvoiceData ( invoiceResponse || [] );
-
-        const grnResponse = await getGRNData ();
-        setGRNData ( grnResponse || [] );
-        
-        const purchaseResponse = await getPurchaseData ();
-        setPurchaseData ( purchaseResponse || [] );
-        
-        const userResponse = await getUserData ();
-        setUserData ( userResponse || [] );
-        
-      } catch ( error ) {
-        
-        console.error ( "Error fetching dashboard data:" , error );
-        
+        setIsLoading(true);
+        const [customers, products, sales, invoices, grns, purchases, users] = await Promise.all([
+          getCustomerData(),
+          getProductData(),
+          getSaleData(),
+          getInvoiceData(),
+          getGRNData(),
+          getPurchaseData(),
+          getUserData(),
+        ]);
+        setCustomerData(customers || []);
+        setProductData(products  || []);
+        setSaleData(sales        || []);
+        setInvoiceData(invoices  || []);
+        setGRNData(grns          || []);
+        setPurchaseData(purchases|| []);
+        setUserData(users        || []);
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
       } finally {
-        
-        setIsLoading ( false );
-        
+        setIsLoading(false);
       }
     };
+    fetchData();
+  }, []);
 
-    fetchData ();
-    
-  } , [] );
+  /* ── Date filtering ── */
+  const filterByDate = (data, dateKey = "createdAt") => {
+    if (!dateRange.startDate || !dateRange.endDate) return data;
+    const start = new Date(dateRange.startDate);
+    const end   = new Date(dateRange.endDate);
+    end.setHours(23, 59, 59);
+    return data.filter(item => {
+      const d = new Date(item[dateKey] || item.updatedAt);
+      return d >= start && d <= end;
+    });
+  };
 
-  // Filtering data based on the date range.
-  const filteredInvoiceData = dateRange.startDate && dateRange.endDate
-    ? invoiceData.filter ( invoice => {
+  const filteredInvoiceData = filterByDate(invoiceData);
+  const filteredGRNData     = filterByDate(grnData);
 
-        const invoiceDate = new Date ( invoice.createdAt || invoice.updatedAt );
-        const startDate = new Date ( dateRange.startDate );
-        const endDate = new Date ( dateRange.endDate );
-        endDate.setHours ( 23 , 59 , 59 );
-        return invoiceDate >= startDate && invoiceDate <= endDate;
-
-      } )
-    : invoiceData;
-
-  const filteredGRNData = dateRange.startDate && dateRange.endDate
-    ? grnData.filter ( grn => {
-
-        const grnDate = new Date ( grn.createdAt || grn.updatedAt );
-        const startDate = new Date ( dateRange.startDate );
-        const endDate = new Date ( dateRange.endDate );
-        endDate.setHours ( 23 , 59 , 59 );
-        return grnDate >= startDate && grnDate <= endDate;
-
-      } )
-    : grnData;
+  const totalSales     = filteredInvoiceData.reduce((s, i) => s + (i.total || 0), 0);
+  const totalPurchases = filteredGRNData.reduce((s, i) => s + (i.total || 0), 0);
 
   return (
+    <div className="space-y-6">
 
-    <div className = "p-2 sm:p-4 md:p-6 relative">
-      
-      {/* Background particle effect. */}
-      <div className = "absolute inset-0 pointer-events-none">
-        <ParticleBackground 
-          count = { 20 } 
-          color = "#f472b6" 
-          opacity = { 0.05 } 
-          glowColor = "rgba( 192, 38, 211, 0.3 )"
-        />
-      </div>
-      
-      {/* Date Range Selector. */}
-      <div className = "mb-4 sm:mb-6 relative z-10">
-        <DateRangeSelector 
-          onRangeChange = { ( newRange ) => setDateRange ( newRange ) }
-          initialStartDate = { dateRange.startDate }
-          initialEndDate = { dateRange.endDate }
+      {/* ── Page header ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-slate-800">Dashboard</h1>
+          <p className="text-sm text-slate-500 mt-0.5">Overview of your business performance</p>
+        </div>
+        <DateRangeSelector
+          onRangeChange={(newRange) => setDateRange(newRange)}
+          initialStartDate={dateRange.startDate}
+          initialEndDate={dateRange.endDate}
         />
       </div>
 
-      { isLoading ? (
-        <div className = "flex items-center justify-center min-h-[60vh] backdrop-blur-sm bg-hyper-dark/30 rounded-xl border border-purple-500/20 p-4 sm:p-8">
-          <HyperPOSLoader 
-            size = "lg" 
-            text = "Syncing HyperPOS data..." 
-          />
+      {isLoading ? (
+        <div className="flex items-center justify-center min-h-[60vh] bg-white rounded-xl border border-slate-200 shadow-card">
+          <HyperPOSLoader size="lg" text="Loading dashboard data…" />
         </div>
       ) : (
         <>
-          {/* Summary Cards. */}
-          <div className = "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-10 relative z-10">
-            
-            <SummaryCard 
-              title = "Total Sales" 
-              value = { filteredInvoiceData.length > 0 ? `${ filteredInvoiceData.reduce ( ( sum , invoice ) => sum + ( invoice.total || 0 ) , 0 ).toLocaleString () }` : "Loading..." } 
-              subtitle = "From invoices" 
-              borderColor = "border-purple-600" 
-              isLoading = { isLoading }
+          {/* ── KPI cards ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+            <SummaryCard
+              title="Total Sales"
+              value={filteredInvoiceData.length > 0 ? `Rs ${totalSales.toLocaleString()}` : "—"}
+              subtitle="From invoices"
+              accentColor="bg-indigo-500"
+              icon={<TrendingUp size={18} />}
+              isLoading={isLoading}
             />
 
-            <SummaryCard 
-              title = "Total Purchases" 
-              value = { filteredGRNData.length > 0 ? `${ filteredGRNData.reduce ( ( sum , grn ) => sum + ( grn.total || 0 ) , 0 ).toLocaleString () }` : "Loading..." } 
-              subtitle = "From GRNs" 
-              borderColor = "border-blue-600" 
-              isLoading = { isLoading }
+            <SummaryCard
+              title="Total Purchases"
+              value={filteredGRNData.length > 0 ? `Rs ${totalPurchases.toLocaleString()}` : "—"}
+              subtitle="From GRNs"
+              accentColor="bg-sky-500"
+              icon={<ShoppingCart size={18} />}
+              isLoading={isLoading}
             />
 
-            <SummaryCard 
-              title = "Active Customers" 
-              value = { customerData.filter ( c => c.isActive !== false ).length > 0 ? customerData.filter ( c => c.isActive !== false ).length : "Loading..." } 
-              subtitle = "Registered accounts" 
-              borderColor = "border-green-600" 
-              isLoading = { isLoading }
+            <SummaryCard
+              title="Active Customers"
+              value={customerData.filter(c => c.isActive !== false).length || "—"}
+              subtitle="Registered accounts"
+              accentColor="bg-emerald-500"
+              icon={<Users size={18} />}
+              isLoading={isLoading}
             />
 
-            <SummaryCard 
-              title = "Active Products" 
-              value = { productData.filter ( p => p.isActive !== false ).length > 0 ? productData.filter ( p => p.isActive !== false ).length : "Loading..." } 
-              subtitle = "In inventory" 
-              borderColor = "border-amber-600" 
-              isLoading = { isLoading }
+            <SummaryCard
+              title="Active Products"
+              value={productData.filter(p => p.isActive !== false).length || "—"}
+              subtitle="In inventory"
+              accentColor="bg-amber-500"
+              icon={<Package size={18} />}
+              isLoading={isLoading}
             />
-            
+
           </div>
 
-          {/* Sales vs Purchases Chart. */}
-          <div className = "mb-4 sm:mb-6 md:mb-10 relative z-10">
-            
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 mb-4 sm:mb-6 md:mb-10 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Sales vs Purchases</h2>
-              
-              <div className = "h-48 sm:h-64 md:h-80 lg:h-96">
-                <SalesPurchasesComparisonChart 
-                  invoiceData = { filteredInvoiceData } 
-                  grnData = { filteredGRNData } 
-                  isLoading = { isLoading } 
-                />
-              </div>
-              
+          {/* ── Sales vs Purchases ── */}
+          <ChartCard title="Sales vs Purchases">
+            <div className="h-64 sm:h-80 lg:h-96">
+              <SalesPurchasesComparisonChart
+                invoiceData={filteredInvoiceData}
+                grnData={filteredGRNData}
+                isLoading={isLoading}
+              />
             </div>
-            
+          </ChartCard>
+
+          {/* ── 2-column charts ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+            <ChartCard title="Sales Trend">
+              <div className="h-64 sm:h-72">
+                <SalesTrendChart invoiceData={filteredInvoiceData} isLoading={isLoading} />
+              </div>
+            </ChartCard>
+
+            <ChartCard title="Purchase Trend">
+              <div className="h-64 sm:h-72">
+                <PurchaseTrendChart grnData={filteredGRNData} isLoading={isLoading} />
+              </div>
+            </ChartCard>
+
+            <ChartCard title="Top Products">
+              <div className="h-64 sm:h-72">
+                <TopProductsChart invoiceData={filteredInvoiceData} productData={productData} isLoading={isLoading} />
+              </div>
+            </ChartCard>
+
+            <ChartCard title="Top Suppliers">
+              <div className="h-64 sm:h-72">
+                <TopSuppliersChart grnData={filteredGRNData} isLoading={isLoading} />
+              </div>
+            </ChartCard>
+
           </div>
 
-          {/* Visualizations. */}
-          <div className = "grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6 mb-4 sm:mb-6 md:mb-10 relative z-10">
-            
-            {/* Sales Trend Chart. */}
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Sales Trend</h2>
-              
-              <div className = "h-48 sm:h-64 md:h-80">
-                <SalesTrendChart invoiceData = { filteredInvoiceData } isLoading = { isLoading } />
-              </div>
-              
+          {/* ── User Activity ── */}
+          <ChartCard title="User Activity">
+            <div className="h-64 sm:h-72">
+              <UserActivity userData={userData} invoiceData={filteredInvoiceData} isLoading={isLoading} />
             </div>
-            
-            {/* Purchase Trend Chart. */}
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Purchase Trend</h2>
-              
-              <div className = "h-48 sm:h-64 md:h-80">
-                <PurchaseTrendChart grnData = { filteredGRNData } isLoading = { isLoading } />
+          </ChartCard>
+
+          {/* ── Recent tables ── */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+            <ChartCard title="Recent Sales">
+              <div className="overflow-x-auto">
+                <RecentInvoices invoiceData={filteredInvoiceData} isLoading={isLoading} />
               </div>
-              
-            </div>
-            
-            {/* Top Products Chart. */}
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Top Products</h2>
-              
-              <div className = "h-48 sm:h-64 md:h-80">
-                <TopProductsChart invoiceData = { filteredInvoiceData } productData = { productData } isLoading = { isLoading } />
+            </ChartCard>
+
+            <ChartCard title="Recent Purchases">
+              <div className="overflow-x-auto">
+                <RecentPurchases grnData={filteredGRNData} isLoading={isLoading} />
               </div>
-              
-            </div>
-            
-            {/* Top Suppliers Chart. */}
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Top Suppliers</h2>
-              
-              <div className = "h-48 sm:h-64 md:h-80">
-                <TopSuppliersChart grnData = { filteredGRNData } isLoading = { isLoading } />
-              </div>
-              
-            </div>
-            
+            </ChartCard>
+
           </div>
 
-          {/* User Activity. */}
-          <div className = "mb-4 sm:mb-6 md:mb-10 relative z-10">
-            
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20 mx-auto max-w-4xl">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4 text-center" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>User Activity</h2>
-              
-              <div className = "h-48 sm:h-64 md:h-80">
-                <UserActivity userData = { userData } invoiceData = { filteredInvoiceData } isLoading = { isLoading } />
-              </div>
-              
+          {/* ── Revenue Growth ── */}
+          <ChartCard title="Revenue Growth">
+            <div className="h-64 sm:h-80 lg:h-96">
+              <RevenueGrowthChart invoiceData={filteredInvoiceData} isLoading={isLoading} />
             </div>
-            
-          </div>
+          </ChartCard>
 
-          <div className = "grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6 relative z-10">
-            
-            {/* Recent Sales Table. */}
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Recent Sales</h2>
-              
-              <div className = "overflow-x-auto">
-                <RecentInvoices invoiceData = { filteredInvoiceData } isLoading = { isLoading } />
-              </div>
-              
-            </div>
-            
-            {/* Recent Purchases Table. */}
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Recent Purchases</h2>
-              
-              <div className = "overflow-x-auto">
-                <RecentPurchases grnData = { filteredGRNData } isLoading = { isLoading } />
-              </div>
-              
-            </div>
-            
-          </div>
-
-          {/* Revenue Growth Chart. */}
-          <div className = "mt-10 sm:mb-6 md:mb-10 relative z-10">
-            
-            <div className = "bg-white/10 backdrop-blur-sm rounded-xl shadow-md p-3 sm:p-4 md:p-6 border border-purple-500/20">
-              
-              <h2 className = "text-base sm:text-lg md:text-xl font-semibold text-white mb-2 sm:mb-3 md:mb-4" style = { { textShadow : "0 0 5px rgba( 192, 38, 211, 0.7 )" } }>Revenue Growth</h2>
-              
-              <div className = "h-48 sm:h-64 md:h-80 lg:h-96">
-                <RevenueGrowthChart 
-                  invoiceData = { filteredInvoiceData } 
-                  isLoading = { isLoading } 
-                />
-              </div>
-              
-            </div>
-            
-          </div>
         </>
       )}
+
     </div>
-
   );
-
 }
 
 export default DashboardHome;

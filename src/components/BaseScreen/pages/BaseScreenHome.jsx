@@ -1,501 +1,273 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { 
-  Calculator, RefreshCw, UserPlus, ChevronRight, 
-  DollarSign, ShoppingBag, FileText, AlertCircle, Eye
+import {
+  Calculator, RefreshCw, UserPlus, ChevronRight,
+  TrendingUp, ShoppingBag, FileText, AlertCircle, Eye, X,
 } from "lucide-react";
-import ParticleBackground from "../../UI/ParticleBackground";
-import { getSaleData } from "../../Dashboard/data/salesData";
-import { getProductData } from "../../Dashboard/data/productData";
-import { getInvoiceData } from "../../Dashboard/data/invoiceData";
+import { getSaleData }     from "../../Dashboard/data/salesData";
+import { getProductData }  from "../../Dashboard/data/productData";
+import { getInvoiceData }  from "../../Dashboard/data/invoiceData";
+
+/* ── Sale details modal ── */
+function SaleModal({ sale, onClose }) {
+  const fmt = d => d ? new Date(d).toLocaleString() : "—";
+  return (
+    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden hyper-modal-appear">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+          <h2 className="text-base font-semibold text-slate-800">Sale Details</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+            <X size={18} />
+          </button>
+        </div>
+
+        <div className="max-h-[60vh] overflow-y-auto px-6 py-5 space-y-4">
+          {/* Invoice info */}
+          <div>
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-1 border-b border-slate-100">Invoice</h3>
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              {[
+                ["Invoice ID", sale.invoice.id],
+                ["Customer ID", sale.invoice.customerId],
+                ["Payment", sale.invoice.paymentMethod],
+                ["Date", fmt(sale.invoice.updatedAt)],
+              ].map(([label, val]) => (
+                <div key={label}>
+                  <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-0.5">{label}</p>
+                  <p className="text-slate-700">{val}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Total */}
+          <div className="bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3 flex items-center justify-between">
+            <span className="text-sm text-slate-600 font-medium">Total</span>
+            <span className="text-lg font-bold text-emerald-600">Rs {sale.invoice.total.toLocaleString()}</span>
+          </div>
+
+          {/* Items */}
+          <div>
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-1 border-b border-slate-100">
+              Items ({sale.items.length})
+            </h3>
+            <div className="space-y-2">
+              {sale.items.map(item => (
+                <div key={item.id} className="bg-slate-50 rounded-lg px-4 py-3 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-slate-700">Product #{item.productId}</p>
+                    <p className="text-xs text-slate-400">Qty: {item.quantity} · Unit: Rs {item.unitPrice?.toLocaleString()} · Disc: {item.discount}%</p>
+                  </div>
+                  <p className="text-sm font-semibold text-emerald-600">Rs {item.amount?.toLocaleString()}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+          <button onClick={onClose} className="pos-btn-primary">Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Stat card ── */
+function StatCard({ icon, label, value, accentColor, isLoading }) {
+  return (
+    <div className={`bg-white border border-slate-200 rounded-xl overflow-hidden`}>
+      <div className={`h-1 w-full ${accentColor}`} />
+      <div className="px-4 py-4">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{label}</span>
+          <span className="text-slate-300">{icon}</span>
+        </div>
+        {isLoading
+          ? <div className="h-7 w-24 bg-slate-100 animate-pulse rounded-md" />
+          : <p className="text-2xl font-bold text-slate-800 tracking-tight">{value}</p>
+        }
+      </div>
+    </div>
+  );
+}
+
+/* ── Nav card ── */
+const navCards = [
+  { title: "Cashier", desc: "Process sales and generate invoices", icon: <Calculator size={24} />, path: "/basescreen/cashier" },
+  { title: "Invoice Return", desc: "Process returns and refunds", icon: <RefreshCw size={24} />, path: "/basescreen/invoice-return" },
+  { title: "Customer Registration", desc: "Register new customers in the system", icon: <UserPlus size={24} />, path: "/basescreen/customer-registration" },
+];
 
 function BaseScreenHome() {
-  // States for data
-  const [salesData, setSalesData] = useState([]);
+  const [salesData,   setSalesData]   = useState([]);
   const [productData, setProductData] = useState([]);
-  const [, setInvoiceData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [stats, setStats] = useState({
-    todaySales: 0,
-    transactionCount: 0,
-    openInvoices: 0,
-    lowStockItems: 0
-  });
+  const [isLoading,   setIsLoading]   = useState(true);
+  const [stats,       setStats]       = useState({ todaySales: 0, transactionCount: 0, openInvoices: 0, lowStockItems: 0 });
   const [selectedSale, setSelectedSale] = useState(null);
 
-  // Fetch data on component mount
   useEffect(() => {
-    const fetchData = async () => {
+    (async () => {
       try {
         setIsLoading(true);
-        
-        // Fetch all required data
-        const sales = await getSaleData();
-        const products = await getProductData();
-        const invoices = await getInvoiceData();
-        
-        setSalesData(sales || []);
+        const [sales, products, invoices] = await Promise.all([getSaleData(), getProductData(), getInvoiceData()]);
+        setSalesData(sales   || []);
         setProductData(products || []);
-        setInvoiceData(invoices || []);
-        
-        // Calculate stats
-        calculateStats(sales, products, invoices);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+        const todaySales = (sales || []).filter(s => {
+          const d = new Date(s.invoice?.createdAt || s.invoice?.updatedAt);
+          d.setHours(0, 0, 0, 0);
+          return d.getTime() === today.getTime();
+        });
+
+        setStats({
+          todaySales: todaySales.reduce((t, s) => t + (s.invoice?.total || 0), 0),
+          transactionCount: todaySales.length,
+          openInvoices: (invoices || []).filter(i => i.status === "PENDING" || i.status === "UNPAID").length,
+          lowStockItems: (products || []).filter(p => (p.quantity || 0) < 10).length,
+        });
+      } catch (err) {
+        console.error("Error fetching data:", err);
       } finally {
         setIsLoading(false);
       }
-    };
-    
-    fetchData();
+    })();
   }, []);
-  
-  // Calculate statistics from the fetched data
-  const calculateStats = (sales, products, invoices) => {
-    // Get today's date at midnight for comparison
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    // Filter sales for today
-    const todaySales = sales?.filter(sale => {
-      const saleDate = new Date(sale.invoice?.createdAt || sale.invoice?.updatedAt);
-      saleDate.setHours(0, 0, 0, 0);
-      return saleDate.getTime() === today.getTime();
-    }) || [];
-    
-    // Calculate total sales amount for today
-    const todaySalesTotal = todaySales.reduce((total, sale) => {
-      return total + (sale.invoice?.total || 0);
-    }, 0);
-    
-    // Count open invoices (assuming unpaid or pending status)
-    const openInvoicesCount = invoices?.filter(invoice => 
-      invoice.status === 'PENDING' || invoice.status === 'UNPAID'
-    ).length || 0;
-    
-    // Count low stock items (assuming a threshold of 10)
-    const lowStockThreshold = 10;
-    const lowStockCount = products?.filter(product => 
-      (product.quantity || 0) < lowStockThreshold
-    ).length || 0;
-    
-    // Update stats state
-    setStats({
-      todaySales: todaySalesTotal,
-      transactionCount: todaySales.length,
-      openInvoices: openInvoicesCount,
-      lowStockItems: lowStockCount
-    });
-  };
 
-  // Function to format date for display in the table
-  const formatDate = (dateString) => {
-    if (!dateString) return "—";
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
-
-  // View Modal for sale details
-  const ViewModal = ({ sale, onClose }) => {
-    // Function to format date strings
-    const formatDateTime = (dateString) => {
-      if (!dateString) return "Not available";
-      const date = new Date(dateString);
-      return date.toLocaleString();
-    };
-
-    return (
-      <div className="fixed inset-0 top-14 sm:top-16 bg-black/70 backdrop-blur-sm flex justify-center items-center z-40 p-4 sm:p-8">
-        <div className="bg-hyper-dark/90 rounded-2xl shadow-2xl w-full max-w-md overflow-hidden relative border border-purple-500/30">
-          {/* Header */}
-          <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-purple-500/30">
-            <div className="w-full text-center">
-              <h2 className="text-xl sm:text-2xl font-bold text-white hyper-text-glow">Sale Details</h2>
-            </div>
-            <button
-              onClick={onClose}
-              className="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-xl cursor-pointer"
-            >
-              &times;
-            </button>
-          </div>
-
-          {/* Container with padding to create space for scrollbar */}
-          <div className="px-2">
-            {/* Scrollable content area with purple-themed scrollbar */}
-            <div className="max-h-[60vh] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-purple-900/30 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-purple-500/50 hover:[&::-webkit-scrollbar-thumb]:bg-purple-400/70 p-4 sm:p-6">
-              <div className="space-y-4 sm:space-y-5">
-                {/* Invoice Information */}
-                                <div className="bg-purple-900/30 p-3 sm:p-4 rounded-xl border border-purple-500/30">
-                  <h3 className="text-md font-semibold text-purple-300 mb-2 sm:mb-3 text-center">Invoice Information</h3>
-                  <div className="grid grid-cols-2 gap-3 text-sm">
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-400">Invoice ID</span>
-                      <span className="p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{sale.invoice.id}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-400">Customer ID</span>
-                      <span className="p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{sale.invoice.customerId}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-400">Payment Method</span>
-                      <span className="p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{sale.invoice.paymentMethod}</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-400">Date</span>
-                      <span className="p-2 bg-hyper-dark/50 rounded-md shadow-sm text-white">{formatDateTime(sale.invoice.updatedAt)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Financial Information */}
-                <div className="bg-green-900/30 p-3 sm:p-4 rounded-xl border border-green-500/30">
-                  <h3 className="text-md font-semibold text-green-300 mb-2 sm:mb-3 text-center">Financial Information</h3>
-                  <div className="grid grid-cols-1 gap-3 text-sm">
-                    <div className="flex flex-col">
-                      <span className="font-medium text-gray-400">Total Value</span>
-                      <span className="p-2 bg-hyper-dark/50 rounded-md shadow-sm font-semibold text-green-400">
-                        Rs {sale.invoice.total.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Items Information */}
-                <div className="bg-blue-900/30 p-3 sm:p-4 rounded-xl border border-blue-500/30">
-                  <h3 className="text-md font-semibold text-blue-300 mb-2 sm:mb-3 text-center">Items ({sale.items.length})</h3>
-                  <div className="space-y-3">
-                    {sale.items.map((item) => (
-                      <div key={item.id} className="bg-hyper-dark/50 p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-blue-500/20">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="font-semibold text-blue-300">Item #{item.id}</span>
-                          <span className="text-xs px-2 py-1 bg-blue-900/50 text-blue-300 rounded-full border border-blue-500/30">
-                            Product #{item.productId}
-                          </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 text-sm">
-                          <div className="flex items-center gap-1">
-                            <span className="font-medium text-gray-400">Quantity:</span> 
-                            <span className="ml-auto text-white">{item.quantity}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="font-medium text-gray-400">Unit Price:</span> 
-                            <span className="ml-auto text-white">Rs {item.unitPrice.toLocaleString()}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="font-medium text-gray-400">Discount:</span> 
-                            <span className="ml-auto text-white">{item.discount}%</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <span className="font-medium text-gray-400">Amount:</span> 
-                            <span className="ml-auto font-semibold text-green-400">Rs {item.amount.toLocaleString()}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-purple-500/30">
-            <div className="flex justify-center">
-              <button
-                onClick={onClose}
-                className="px-4 sm:px-6 py-2 bg-purple-700 text-white rounded-lg hover:bg-purple-600 transition duration-200 cursor-pointer shadow-sm"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Main navigation cards
-  const mainNavCards = [
-    {
-      title: "Cashier",
-      description: "Process sales and generate invoices for customers",
-      icon: <Calculator size={28} />,
-      path: "/basescreen/cashier",
-      color: "from-purple-600/20 to-pink-600/20",
-      borderColor: "border-purple-500/30",
-      iconColor: "text-purple-400"
-    },
-    {
-      title: "Invoice Return",
-      description: "Process returns and refunds for customer invoices",
-      icon: <RefreshCw size={28} />,
-      path: "/basescreen/invoice-return",
-      color: "from-pink-600/20 to-red-600/20",
-      borderColor: "border-pink-500/30",
-      iconColor: "text-pink-400"
-    },
-    {
-      title: "Customer Registration",
-      description: "Register new customers in the system",
-      icon: <UserPlus size={28} />,
-      path: "/basescreen/customer-registration",
-      color: "from-blue-600/20 to-purple-600/20",
-      borderColor: "border-blue-500/30",
-      iconColor: "text-blue-400"
-    }
-  ];
+  const fmt = d => d ? new Date(d).toLocaleDateString() : "—";
 
   return (
-    <div className="p-2 sm:p-4 md:p-6 relative">
-      {/* Background particle effect */}
-      <div className="absolute inset-0 pointer-events-none">
-        <ParticleBackground 
-          count={20} 
-          color="#f472b6" 
-          opacity={0.05} 
-          glowColor="rgba(192, 38, 211, 0.3)"
-        />
+    <div className="space-y-6">
+
+      {/* Page header */}
+      <div>
+        <h1 className="text-xl font-bold text-slate-800">Cashier Dashboard</h1>
+        <p className="text-sm text-slate-500 mt-0.5">Today's overview and quick access</p>
       </div>
-      
-      {/* Stats Cards */}
-      <div className="mb-6 relative z-10">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-green-500/30">
-            <div className="flex items-center mb-1">
-              <DollarSign size={16} className="mr-2 text-green-400" />
-              <span className="text-gray-300 text-sm">Today's Sales</span>
-            </div>
-            <div className="text-xl font-bold text-white">
-              {isLoading ? (
-                <div className="h-6 w-24 bg-white/20 animate-pulse rounded"></div>
-              ) : (
-                `$${stats.todaySales.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`
-              )}
-            </div>
-          </div>
-          
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-blue-500/30">
-            <div className="flex items-center mb-1">
-              <ShoppingBag size={16} className="mr-2 text-blue-400" />
-              <span className="text-gray-300 text-sm">Transactions</span>
-            </div>
-            <div className="text-xl font-bold text-white">
-              {isLoading ? (
-                <div className="h-6 w-16 bg-white/20 animate-pulse rounded"></div>
-              ) : (
-                stats.transactionCount
-              )}
-            </div>
-          </div>
-          
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-amber-500/30">
-            <div className="flex items-center mb-1">
-              <FileText size={16} className="mr-2 text-amber-400" />
-              <span className="text-gray-300 text-sm">Open Invoices</span>
-            </div>
-            <div className="text-xl font-bold text-white">
-              {isLoading ? (
-                <div className="h-6 w-16 bg-white/20 animate-pulse rounded"></div>
-              ) : (
-                stats.openInvoices
-              )}
-            </div>
-          </div>
-          
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3 border border-red-500/30">
-            <div className="flex items-center mb-1">
-              <AlertCircle size={16} className="mr-2 text-red-400" />
-              <span className="text-gray-300 text-sm">Low Stock Items</span>
-            </div>
-            <div className="text-xl font-bold text-white">
-              {isLoading ? (
-                <div className="h-6 w-16 bg-white/20 animate-pulse rounded"></div>
-              ) : (
-                stats.lowStockItems
-              )}
-            </div>
-          </div>
-        </div>
+
+      {/* KPI cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard icon={<TrendingUp size={18} />}  label="Today's Sales"  value={`Rs ${stats.todaySales.toLocaleString()}`} accentColor="bg-indigo-500" isLoading={isLoading} />
+        <StatCard icon={<ShoppingBag size={18} />} label="Transactions"   value={stats.transactionCount}                   accentColor="bg-sky-500"    isLoading={isLoading} />
+        <StatCard icon={<FileText size={18} />}    label="Open Invoices"  value={stats.openInvoices}                       accentColor="bg-amber-500"  isLoading={isLoading} />
+        <StatCard icon={<AlertCircle size={18} />} label="Low Stock Items" value={stats.lowStockItems}                    accentColor="bg-red-500"    isLoading={isLoading} />
       </div>
-      
-      {/* Main Navigation Cards */}
-      <div className="mb-6 relative z-10">
-        <h2 className="text-lg font-semibold text-white mb-3" style={{ textShadow: "0 0 5px rgba(192, 38, 211, 0.7)" }}>
-          Point of Sale
-        </h2>
-        
+
+      {/* Nav cards */}
+      <div>
+        <h2 className="pos-section-title mb-4">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {mainNavCards.map((card, index) => (
-            <Link 
-              key={index}
-              to={card.path}
-              className={`bg-gradient-to-br ${card.color} backdrop-blur-sm rounded-xl p-5 border ${card.borderColor} shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden`}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/0 to-pink-600/0 opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-              
-              <div className={`${card.iconColor} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+          {navCards.map((card, i) => (
+            <Link key={i} to={card.path}
+              className="bg-white border border-slate-200 rounded-xl p-5 hover:border-indigo-300 hover:shadow-md transition-all duration-200 group flex flex-col">
+              <div className="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-500 mb-4 group-hover:bg-indigo-100 transition-colors">
                 {card.icon}
               </div>
-              
-              <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-pink-200 transition-colors">
-                {card.title}
-              </h3>
-              
-              <p className="text-gray-300 text-sm mb-4">
-                {card.description}
-              </p>
-              
-              <div className="flex items-center text-pink-300 text-sm font-medium mt-auto group-hover:translate-x-1 transition-transform duration-300">
+              <h3 className="text-base font-semibold text-slate-800 mb-1 group-hover:text-indigo-600 transition-colors">{card.title}</h3>
+              <p className="text-sm text-slate-500 flex-1">{card.desc}</p>
+              <div className="flex items-center gap-1 text-indigo-500 text-sm font-medium mt-4 group-hover:gap-2 transition-all">
                 <span>Open</span>
-                <ChevronRight size={16} className="ml-1" />
+                <ChevronRight size={15} />
               </div>
-              
-              <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500/0 via-pink-500/50 to-purple-500/0 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
             </Link>
           ))}
         </div>
       </div>
-      
-      {/* Recent Transactions Table */}
-      <div className="mb-6 relative z-10">
-        <h2 className="text-lg font-semibold text-white mb-3" style={{ textShadow: "0 0 5px rgba(192, 38, 211, 0.7)" }}>
-          Recent Transactions
-        </h2>
-        
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl shadow-md overflow-hidden border border-purple-500/20">
-          {isLoading ? (
-            // Loading skeleton
-            <div className="p-4">
-              <div className="animate-pulse space-y-4">
-                <div className="h-10 bg-white/10 rounded"></div>
-                <div className="h-10 bg-white/10 rounded"></div>
-                <div className="h-10 bg-white/10 rounded"></div>
-                <div className="h-10 bg-white/10 rounded"></div>
-                <div className="h-10 bg-white/10 rounded"></div>
-              </div>
-            </div>
-          ) : (
-            <table className="w-full text-sm text-left">
+
+      {/* Recent transactions */}
+      <div>
+        <h2 className="pos-section-title mb-4">Recent Transactions</h2>
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="pos-table">
               <thead>
-                <tr className="bg-purple-900/70 text-white shadow-sm">
-                  <th className="p-3 whitespace-nowrap rounded-tl-lg">Invoice ID</th>
-                  <th className="p-3 whitespace-nowrap">Customer ID</th>
-                  <th className="p-3 whitespace-nowrap">Total</th>
-                  <th className="p-3 whitespace-nowrap hidden sm:table-cell">Payment</th>
-                  <th className="p-3 whitespace-nowrap hidden md:table-cell">Date</th>
-                  <th className="p-3 text-center whitespace-nowrap rounded-tr-lg">View</th>
+                <tr>
+                  <th>Invoice ID</th>
+                  <th>Customer ID</th>
+                  <th>Total</th>
+                  <th className="hidden sm:table-cell">Payment</th>
+                  <th className="hidden md:table-cell">Date</th>
+                  <th className="text-center">View</th>
                 </tr>
               </thead>
               <tbody>
-                {salesData && salesData.length > 0 ? (
-                  salesData.slice(0, 5).map((sale) => (
-                    <tr key={sale.invoice.id} className="border-t border-purple-500/20 text-white hover:bg-white/5 transition duration-200 ease-in-out">
-                      <td className="p-3 font-medium">{sale.invoice.id}</td>
-                      <td className="p-3">{sale.invoice.customerId}</td>
-                      <td className="p-3 font-semibold text-green-400">Rs {sale.invoice.total.toLocaleString()}</td>
-                      <td className="p-3 hidden sm:table-cell">{sale.invoice.paymentMethod}</td>
-                      <td className="p-3 hidden md:table-cell">{formatDate(sale.invoice.updatedAt)}</td>
-                      <td className="p-3 text-center">
-                        <button
-                          onClick={() => setSelectedSale(sale)}
-                          className="text-purple-400 hover:text-purple-300 cursor-pointer transition"
-                          aria-label="View sale details"
-                        >
-                          <Eye size={18} />
+                {isLoading ? (
+                  Array(5).fill(0).map((_, i) => (
+                    <tr key={i}>
+                      {Array(6).fill(0).map((__, j) => (
+                        <td key={j}><div className="h-4 bg-slate-100 animate-pulse rounded" /></td>
+                      ))}
+                    </tr>
+                  ))
+                ) : salesData.length > 0 ? (
+                  salesData.slice(0, 8).map(sale => (
+                    <tr key={sale.invoice.id}>
+                      <td className="font-medium text-slate-500 text-xs">{sale.invoice.id}</td>
+                      <td className="text-slate-700">{sale.invoice.customerId}</td>
+                      <td className="font-semibold text-emerald-600">Rs {sale.invoice.total?.toLocaleString()}</td>
+                      <td className="hidden sm:table-cell text-slate-500">{sale.invoice.paymentMethod}</td>
+                      <td className="hidden md:table-cell text-slate-500">{fmt(sale.invoice.updatedAt)}</td>
+                      <td className="text-center">
+                        <button onClick={() => setSelectedSale(sale)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors">
+                          <Eye size={16} />
                         </button>
                       </td>
                     </tr>
                   ))
                 ) : (
-                  // If no sales, still show 5 empty rows to maintain consistent height
-                  Array(5).fill(0).map((_, index) => (
-                    <tr key={index} className="border-t border-purple-500/20 text-white">
-                      <td colSpan="6" className="p-3 text-center font-medium text-gray-400">
-                        {index === 2 ? "No sales found" : "\u00A0"}
-                      </td>
-                    </tr>
-                  ))
+                  <tr><td colSpan="6" className="py-10 text-center text-slate-400">No transactions found</td></tr>
                 )}
               </tbody>
             </table>
-          )}
+          </div>
         </div>
       </div>
-      
-      {/* Low Stock Items Table */}
-      <div className="mb-6 relative z-10">
-        <h2 className="text-lg font-semibold text-white mb-3" style={{ textShadow: "0 0 5px rgba(192, 38, 211, 0.7)" }}>
-          Low Stock Items
-        </h2>
-        
-        <div className="bg-white/5 backdrop-blur-sm rounded-xl shadow-md overflow-hidden border border-red-500/20">
-          {isLoading ? (
-            // Loading skeleton
-            <div className="p-4">
-              <div className="animate-pulse space-y-4">
-                <div className="h-10 bg-white/10 rounded"></div>
-                <div className="h-10 bg-white/10 rounded"></div>
-                <div className="h-10 bg-white/10 rounded"></div>
-              </div>
-            </div>
-          ) : (
-            <table className="w-full text-sm text-left">
+
+      {/* Low stock */}
+      <div>
+        <h2 className="pos-section-title mb-4">Low Stock Alert</h2>
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="pos-table">
               <thead>
-                <tr className="bg-red-900/70 text-white shadow-sm">
-                  <th className="p-3 whitespace-nowrap rounded-tl-lg">Product ID</th>
-                  <th className="p-3 whitespace-nowrap">Name</th>
-                  <th className="p-3 whitespace-nowrap">Current Stock</th>
-                  <th className="p-3 whitespace-nowrap hidden sm:table-cell">Price</th>
-                  <th className="p-3 text-center whitespace-nowrap rounded-tr-lg">Status</th>
+                <tr>
+                  <th>Product ID</th>
+                  <th>Name</th>
+                  <th>Stock</th>
+                  <th className="hidden sm:table-cell">Price</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {productData && productData.filter(product => (product.quantity || 0) < 10).length > 0 ? (
-                  productData
-                    .filter(product => (product.quantity || 0) < 10) // Filter low stock items
-                    .slice(0, 5) // Show exactly 5 items
-                    .map((product) => (
-                      <tr key={product.id} className="border-t border-red-500/20 text-white hover:bg-white/5 transition duration-200 ease-in-out">
-                        <td className="p-3 font-medium">{product.id}</td>
-                        <td className="p-3">{product.name}</td>
-                        <td className="p-3 font-semibold text-red-400">{product.quantity || 0}</td>
-                        <td className="p-3 hidden sm:table-cell">Rs {(product.price || 0).toLocaleString()}</td>
-                        <td className="p-3 text-center">
-                          <span className="px-2 py-1 bg-red-900/50 text-red-300 rounded-full text-xs border border-red-500/30">
-                            Low Stock
-                          </span>
-                        </td>
-                      </tr>
-                    ))
-                ) : (
-                  // If no low stock items, still show 5 empty rows to maintain consistent height
-                  Array(5).fill(0).map((_, index) => (
-                    <tr key={index} className="border-t border-red-500/20 text-white">
-                      <td colSpan="5" className="p-3 text-center font-medium text-gray-400">
-                        {index === 2 ? "No low stock items found" : "\u00A0"}
-                      </td>
+                {isLoading ? (
+                  Array(3).fill(0).map((_, i) => (
+                    <tr key={i}>{Array(5).fill(0).map((__, j) => <td key={j}><div className="h-4 bg-slate-100 animate-pulse rounded" /></td>)}</tr>
+                  ))
+                ) : productData.filter(p => (p.quantity || 0) < 10).length > 0 ? (
+                  productData.filter(p => (p.quantity || 0) < 10).slice(0, 5).map(p => (
+                    <tr key={p.id}>
+                      <td className="font-medium text-slate-500 text-xs">{p.id}</td>
+                      <td className="text-slate-700 font-medium">{p.name}</td>
+                      <td className="font-bold text-red-500">{p.quantity || 0}</td>
+                      <td className="hidden sm:table-cell text-slate-500">Rs {(p.price || 0).toLocaleString()}</td>
+                      <td><span className="pos-badge-danger">Low Stock</span></td>
                     </tr>
                   ))
+                ) : (
+                  <tr><td colSpan="5" className="py-10 text-center text-slate-400">All items are well stocked</td></tr>
                 )}
               </tbody>
             </table>
-          )}
+          </div>
         </div>
       </div>
-      
-      {/* Footer */}
-      <div className="text-center text-xs text-gray-400 mt-8 relative z-10">
-        <p>HyperPOS &copy; {new Date().getFullYear()} | All Rights Reserved</p>
-        <p className="mt-1">Version 1.0.0</p>
-      </div>
-      
-      {/* View Modal */}
-      {selectedSale && <ViewModal sale={selectedSale} onClose={() => setSelectedSale(null)} />}
+
+      {selectedSale && <SaleModal sale={selectedSale} onClose={() => setSelectedSale(null)} />}
+
     </div>
   );
 }
 
 export default BaseScreenHome;
-
-

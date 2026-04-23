@@ -1,115 +1,119 @@
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, BarChart2, ShieldCheck, Zap } from "lucide-react";
 
-/* eslint-disable no-unused-vars */
-
-import { useRef } from 'react';
-
-import { useNavigate } from 'react-router-dom';
-
-import { motion, useScroll, useTransform } from 'framer-motion';
-
-import ParticleBackground from '../../UI/ParticleBackground';
-import GradientButton from '../../UI/GradientButton';
-
-// Import the CSS for animation styles
-import './Hero.css';
+const BADGES = [
+  { icon: <ShieldCheck size={14} />, text: "Secure" },
+  { icon: <Zap size={14} />,         text: "Real-time" },
+  { icon: <BarChart2 size={14} />,   text: "Analytics" },
+];
 
 const Hero = () => {
   const navigate = useNavigate();
-  const containerRef = useRef(null);
-
-  // Scroll progress
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  });
-
-  // Transform values based on scroll
-  const maskedTextOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-  const maskedTextY = useTransform(scrollYProgress, [0, 0.15], [0, -100]);
-  
-  const contentOpacity = useTransform(scrollYProgress, [0.15, 0.25], [0, 1]);
-  const contentY = useTransform(scrollYProgress, [0.15, 0.25], [50, 0]);
-
-  const toSignUp = () => {
-    navigate('/signup');
-  };
 
   return (
-    <div 
-      ref={containerRef}
-      className="relative min-h-[200vh] bg-gradient-to-br from-[#0f0326] to-[#2d1247]"
-    >
-      <div className="sticky top-0 min-h-screen flex items-center justify-center overflow-hidden px-4 py-6 sm:px-6 md:px-8">
-        {/* Particle Background */}
-        <ParticleBackground count={15} className="absolute inset-0 -z-5" />
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
 
-        {/* Overlay with Scanline Effect */}
-        <div className="absolute inset-0 bg-black/40 hyper-scanlines -z-5 pointer-events-none" />
-
-        {/* Masked Text Container */}
-        <motion.div 
-          className="absolute w-full text-center"
-          style={{ 
-            opacity: maskedTextOpacity,
-            y: maskedTextY
-          }}
-        >
-          <h1 className="masked-text text-6xl md:text-8xl font-bold">
-            HyperPOS
-          </h1>
-          <div className='flex flex-col items-center'>
-            <div className="flex flex-row  w-2/3 justify-center items-center">
-              <img src="./mock.png" alt="logo" className="w-/6 mx-auto mt-5" />
-            </div>
-          </div>
-          
-        </motion.div>
-
-        {/* Content */}
-        <motion.div 
-          className="relative w-full max-w-[600px] mx-auto z-10"
-          style={{ 
-            opacity: contentOpacity,
-            y: contentY
-          }}
-        >
-          <div className="relative bg-black/40 backdrop-blur-md p-6 sm:p-8 rounded-lg border border-[#f472b6]/30 shadow-lg overflow-hidden">
-            {/* Neon Accents */}
-            <div className="hyper-line-accent absolute top-0 left-0"></div>
-            <div className="hyper-modal-corner hyper-modal-corner-tl"></div>
-            <div className="hyper-modal-corner hyper-modal-corner-tr"></div>
-            <div className="hyper-modal-corner hyper-modal-corner-bl"></div>
-            <div className="hyper-modal-corner hyper-modal-corner-br"></div>
-
-            {/* Text Content */}
-            <div className="text-center">
-              <div className="font-bold bg-gradient-to-b from-[#FFE942] via-[#FF9500] to-[#FF0CB2] bg-clip-text text-transparent font-['Open_Sans',sans-serif]">
-                <p className="text-2xl m-0 md:text-4xl hyper-text-glow">Find The Perfect Solution</p>
-                <p className="text-2xl m-0 md:text-4xl hyper-text-glow">For Your Business</p>
-              </div>
-              
-              <p className="text-purple-300/70 text-base leading-6 mt-4 font-['Open_Sans',sans-serif]">
-                Our software enhances operational efficiency and provides a robust framework for managing sales, inventory and customer relationships. Whether you have single or multiple stores, our tools help to take your business into the next level.
-              </p>
-              
-              <div className="mt-6">
-                <GradientButton 
-                  className="py-3 px-8 text-lg min-w-[140px] rounded-2xl hyper-button text-white uppercase tracking-wider font-medium relative overflow-hidden"
-                  onClick={toSignUp}
-                >
-                  Sign Up
-                </GradientButton>
-              </div>
-            </div>
-
-            {/* Bottom Neon Line */}
-            <div className="hyper-line-bottom absolute bottom-0 left-0"></div>
-          </div>
-          
-          <div className="hyper-glow-bottom"></div>
-        </motion.div>
+      {/* Gradient blobs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full opacity-[0.06]"
+             style={{ background: "radial-gradient(circle, #6366f1, transparent)" }} />
+        <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full opacity-[0.05]"
+             style={{ background: "radial-gradient(circle, #4338ca, transparent)" }} />
       </div>
-    </div>
+
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-24 sm:py-32 w-full">
+        <div className="flex flex-col lg:flex-row items-center gap-16">
+
+          {/* Left: copy */}
+          <div className="flex-1 text-center lg:text-left">
+
+            <span className="inline-flex items-center gap-1.5 bg-indigo-50 text-indigo-600 text-xs font-semibold px-3 py-1.5 rounded-full border border-indigo-100 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-pulse" />
+              Modern Point-of-Sale Platform
+            </span>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-tight mb-6">
+              Smarter retail,<br />
+              <span className="text-indigo-600">faster checkout.</span>
+            </h1>
+
+            <p className="text-lg text-slate-500 leading-relaxed mb-8 max-w-xl mx-auto lg:mx-0">
+              The all-in-one POS system built for modern businesses. Manage
+              inventory, track sales, and grow with real-time analytics — all
+              from one dashboard.
+            </p>
+
+            <div className="flex items-center gap-3 mb-8 justify-center lg:justify-start flex-wrap">
+              {BADGES.map(({ icon, text }) => (
+                <span key={text} className="inline-flex items-center gap-1.5 bg-slate-100 text-slate-600 text-xs font-medium px-3 py-1.5 rounded-full">
+                  <span className="text-indigo-500">{icon}</span> {text}
+                </span>
+              ))}
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+              <button
+                onClick={() => navigate("/signup")}
+                className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl shadow-md hover:shadow-lg transition-all duration-200"
+              >
+                Get Started Free <ArrowRight size={16} />
+              </button>
+              <button
+                onClick={() => navigate("/login")}
+                className="flex items-center justify-center gap-2 bg-white border border-slate-200 hover:border-indigo-300 text-slate-700 hover:text-indigo-700 font-semibold px-6 py-3 rounded-xl transition-all duration-200"
+              >
+                Sign In
+              </button>
+            </div>
+
+          </div>
+
+          {/* Right: dashboard card */}
+          <div className="flex-1 w-full max-w-md lg:max-w-none">
+            <div className="relative">
+              <div
+                className="rounded-2xl p-8 text-white relative overflow-hidden"
+                style={{ background: "linear-gradient(145deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%)" }}
+              >
+                <div className="absolute inset-0 opacity-[0.06]" style={{
+                  backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+                  backgroundSize: "20px 20px",
+                }} />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-6">
+                    <img src="/HyperPOS.svg" alt="HyperPOS" className="w-8 h-8 brightness-0 invert" />
+                    <span className="font-bold text-lg">HyperPOS</span>
+                  </div>
+                  <p className="text-indigo-200 text-sm mb-4">Today's Overview</p>
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    {[
+                      { label: "Total Sales",     value: "Rs 48,250" },
+                      { label: "Transactions",    value: "124" },
+                      { label: "Active Products", value: "891" },
+                      { label: "Customers",       value: "2,340" },
+                    ].map(({ label, value }) => (
+                      <div key={label} className="bg-white/10 rounded-xl p-3">
+                        <p className="text-indigo-300 text-xs mb-1">{label}</p>
+                        <p className="text-white font-bold text-lg">{value}</p>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-white/10 rounded-xl p-3 flex items-center justify-between">
+                    <span className="text-indigo-200 text-sm">Revenue Growth</span>
+                    <span className="text-emerald-400 font-bold text-sm">+12.4% ↑</span>
+                  </div>
+                </div>
+              </div>
+              <div className="absolute -bottom-4 -right-4 bg-white border border-slate-200 rounded-xl px-4 py-2.5 shadow-lg flex items-center gap-2">
+                <span className="text-emerald-500">✓</span>
+                <span className="text-slate-700 text-sm font-semibold">Live & Synced</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
   );
 };
 

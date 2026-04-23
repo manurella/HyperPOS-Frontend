@@ -4,8 +4,6 @@ import ProductSearch from "./ProductSearch";
 import CartTable from "./CartTable";
 import SummaryFooter from "./SummaryFooter";
 import Controls from "./Controls";
-import "./styles.css";
-import { q } from "framer-motion/client";
 import { saveGRN } from "../../API/APIGRN";
 import { savePurchase } from "../../API//APIPurchase"
 import {getSuppliers} from "../../API/APISupplier";
@@ -125,26 +123,26 @@ const Purchase = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-7.5rem)] bg-gray-900 text-white w-full cashier-app shadow-2xl shadow-indigo-950" >
-      <div className="max-w-screen-xl cashier-container">
-        <Header suppliers={supplierList} grn={grn} setSupplier={setSupplier}/>
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-5">
+        <Header suppliers={supplierList} grn={grn} setSupplier={setSupplier} />
 
-        {printGrn && 
-        (<div className="w-full flex justify-center ">
-          <InvoicePreview invoice={printGrn} productList={ProductList} setPrintGrn={setPrintGrn} close={handleNewGrn}/>
-          </div>)}
+        {printGrn && (
+          <div className="w-full flex justify-center">
+            <InvoicePreview invoice={printGrn} productList={ProductList} setPrintGrn={setPrintGrn} close={handleNewGrn} />
+          </div>
+        )}
 
-        <ProductSearch 
-        onAdd={handleAddToCart} 
-        grn={grn} 
-        setProductList={setProductList} 
+        <ProductSearch
+          onAdd={handleAddToCart}
+          grn={grn}
+          setProductList={setProductList}
         />
         <CartTable
           cartItems={cartItems}
           onRemove={handleRemoveFromCart}
           onQuantityChange={handleQuantityChange}
         />
-        
         <SummaryFooter
           cartItems={cartItems}
           cash={cash}

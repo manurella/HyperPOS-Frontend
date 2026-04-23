@@ -1,95 +1,72 @@
 
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Outlet, redirect } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import Loader from "../../UI/Loader";
 
-function DashboardLayout ( ) {
+function DashboardLayout() {
 
-  const [ loading , setLoading ] = useState ( true );
-  const [ sidebarOpen , setSidebarOpen ] = useState ( false );
-  const navigate = useNavigate ( );
+  const [loading, setLoading]         = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const navigate                      = useNavigate();
 
-  useEffect ( ( ) => {
+  useEffect(() => {
 
-    // Check if user is logged in and has the role of admin.
-    const role = JSON.parse (localStorage.getItem ( "user" ))?.roles;
-    if ( role === "ROLE_ADMIN" ) {
-      setLoading ( false );
-    } else{
-      setLoading ( true );
-      navigate ( "/" );
+    const role = JSON.parse(localStorage.getItem("user"))?.roles;
+    if (role === "ROLE_ADMIN") {
+      setLoading(false);
+    } else {
+      setLoading(true);
+      navigate("/");
     }
 
-    const timer = setTimeout ( () => {
-      setLoading ( false );
-    } , 2950 );
-     // Change loading time here.
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2950);
 
-    return () => clearTimeout ( timer );
-    
-  } , [] );
+    return () => clearTimeout(timer);
 
-  // Toggle Sidebar.
-  const toggleSidebar = ( ) => {
-    setSidebarOpen ( !sidebarOpen );
-  };
+  }, []);
 
-  // Close Sidebar.
-  const closeSidebar = ( ) => {
-    setSidebarOpen ( false );
-  };
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+  const closeSidebar  = () => setSidebarOpen(false);
 
-  if ( loading ) {
+  if (loading) {
     return <Loader />;
   }
 
   return (
-    
-    <div className = "flex flex-col h-screen overflow-hidden relative">
-      
-      {/* Background gradient. */}
-      <div className = "absolute inset-0 z-0" style = { { 
-        background : "linear-gradient( 135deg , rgba( 126 , 34 , 206 , 0.8 ) 0% , rgba( 236 , 72 , 153 , 0.8 ) 100% )",
-        opacity : 0.2
-      } }></div>
-      
-      {/* Base background. */}
-      <div className = "absolute inset-0 z-0 hyper-bg" style = { { opacity : 0.95 } }></div>
-      
-      {/* Scanline effect. */}
-      <div className = "hyper-scanline"></div>
-      
-      {/* Topbar. */}
-      <Topbar onMenuToggle = { toggleSidebar } />
-      
-      {/* Main content. */}
-      <div className = "flex flex-1 overflow-hidden">
-        
-        {/* Mobile sidebar. */}
-        { sidebarOpen && (
-          <div
-            className = "fixed inset-0 bg-black/70 z-20 lg:hidden backdrop-blur-sm"
-            onClick = { closeSidebar }
-            aria-hidden = "true"
-          />
-        ) }
+    <div className="flex h-screen overflow-hidden bg-slate-100">
 
-        {/* Sidebar. */}
-        <Sidebar onCloseMobile = { closeSidebar } isMobileOpen = { sidebarOpen } />
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-20 lg:hidden"
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
+      )}
 
-        {/* Content */}
-        <main className = "flex-1 overflow-auto p-2 sm:p-4 md:p-6 text-white relative z-10">
+      {/* Sidebar */}
+      <Sidebar onCloseMobile={closeSidebar} isMobileOpen={sidebarOpen} />
+
+      {/* Right column */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+
+        {/* Topbar */}
+        <Topbar onMenuToggle={toggleSidebar} />
+
+        {/* Page content */}
+        <main className="flex-1 overflow-auto p-4 sm:p-6 bg-slate-50">
           <Outlet />
         </main>
-        
+
       </div>
-      
+
     </div>
-    
   );
 }
 
