@@ -1,809 +1,565 @@
+/* ============================================================
+   HyperPOS — Professional Design System
+   Clean minimal theme: dark sidebar + light content
+   ============================================================ */
 
-/* Base. */
+/* ─── Sidebar background ─── */
 .hyper-bg {
-
-  background : linear-gradient( 180deg , #0f0326 0% , #1a0a40 50% , #3b0764 100% );
-
+  background: var(--sidebar-bg, #0a0f1e);
 }
 
 .hyper-bg-horizontal {
-
-  background : linear-gradient( 90deg , #0f0326 0% , #1a0a40 50% , #3b0764 100% );
-
+  background: var(--topbar-bg, #ffffff);
 }
 
-/* Particles. */
-.particles-container {
-
-  position : absolute;
-  width : 100%;
-  height : 100%;
-  top : 0;
-  left : 0;
-  overflow : hidden;
-  z-index : 0;
-
+/* ─── Hide legacy particle and scanline elements ─── */
+.particles-container,
+.particle,
+.hyper-scanline,
+.hyper-scanlines,
+.hyper-line-vertical,
+.hyper-glow-bottom {
+  display: none;
 }
 
-.particle {
-
-  position : absolute;
-  background : rgba( 255 , 255 , 255 , 0.3 );
-  border-radius : 50%;
-  animation : float 15s infinite linear;
-
-}
-
-/* Scanline. */
-.hyper-scanline {
-
-  position : absolute;
-  top : 0;
-  left : 0;
-  width : 100%;
-  height : 100%;
-  background : linear-gradient( 
-    to bottom, 
-    transparent 0%, 
-    rgba( 255 , 255 , 255 , 0.05 ) 50%, 
-    transparent 100%
-    );
-  animation : scanline 8s linear infinite;
-  pointer-events : none;
-  z-index : 2;
-
-}
-
-.hyper-scanlines {
-
-  background : linear-gradient( transparent 50% , rgba( 15 , 3 , 38 , 0.5 ) 50% );
-  background-size : 100% 4px;
-  position : absolute;
-  top : 0;
-  left : 0;
-  width : 100%;
-  height : 100%;
-  opacity : 0.3;
-  pointer-events : none;
-
-}
-
-/* Neon Lines. */
+/* ─── Subtle separator lines ─── */
 .hyper-line {
-
-  position : absolute;
-  height : 1px;
-  width : 100%;
-  background : #f472b6;
-  box-shadow : 0 0 8px #f472b6 , 0 0 15px #f472b6;
-
+  position: absolute;
+  height: 1px;
+  width: 100%;
+  background: var(--border, #e2e8f0);
 }
 
 .hyper-line-bottom {
-
-  position : absolute;
-  bottom : 0;
-  left : 0;
-  right : 0;
-  height : 1px;
-  background : linear-gradient( 90deg , #f472b6 , transparent , #f472b6 );
-  box-shadow : 0 0 8px #f472b6;
-
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border, #e2e8f0);
 }
 
 .hyper-line-accent {
-
-  width : 100%;
-  height : 2px;
-  background : linear-gradient( 90deg , #f472b6 , transparent );
-  box-shadow : 0 0 10px #f472b6;
-
+  width: 100%;
+  height: 1px;
+  background: var(--border, #e2e8f0);
 }
 
-.hyper-line-vertical {
-
-  position : absolute;
-  left : 0;
-  top : 50%;
-  transform : translateY( -50% );
-  width : 3px;
-  height : 66%;
-  background : #f472b6;
-  box-shadow : 0 0 8px #f472b6 , 0 0 15px #f472b6;
-
-}
-
-/* Buttons. */
+/* ─── Buttons ─── */
 .hyper-button {
-
-  position : relative;
-  overflow : hidden;
-  transition : all 0.3s ease;
-  animation : pulse-border 2s infinite;
-  background : rgba( 192 , 38 , 211 , 0.2 );
-  border : 1px solid rgba( 244 , 114 , 182 , 0.5 );
-  box-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.8 ) , 0 0 10px rgba( 192 , 38 , 211 , 0.5 );
-
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: var(--accent, #6366f1);
+  color: #ffffff;
 }
 
 .hyper-button:hover {
-
-  background : rgba( 192 , 38 , 211 , 0.3 );
-
+  background: var(--accent-hover, #4f46e5);
 }
 
 .hyper-button::before {
-
-  content : '';
-  position : absolute;
-  top : 0;
-  left : -100%;
-  width : 100%;
-  height : 100%;
-  background : linear-gradient(
-    90deg , 
-    transparent , 
-    rgba( 255 , 255 , 255 , 0.2 ), 
-    transparent
-    );
-  transition : all 0.5s ease;
-
+  display: none;
 }
 
-.hyper-button:hover::before {
-
-  left : 100%;
-
-}
-
-/* Menu Items. */
+/* ─── Sidebar menu items ─── */
 .hyper-menu-item {
-
-  position : relative;
-  overflow : hidden;
-  transition : all 0.3s ease;
-
+  position: relative;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
 }
 
 .hyper-menu-item::before {
-
-  content : '';
-  position : absolute;
-  top : 0;
-  left : -100%;
-  width : 100%;
-  height : 100%;
-  background : linear-gradient(
-    90deg, 
-    transparent, 
-    rgba( 255 , 255 , 255 , 0.2 ), 
-    transparent
-    );
-  transition : all 0.5s ease;
-
-}
-
-.hyper-menu-item:hover::before {
-
-  left : 100%;
-
+  display: none;
 }
 
 .hyper-menu-active {
-
-  background : rgba( 192 , 38 , 211 , 0.3 );
-  border : 1px solid rgba( 244 , 114 , 182 , 0.5 );
-  box-shadow : 0 0 10px rgba( 192 , 38 , 211 , 0.5 ) , inset 0 0 5px rgba( 244 , 114 , 182 , 0.3 );
-  animation : flicker 4s infinite;
-
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8 !important;
+  font-weight: 500;
 }
 
-/* Text Effects. */
+/* ─── Text — clean, no neon glow ─── */
 .hyper-text {
-
-  text-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.5 );
-  letter-spacing : 0.5px;
-
+  letter-spacing: 0;
+  text-shadow: none;
+  color: #e2e8f0;
 }
 
 .hyper-text-glow {
-
-  text-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.8 );
-  letter-spacing : 1px;
-
+  text-shadow: none;
+  letter-spacing: 0;
 }
 
+/* ─── Clock in topbar ─── */
 .hyper-time {
-
-  text-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.8 );
-  letter-spacing : 2px;
-  background : rgba( 15 , 3 , 38 , 0.5 );
-  padding : 4px 8px;
-  border-radius : 4px;
-  border : 1px solid rgba( 244 , 114 , 182 , 0.3 );
-
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #475569;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  text-shadow: none;
 }
 
-/* Icons. */
+/* ─── Icons ─── */
 .hyper-icon {
-
-  filter : drop-shadow( 0 0 3px rgba( 244 , 114 , 182 , 0.8 ) );
-
+  filter: none;
+  opacity: 0.85;
 }
 
-/* Glow Effects. */
-.hyper-glow-bottom {
-
-  position : absolute;
-  bottom : 0;
-  left : 0;
-  right : 0;
-  height : 40px;
-  background : radial-gradient( ellipse at bottom , rgba( 192 , 38 , 211 , 0.3 ) 0% , transparent 70% );
-  filter : blur( 20px );
-  pointer-events : none;
-
-}
-
-/* Logo Glow. */
+/* ─── Logo ─── */
 .logo-glow {
-
-  filter : drop-shadow( 0 0 8px rgba( 152 , 84 , 248 , 0.6 ) );
-  animation : logo-pulse 3s infinite ease-in-out;
-
+  filter: none;
+  animation: none;
 }
 
 @keyframes logo-pulse {
-
-  0%, 100% {
-    filter : drop-shadow( 0 0 8px rgba( 152 , 84 , 248 , 0.6 ) );
-  }
-  50% {
-    filter : drop-shadow( 0 0 15px rgba( 255 , 68 , 204 , 0.8 ) );
-  }
-
+  0%, 100% { opacity: 1; }
 }
 
-/* Calendar. */
+/* ─── Calendar overrides ─── */
 .hyperpos-calendar {
-
-  border : 1px solid rgba( 244 , 114 , 182 , 0.5 ) !important;
-  border-radius : 8px !important;
-  overflow : hidden !important;
-  background-color : rgba( 15 , 3 , 38 , 0.95 ) !important;
-  box-shadow : 0 0 20px rgba( 192 , 38 , 211 , 0.5 ) , 0 0 40px rgba( 244 , 114 , 182 , 0.3 ) !important;
-
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
 }
 
 .hyperpos-calendar .react-calendar__tile--now {
-
-  background : rgba( 244 , 114 , 182 , 0.3 ) !important;
-  color : white !important;
-
+  background: #eef2ff !important;
+  color: #4f46e5 !important;
+  font-weight: 600 !important;
 }
 
 .hyperpos-calendar .react-calendar__tile--active {
-
-  background : rgba( 192 , 38 , 211 , 0.7 ) !important;
-  color : white !important;
-
+  background: #6366f1 !important;
+  color: #ffffff !important;
 }
 
 .hyperpos-calendar .react-calendar__tile:enabled:hover {
-
-  background : rgba( 244 , 114 , 182 , 0.2 ) !important;
-
+  background: #f0f2ff !important;
 }
 
 .hyperpos-calendar .react-calendar__navigation button:enabled:hover,
 .hyperpos-calendar .react-calendar__navigation button:enabled:focus {
-
-  background : rgba( 244 , 114 , 182 , 0.2 ) !important;
-
+  background: #f0f2ff !important;
 }
 
 .hyperpos-calendar .react-calendar__month-view__days__day--weekend {
-
-  color : #f472b6 !important;
-
+  color: #6366f1 !important;
 }
 
 .hyperpos-calendar .react-calendar__navigation {
-
-  background : rgba( 15 , 3 , 38 , 0.8 ) !important;
-  border-bottom : 1px solid rgba( 244 , 114 , 182 , 0.3 ) !important;
-
+  background: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
 }
 
 .hyperpos-calendar .react-calendar__navigation button,
 .hyperpos-calendar .react-calendar__month-view__weekdays__weekday,
 .hyperpos-calendar .react-calendar__tile {
-
-  color : white !important;
-
+  color: #0f172a !important;
 }
 
 .hyperpos-calendar .react-calendar__month-view__weekdays__weekday abbr {
-
-  text-decoration : none !important;
-  color : #c026d3 !important;
-  font-weight : bold !important;
-
+  text-decoration: none !important;
+  color: #6366f1 !important;
+  font-weight: 600 !important;
 }
 
-@keyframes scanline {
-
-  0% {
-    transform : translateY( -100% );
-  }
-  100% {
-    transform : translateY( 100% );
-  }
-
-}
-
-@keyframes flicker {
-
-  0%, 100% { opacity : 1; }
-  92% { opacity : 1; }
-  93% { opacity : 0.3; }
-  94% { opacity : 1; }
-  96% { opacity : 0.5; }
-  97% { opacity : 1; }
-
-}
-
-@keyframes pulse-border {
-
-  0%, 100% {
-    box-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.8 ) , 0 0 10px rgba( 192 , 38 , 211 , 0.5 );
-  }
-  50% {
-    box-shadow : 0 0 10px rgba( 244 , 114 , 182 , 0.8 ) , 0 0 20px rgba( 192 , 38 , 211 , 0.5 );
-  }
-
-}
-
-@keyframes float {
-
-  0% {
-    transform : translateY( 0 ) rotate( 0deg );
-    opacity : 0;
-  }
-  10% {
-    opacity : 1;
-  }
-  90% {
-    opacity : 1;
-  }
-  100% {
-    transform : translateY( -100vh ) rotate( 720deg );
-    opacity : 0;
-  }
-
-}
-
-/* Scrollbar. */
-::-webkit-scrollbar {
-
-  width : 8px;
-  height : 8px;
-
-}
-
-::-webkit-scrollbar-track {
-
-  background : rgba( 15 , 3 , 38 , 0.8 );
-  border-radius : 4px;
-
-}
-
-::-webkit-scrollbar-thumb {
-
-  background : linear-gradient( 180deg , #c026d3 , #f472b6 );
-  border-radius : 4px;
-  box-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.5 );
-
-}
-
-::-webkit-scrollbar-thumb:hover {
-
-  background : linear-gradient( 180deg , #d946ef , #f87171 );
-  box-shadow : 0 0 8px rgba( 244 , 114 , 182 , 0.8 );
-
-}
-
-/* Scrollbar with scanline.*/
-.hyper-scrollbar::-webkit-scrollbar-thumb {
-
-  background-image : linear-gradient( 180deg , #c026d3 , #f472b6 );
-  background-size : 100% 100%;
-  box-shadow : 0 0 8px rgba( 244 , 114 , 182 , 0.5 );
-  position : relative;
-
-}
-
-.hyper-scrollbar::-webkit-scrollbar-thumb::after {
-
-  content : '';
-  position : absolute;
-  top : 0;
-  left : 0;
-  right : 0;
-  bottom : 0;
-  background : repeating-linear-gradient(
-    0deg,
-    transparent,
-    rgba( 255 , 255 , 255 , 0.1 ) 1px,
-    transparent 2px
-  );
-  background-size : 100% 4px;
-  pointer-events : none;
-
-}
-
-/* Firefox scrollbar styling. */
-* {
-
-  scrollbar-width : thin;
-  scrollbar-color : #c026d3 rgba( 15 , 3 , 38 , 0.8 );
-
-}
-
-@keyframes scrollGlow {
-
-  0%, 100% { box-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.5 ); }
-  50% { box-shadow : 0 0 10px rgba( 244 , 114 , 182 , 0.8 ); }
-
-}
-
-.hyper-scrollbar-animated::-webkit-scrollbar-thumb {
-
-  animation : scrollGlow 2s infinite;
-
-}
-
-/* Chart. */
+/* ─── Chart containers ─── */
 .hyper-chart-container {
-
-  position : relative;
-  overflow : hidden;
-  border-radius : 8px;
-  background : rgba( 15 , 3 , 38 , 0.7 );
-  border : 1px solid rgba( 244 , 114 , 182 , 0.3 );
-  box-shadow : 0 0 15px rgba( 192 , 38 , 211 , 0.3 );
-
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .hyper-chart-grid line {
-
-  stroke : rgba( 244 , 114 , 182 , 0.15 );
-  stroke-width : 1;
-  stroke-dasharray : 4 4;
-
+  stroke: #e2e8f0;
+  stroke-width: 1;
+  stroke-dasharray: 4 4;
 }
 
 .hyper-chart-tooltip {
-
-  background : rgba( 15 , 3 , 38 , 0.9 ) !important;
-  color : #fff !important;
-  border : 1px solid rgba( 244 , 114 , 182 , 0.3 ) !important;
-  box-shadow : 0 0 10px rgba( 244 , 114 , 182 , 0.5 ) !important;
-  border-radius : 4px !important;
-  padding : 8px !important;
-
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  font-size: 0.8125rem !important;
 }
 
 .hyper-chart-axis text {
-
-  fill : rgba( 255 , 255 , 255 , 0.8 ) !important;
-  font-size : 12px !important;
-
+  fill: #64748b !important;
+  font-size: 12px !important;
 }
 
 .hyper-chart-axis line {
-
-  stroke : rgba( 244 , 114 , 182 , 0.3 ) !important;
-
+  stroke: #e2e8f0 !important;
 }
 
 .hyper-chart-axis path {
-
-  stroke : rgba( 244 , 114 , 182 , 0.3 ) !important;
-
+  stroke: #e2e8f0 !important;
 }
 
 .hyper-chart-legend text {
-
-  fill : rgba( 255 , 255 , 255 , 0.8 ) !important;
-  font-size : 12px !important;
-
+  fill: #475569 !important;
+  font-size: 12px !important;
 }
 
 .hyper-chart-point {
-
-  animation : pulse-point 2s infinite;
-
+  animation: none;
 }
 
-@keyframes pulse-point {
-
-  0%, 100% {
-    filter : drop-shadow( 0 0 3px rgba( 244 , 114 , 182 , 0.8 ) );
-  }
-  50% {
-    filter : drop-shadow( 0 0 6px rgba( 244 , 114 , 182 , 1 ) );
-  }
-
+/* ─── Sidebar scrollbar ─── */
+.hyper-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.hyper-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.hyper-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.25);
+  border-radius: 9999px;
+}
+.hyper-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.45);
 }
 
+/* ─── Animations ─── */
 @keyframes direction-reverse {
-
-  to { transform : rotate( -360deg ); }
-
+  to { transform: rotate(-360deg); }
 }
 
 .direction-reverse {
-
-  animation-direction : reverse;
-
+  animation-direction: reverse;
 }
 
 @keyframes blink {
-
-  0%, 100% { opacity : 1; }
-  50% { opacity : 0; }
-
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .animate-blink {
-
-  animation : blink 1s infinite;
-
+  animation: blink 1s infinite;
 }
 
-/* Progress bar. */
+/* ─── Progress bar ─── */
 @keyframes progress-indeterminate {
-
-  0% {
-    width : 0%;
-    margin-left : 0%;
-  }
-
-  50% {
-    width : 70%;
-    margin-left : 0%;
-  }
-
-  100% {
-    width : 0%;
-    margin-left : 100%;
-  }
-
+  0% { width: 0%; margin-left: 0%; }
+  50% { width: 70%; margin-left: 0%; }
+  100% { width: 0%; margin-left: 100%; }
 }
 
 .animate-progress-indeterminate {
-
-  animation : progress-indeterminate 2s ease-in-out infinite;
-
+  animation: progress-indeterminate 2s ease-in-out infinite;
 }
 
-/* Rotating elements. */
-.duration-3000 {
+/* ─── Timing utilities ─── */
+.duration-3000 { animation-duration: 3000ms; }
+.duration-5000 { animation-duration: 5000ms; }
 
-  animation-duration : 3000ms;
-
-}
-
-.duration-5000 {
-
-  animation-duration : 5000ms;
-
-}
-
-/* Modal animation. */
+/* ─── Modal ─── */
 @keyframes modal-appear {
-
-  0% {
-    transform : scale( 0.9 );
-    opacity : 0;
-  }
-  70% {
-    transform : scale( 1.05 );
-  }
-  100% {
-    transform : scale( 1 );
-    opacity : 1;
-  }
-
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .hyper-modal-appear {
-
-  animation : modal-appear 0.3s ease-out forwards;
-
+  animation: modal-appear 0.2s ease-out forwards;
 }
 
-/* Typing effect animations. */
+/* ─── Fade / typing utilities ─── */
 @keyframes typing {
-
-  from { width : 0 }
-  to { width : 100% }
-
+  from { width: 0; }
+  to { width: 100%; }
 }
 
 @keyframes fade-in {
-
-  to { opacity : 1; }
-
+  to { opacity: 1; }
 }
 
 .hyper-typing-effect {
-
-  overflow : hidden;
-  white-space : nowrap;
-  animation : typing 1.5s steps( 40 , end );
-
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typing 1.5s steps(40, end);
 }
 
 .hyper-typing-effect-2 {
-
-  overflow : hidden;
-  white-space : nowrap;
-  opacity : 0;
-  animation : typing 1.5s steps( 40 , end ) 1s forwards , fade-in 0.1s 1s forwards;
-
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  animation: typing 1.5s steps(40, end) 1s forwards, fade-in 0.1s 1s forwards;
 }
 
-/* Logout modal styles. */
+/* ─── Modal backdrop ─── */
 .hyper-modal-backdrop {
-
-  background : rgba( 0 , 0 , 0 , 0.7 );
-  backdrop-filter : blur( 4px );
-
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
 }
 
+/* ─── Modal container ─── */
 .hyper-modal-container {
-
-  background : linear-gradient( 180deg , rgba( 15 , 3 , 38 , 0.95 ) 0% , rgba( 26 , 10 , 64 , 0.95 ) 100% );
-  border : 2px solid rgba( 192 , 38 , 211 , 0.5 );
-  box-shadow : 0 0 20px rgba( 192 , 38 , 211 , 0.3 ) , 0 0 40px rgba( 244 , 114 , 182 , 0.2 );
-
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.18);
 }
 
+/* ─── Modal header ─── */
 .hyper-modal-header {
-
-  background : linear-gradient( 90deg , rgba( 88 , 28 , 135 , 0.8 ) 0% , rgba( 157 , 23 , 77 , 0.8 ) 100% );
-  border-bottom : 1px solid rgba( 244 , 114 , 182 , 0.3 );
-
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
 }
 
+/* ─── Terminal block (kept clean) ─── */
 .hyper-modal-terminal {
-
-  background : rgba( 0 , 0 , 0 , 0.5 );
-  border : 1px solid rgba( 34 , 197 , 94 , 0.3 );
-  box-shadow : 0 0 10px rgba( 34 , 197 , 94 , 0.2 ) inset;
-
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 6px;
 }
 
-.hyper-modal-corner {
-
-  width : 3px;
-  height : 3px;
-  border-width : 2px;
-  border-color : rgba( 244 , 114 , 182 , 0.8 );
-  position : absolute;
-
-}
-
-.hyper-modal-corner-tl {
-
-  top : 0;
-  left : 0;
-  border-top-style : solid;
-  border-left-style : solid;
-
-}
-
-.hyper-modal-corner-tr {
-
-  top : 0;
-  right : 0;
-  border-top-style : solid;
-  border-right-style : solid;
-
-}
-
-.hyper-modal-corner-bl {
-
-  bottom : 0;
-  left : 0;
-  border-bottom-style : solid;
-  border-left-style : solid;
-
-}
-
+/* ─── Corner accents (removed) ─── */
+.hyper-modal-corner,
+.hyper-modal-corner-tl,
+.hyper-modal-corner-tr,
+.hyper-modal-corner-bl,
 .hyper-modal-corner-br {
-
-  bottom : 0;
-  right : 0;
-  border-bottom-style : solid;
-  border-right-style : solid;
-
+  display: none;
 }
 
-/* Warning text. */
+/* ─── Text utilities ─── */
 .hyper-warning-text {
-
-  color : #f472b6;
-  text-shadow : 0 0 5px rgba( 244 , 114 , 182 , 0.8 );
-  font-weight : bold;
-
+  color: #ef4444;
+  font-weight: 600;
 }
 
-/* Terminal text. */
 .hyper-terminal-text {
-
-  color : #22c55e;
-  text-shadow : 0 0 3px rgba( 34 , 197 , 94 , 0.5 );
-  font-family : monospace;
-  letter-spacing : 0.5px;
-
+  color: #34d399;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.8125rem;
 }
 
-/* Blinking cursor effect. */
 .hyper-cursor::after {
-
-  content : '|';
-  animation : blink 1s step-end infinite;
-
+  content: '|';
+  animation: blink 1s step-end infinite;
 }
 
-@keyframes blink {
-
-  0%, 100% { opacity : 1; }
-  50% { opacity : 0; }
-
-}
-
-/* Danger button for logout. */
+/* ─── Danger button ─── */
 .hyper-button-danger {
-
-  background : rgba( 220 , 38 , 38 , 0.2 );
-  border : 1px solid rgba( 248 , 113 , 113 , 0.5 );
-  box-shadow : 0 0 5px rgba( 248 , 113 , 113 , 0.5 ) , 0 0 10px rgba( 220 , 38 , 38 , 0.3 );
-  color : white;
-  transition : all 0.3s ease;
-
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .hyper-button-danger:hover {
-
-  background : rgba( 220 , 38 , 38 , 0.3 );
-  box-shadow : 0 0 8px rgba( 248 , 113 , 113 , 0.7 ) , 0 0 15px rgba( 220 , 38 , 38 , 0.4 );
-
+  background: #fee2e2;
+  border-color: #ef4444;
 }
 
 .hyper-button-danger::before {
-
-  content : '';
-  position : absolute;
-  top : 0;
-  left : -100%;
-  width : 100%;
-  height : 100%;
-  background : linear-gradient(
-    90deg , 
-    transparent , 
-    rgba( 255 , 255 , 255 , 0.2 ), 
-    transparent
-    );
-  transition : all 0.5s ease;
-
+  display: none;
 }
 
-.hyper-button-danger:hover::before {
+/* ─── Page section headings ─── */
+.pos-section-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
 
-  left : 100%;
+.pos-section-title::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 1.25em;
+  background: #6366f1;
+  border-radius: 9999px;
+  flex-shrink: 0;
+}
 
+/* ─── Professional card ─── */
+.pos-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  padding: 1.25rem 1.5rem;
+}
+
+/* ─── Status badges ─── */
+.pos-badge-success {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.pos-badge-danger {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.pos-badge-warning {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+/* ─── Table styles ─── */
+.pos-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+}
+
+.pos-table thead tr {
+  background: #f8fafc;
+}
+
+.pos-table thead th {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.pos-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.1s ease;
+}
+
+.pos-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.pos-table tbody td {
+  padding: 0.875rem 1rem;
+  color: #0f172a;
+  vertical-align: middle;
+}
+
+/* ─── Input field ─── */
+.pos-input {
+  width: 100%;
+  padding: 0.5625rem 0.875rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-family: 'Inter', sans-serif;
+  color: #0f172a;
+  background: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  outline: none;
+}
+
+.pos-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.pos-input::placeholder {
+  color: #94a3b8;
+}
+
+/* ─── Primary button ─── */
+.pos-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5625rem 1.125rem;
+  background: #6366f1;
+  color: #ffffff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+
+.pos-btn-primary:hover {
+  background: #4f46e5;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+}
+
+.pos-btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Secondary button ─── */
+.pos-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #ffffff;
+  color: #374151;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.pos-btn-secondary:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
 }
