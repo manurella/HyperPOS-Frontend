@@ -45,11 +45,16 @@ const APIGetUserById = async (id) => {
 };
 const registerUser = async (user) => {
   const token = localStorage.getItem("token");
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const response = await axios.post(APILinks.register, user, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
   });
   return response.data;
 };
@@ -60,11 +65,16 @@ const registerUser = async (user) => {
 const APIForgotPassword = async (username, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const token = localStorage.getItem("token");
-  const response = await axios.put(APILinks.forgotPassword,{username,password}, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+  const headers = {
+    "Content-Type": "application/json",
+  };
+  
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
+  const response = await axios.put(APILinks.forgotPassword, {username, password}, {
+    headers,
   });
   return response.data;
 };

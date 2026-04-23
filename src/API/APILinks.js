@@ -1,6 +1,6 @@
-// const BaseUrl = "/api"; 
-const BaseUrl = "http://localhost:8080/api";
-const billUrl = "http://localhost:8080";
+const BaseUrl = "/api"; 
+// const BaseUrl = "http://localhost:8080/api";
+const billUrl = "/";
 
 const APILinks = {
   login: `${BaseUrl}/auth/login`,
