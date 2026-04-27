@@ -5,28 +5,20 @@ const SummeryFooter = ({ cartItems, totalAmount }) => {
     }, 0);
 
     return (
-        <>
-            <div className="flex flex-col md:flex-row flex-wrap gap-4 mt-2 w-full">
-                <div className="flex-1 flex items-center gap-2 min-w-[200px]">
-                    <label className="text-purple-200">Original GRN Total:</label>
-                    <input
-                    type="number"
-                    readOnly
-                    value={Number(totalAmount || 0).toFixed(2)}
-                    className="bg-[#0f0326]/80 border border-[#f472b6]/30 p-1 rounded-lg w-full max-w-[150px] text-white text-center focus:outline-none"
-                    />
-                </div>
-                <div className="flex-1 flex items-center gap-2 min-w-[200px]">
-                    <label className="text-purple-200">Return Amount:</label>
-                    <input
-                    type="text"
-                    readOnly
-                    value={(grandTotal || 0)?.toFixed(2)}
-                    className="bg-[#0f0326]/80 border border-[#f472b6]/30 p-1 rounded-lg w-full max-w-[150px] text-white text-center focus:outline-none"
-                    />
+        <div className="bg-white border border-zinc-200 rounded-xl p-5 flex flex-col sm:flex-row gap-4 justify-between items-center shadow-sm">
+            <div className="flex items-center gap-3">
+                <label className="text-sm font-semibold text-zinc-600 uppercase tracking-wide">Original GRN Total:</label>
+                <div className="px-4 py-2 bg-blue-50/20 border border-zinc-200 rounded-lg text-zinc-700 font-medium">
+                    Rs. {Number(totalAmount || 0).toFixed(2)}
                 </div>
             </div>
-        </>
+            <div className="flex items-center gap-3">
+                <label className="text-sm font-semibold text-zinc-600 uppercase tracking-wide">Return Amount:</label>
+                <div className="px-4 py-2 bg-blue-50 border border-zinc-200 rounded-lg text-blue-600 font-bold text-lg">
+                    Rs. {(grandTotal || 0)?.toFixed(2)}
+                </div>
+            </div>
+        </div>
     );
 };
 

@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import  { useState, useEffect } from "react";
 import Header from "./Header";
 import ProductSearch from "./ProductSearch";
@@ -21,7 +22,7 @@ const Purchase = () => {
 
   useEffect(() => {
     if (!grn?.id) {
-      alert("create new GRN");
+      toast.error("create new GRN");
     }
     if (!supplierList?.length) {
       getSupplierList();
@@ -50,7 +51,7 @@ const Purchase = () => {
   }
   const handleAddToCart = (product) => {
     if (grn == null) {
-      alert("Please create an grn first!");
+      toast.error("Please create an grn first!");
       return;
     }
     const discountedPrice = product?.unitCost * (1 - product?.discount / 100);
@@ -85,7 +86,7 @@ const Purchase = () => {
 
   const handleSubmitGrn = () => {
     if (cartItems?.length === 0) {
-      alert("Please add items to the cart before submitting the grn.");
+      toast.error("Please add items to the cart before submitting the grn.");
       return;
     }
 
@@ -104,7 +105,7 @@ const Purchase = () => {
     };
     const submitPurchaseData = async () => {
       if(cash < PurchaseData.grn.total) {
-        alert("Cash is not enough to pay the invoice.");
+        toast.error("Cash is not enough to pay the invoice.");
         return;
       }
       try {
@@ -113,7 +114,7 @@ const Purchase = () => {
         return response;
       } catch (error) {
         const errorMessage = error.response?.data?.message || error?.message;
-        alert(errorMessage);
+        toast.error(errorMessage);
       }
     };
      submitPurchaseData();
@@ -123,8 +124,14 @@ const Purchase = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-5">
+    <div className="space-y-5">
+
+        {/* Page title */}
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">Purchase / GRN</h1>
+          <p className="text-sm text-zinc-600 mt-1">Create and manage goods received notes</p>
+        </div>
+
         <Header suppliers={supplierList} grn={grn} setSupplier={setSupplier} />
 
         {printGrn && (
@@ -155,7 +162,6 @@ const Purchase = () => {
           onSubmitGrn={handleSubmitGrn}
           grn={grn}
         />
-      </div>
     </div>
   );
 };

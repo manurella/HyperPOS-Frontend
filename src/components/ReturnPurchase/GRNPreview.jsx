@@ -3,12 +3,12 @@ import React from "react";
 const GRNPreview = ({ grn, productList, close }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white text-black p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white text-zinc-900 p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">GRN Preview</h2>
           <button
             onClick={close}
-            className="bg-gray-200 rounded-full p-1 hover:bg-gray-300"
+            className="pos-btn-secondary"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@ const GRNPreview = ({ grn, productList, close }) => {
         <div className="mt-6 flex justify-center">
           <button
             onClick={() => window.print()}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="pos-btn-primary"
           >
             Print GRN Return
           </button>

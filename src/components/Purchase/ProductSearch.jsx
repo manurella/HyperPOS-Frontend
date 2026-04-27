@@ -73,13 +73,13 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5">
+    <div className="bg-white border border-zinc-200 rounded-xl p-5">
       <h3 className="pos-section-title mb-4">Add Item</h3>
       <div className="space-y-4">
         {/* Search & Barcode */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Search by Name
             </label>
             <input
@@ -90,11 +90,11 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
               className="pos-input"
             />
             {suggestions.length > 0 && searchTerm && (
-              <ul className="absolute z-20 left-0 right-1/2 bg-white border border-slate-200 rounded-xl shadow-lg mt-1 max-h-44 overflow-y-auto">
+              <ul className="absolute z-20 left-0 right-1/2 bg-white border border-zinc-200 rounded-xl shadow-lg mt-1 max-h-44 overflow-y-auto">
                 {suggestions.map((product) => (
                   <li
                     key={product?.id}
-                    className="cursor-pointer hover:bg-indigo-50 px-3 py-2 flex justify-between text-sm text-slate-700"
+                    className="cursor-pointer hover:bg-blue-50 px-3 py-2 flex justify-between text-sm text-zinc-700"
                     onClick={() => {
                       setSelectedProductId(product?.id);
                       setSearchTerm(product?.name);
@@ -103,14 +103,14 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
                     }}
                   >
                     <span className="font-medium">{product?.name}</span>
-                    <span className="text-slate-400">Stock: {product?.stock}</span>
+                    <span className="text-zinc-700/40">Stock: {product?.stock}</span>
                   </li>
                 ))}
               </ul>
             )}
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Barcode
             </label>
             <input
@@ -126,16 +126,16 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
         {/* Product Info chips */}
         {selectedProduct && (
           <div className="flex flex-wrap gap-2">
-            <span className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-600">
-              Unit: <span className="text-slate-800 font-semibold">{unit}</span>
+            <span className="bg-blue-50/20 border border-zinc-200 rounded-lg px-3 py-2 text-xs font-medium text-zinc-700/80">
+              Unit: <span className="text-zinc-900 font-semibold">{unit}</span>
             </span>
-            <span className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-600">
-              Cost: <span className="text-slate-800 font-semibold">Rs. {unitCost?.toFixed(2)}</span>
+            <span className="bg-blue-50/20 border border-zinc-200 rounded-lg px-3 py-2 text-xs font-medium text-zinc-700/80">
+              Cost: <span className="text-zinc-900 font-semibold">Rs. {unitCost?.toFixed(2)}</span>
             </span>
-            <span className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-600">
-              Discount: <span className="text-slate-800 font-semibold">{discount}%</span>
+            <span className="bg-blue-50/20 border border-zinc-200 rounded-lg px-3 py-2 text-xs font-medium text-zinc-700/80">
+              Discount: <span className="text-zinc-900 font-semibold">{discount}%</span>
             </span>
-            <span className="bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2 text-xs font-medium text-indigo-600">
+            <span className="bg-blue-50 border border-blue-200 rounded-lg px-3 py-2 text-xs font-medium text-blue-600">
               Total: <span className="font-semibold">Rs. {amount}</span>
             </span>
           </div>
@@ -144,7 +144,7 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
         {/* Controls row */}
         <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 items-end">
           <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Select Item
             </label>
             <select
@@ -167,7 +167,7 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Qty
             </label>
             <input
@@ -179,7 +179,7 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               &nbsp;
             </label>
             <button className="pos-btn-primary w-full flex items-center justify-center gap-2" onClick={handleAdd}>
@@ -191,7 +191,7 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
         {/* Cost & Discount row */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Unit Cost (Rs.)
             </label>
             <input
@@ -203,7 +203,7 @@ const ProductSearch = ({ onAdd, grn, setProductList }) => {
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Discount (%)
             </label>
             <input

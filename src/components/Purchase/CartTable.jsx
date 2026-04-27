@@ -7,7 +7,7 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5">
+    <div className="bg-white border border-zinc-200 rounded-xl p-5">
       <h3 className="pos-section-title mb-4">Cart Items</h3>
       <div className="overflow-x-auto">
         <table className="pos-table">
@@ -47,18 +47,18 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
                             parseInt(e.target.value, 10) || 1
                           )
                         }
-                        className="w-16 px-2 py-1 border border-slate-200 rounded-lg bg-slate-50 text-center text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        className="w-16 px-2 py-1 border border-zinc-200 rounded-lg bg-blue-50/20 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </td>
                     <td>{item.unit}</td>
                     <td>{item.discount}%</td>
-                    <td className="font-semibold text-slate-800">
+                    <td className="font-semibold text-zinc-900">
                       Rs. {Number(itemTotal).toFixed(2)}
                     </td>
                     <td>
                       <button
                         onClick={() => onRemove(item.productId)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        className="p-1.5 rounded-lg text-zinc-700/40 hover:text-red-500 hover:bg-red-50 transition-colors"
                         title="Remove"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,7 +71,7 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
               })
             ) : (
               <tr>
-                <td colSpan="8" className="text-center py-8 text-slate-400">
+                <td colSpan="8" className="text-center py-8 text-zinc-700/40">
                   No items in cart. Add products above.
                 </td>
               </tr>

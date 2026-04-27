@@ -1,16 +1,16 @@
 const Controls = ({ clear, onSubmitGRN }) => (
-    <div className="flex justify-between items-center mt-4">
+    <div className="flex justify-end gap-3 mt-4">
         <button
             onClick={clear}
-            className="bg-[#f472b6]/80 px-5 py-2 rounded-lg font-bold hover:bg-pink-700 transition-all shadow"
+            className="pos-btn-secondary"
         >
             Clear
         </button>
         <button
             onClick={() => onSubmitGRN()}
-            className="bg-green-700 px-5 py-2 rounded-lg font-bold hover:bg-green-800 transition-all shadow"
+            className="pos-btn-primary"
         >
-            Submit
+            Submit Return
         </button>
     </div>
 );

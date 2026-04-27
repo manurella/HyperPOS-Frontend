@@ -1,5 +1,5 @@
 const Controls = ({ onNewGrn, onSubmitGrn, grn }) => (
-  <div className="bg-white border border-slate-200 rounded-xl p-5 flex justify-between items-center gap-3">
+  <div className="bg-white border border-zinc-200 rounded-xl p-5 flex justify-between items-center gap-3">
     <button
       className={`pos-btn-secondary flex items-center gap-2${!grn?.id ? " animate-pulse" : ""}`}
       onClick={onNewGrn}

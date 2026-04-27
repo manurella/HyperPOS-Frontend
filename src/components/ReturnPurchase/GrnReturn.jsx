@@ -7,6 +7,8 @@ import { getPurchases, getPurchaseById, savePurchase, returnPurchase } from '../
 import {getProducts} from '../../API/APIProducts';
 import GRNPreview from './GRNPreview';
 
+
+import { toast } from "react-hot-toast";
 function GrnReturn() {
     const [grnData, setGRNData] = useState({});
     const [printGRN, setPrintGRN] = useState(null);
@@ -23,7 +25,7 @@ function GrnReturn() {
             }
             catch (error){
                 const errorMessage = error.response?.data?.message || "An error occurred";
-                alert("Error: "+ errorMessage);
+                toast.error("Error: "+ errorMessage);
                 console.error("Error fetching products: ", error);
             }
         };
@@ -44,15 +46,15 @@ function GrnReturn() {
         }
         catch (error) {
             const errorMessage = error.response?.data?.message || "An error occurred";
-            alert("GRN not found: "+ errorMessage);
+            toast.error("GRN not found: "+ errorMessage);
             console.error("Error fetching GRN: ", error);
             setGRNData({});
         }
     };
 
     const handleSubmitGRN = async () => {
-        if(cartItems.length === 0){
-            alert("Please select at least one item to return");
+        if(cartItems?.length === 0){
+            toast.error("Please select at least one item to return");
             return;
         }
         try{
@@ -60,11 +62,11 @@ function GrnReturn() {
             console.log("GRN for submit: ", grnForSubmit);
             const response = await returnPurchase(grnForSubmit.grn.id, grnForSubmit);
             setPrintGRN(response);
-            alert("GRN return submitted successfully");
+            toast.success("GRN return submitted successfully");
         }
         catch (error){
             const errorMessage = error.response?.data?.message || "Something went wrong";
-            alert(errorMessage);
+            toast.error(errorMessage);
             console.error("Error submitting GRN return: ", error);
         }
     };
@@ -97,12 +99,21 @@ function GrnReturn() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-4 w-full grn-app">
-            <div className="max-w-screen-xl mx-auto grn-container">
-                <h1 className="text-2xl font-bold text-center mb-4">Return GRN</h1>
-                <Header grn={grnData?.grn} selectGRN={selectGRN} />
+        <div className="space-y-5">
 
-                {printGRN && <GRNPreview grn={printGRN} productList={productList} close={() => setPrintGRN(null)} />}
+            {/* Page title */}
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">Return Purchase / GRN</h1>
+              <p className="text-sm text-zinc-600 mt-1">Process purchase returns and manage GRN adjustments</p>
+            </div>
+
+            <Header grn={grnData?.grn} selectGRN={selectGRN} />
+
+                {printGRN && (
+                    <div className="w-full flex justify-center">
+                        <GRNPreview grn={printGRN} productList={productList} close={() => setPrintGRN(null)} />
+                    </div>
+                )}
 
                 <CartTable
                     cartItems={cartItems}
@@ -110,12 +121,12 @@ function GrnReturn() {
                     onQuantityChange={handleQuantityChange}
                 />
 
-                <div className="w-full my-4">
-                    <label className="block m-2 text-purple-200 font-semibold">Remarks:</label>
+                <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
+                    <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Remarks</label>
                     <textarea
                         value={remarks}
                         onChange={(e) => setRemarks(e.target.value)}
-                        className="w-full p-2 bg-[#0f0326]/70 border border-[#f472b6]/30 rounded-xl text-white focus:outline-none focus:border-[#f472b6] placeholder-purple-300/70"
+                        className="pos-input resize-none"
                         rows="3"
                         placeholder="Enter any notes or remarks here"
                     />
@@ -125,6 +136,7 @@ function GrnReturn() {
                     cartItems={cartItems}
                     totalAmount={totalAmount}
                 />
+                
                 <Controls
                     clear={()=> {
                         setGRNData({});
@@ -132,8 +144,7 @@ function GrnReturn() {
                     }}
                     onSubmitGRN={handleSubmitGRN}
                 />
-            </div>
         </div>
     );
 }
-export default GrnReturn
+export default GrnReturn;
