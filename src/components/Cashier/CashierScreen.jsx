@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import Header        from "./Header";
 import ProductSearch from "./ProductSearch";
@@ -22,7 +23,7 @@ const CashierScreen = () => {
   const [paymentMethod,  setPaymentMethod]  = useState("CASH");
 
   useEffect(() => {
-    if (!invoice?.id) alert("Please create a new invoice first!");
+    if (!invoice?.id) toast.error("Please create a new invoice first!");
     getCustomersList();
   }, []);
 
@@ -39,7 +40,7 @@ const CashierScreen = () => {
   };
 
   const handleAddToCart = (product) => {
-    if (!invoice) { alert("Please create an invoice first!"); return; }
+    if (!invoice) { toast.error("Please create an invoice first!"); return; }
     const discountedPrice = product.unitPrice * (1 - product.discount / 100);
     setCartItems(prev => [...prev, {
       ...product,
@@ -63,7 +64,7 @@ const CashierScreen = () => {
 
   const handleSubmitInvoice = () => {
     if (!cartItems.length) {
-      alert("Please add items to the cart before submitting.");
+      toast.error("Please add items to the cart before submitting.");
       return;
     }
     const totalAmount = cartItems.reduce(
@@ -80,31 +81,30 @@ const CashierScreen = () => {
     };
     (async () => {
       if (parseFloat(cash) < salesData.invoice.total) {
-        alert("Cash is insufficient to cover the invoice total.");
+        toast.error("Cash is insufficient to cover the invoice total.");
         return;
       }
       try {
         const res = await submitSale(salesData);
         setPrintInvoice(res);
       } catch (err) {
-        alert(err.response?.data?.message || err?.message);
+        toast.error(err.response?.data?.message || err?.message);
       }
     })();
   };
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-5">
+    <div className="space-y-5">
 
         {/* Page title */}
         <div>
-          <h1 className="text-xl font-bold text-slate-800">Point of Sale</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Create and process customer invoices</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">Point of Sale</h1>
+          <p className="text-sm text-zinc-600 mt-1">Create and process customer invoices</p>
         </div>
 
         {/* Invoice preview overlay */}
         {printInvoice && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 bg-slate-900/50 backdrop-blur-sm p-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/60 p-4">
             <InvoicePreview
               invoice={printInvoice}
               productList={productList}
@@ -149,8 +149,6 @@ const CashierScreen = () => {
           onSubmitInvoice={handleSubmitInvoice}
           invoice={invoice}
         />
-
-      </div>
     </div>
   );
 };

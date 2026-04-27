@@ -17,12 +17,12 @@ const Header = ({ invoice, selectInvoice }) => {
   };
 
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5">
+    <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-5">
       <h3 className="pos-section-title mb-4">Invoice Return</h3>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end">
         {/* Search */}
         <div className="sm:col-span-1">
-          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+          <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
             Search Invoice by ID
           </label>
           <div className="flex">
@@ -47,26 +47,26 @@ const Header = ({ invoice, selectInvoice }) => {
         </div>
         {/* Invoice ID */}
         <div>
-          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+          <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
             Invoice ID
           </label>
           <input
             type="text"
             value={invoice?.id || ""}
             readOnly
-            className="pos-input bg-slate-50"
+            className="pos-input bg-zinc-50"
           />
         </div>
         {/* Customer ID */}
         <div>
-          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+          <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
             Customer ID
           </label>
           <input
             type="text"
             value={invoice?.customerId || ""}
             readOnly
-            className="pos-input bg-slate-50"
+            className="pos-input bg-zinc-50"
           />
         </div>
       </div>

@@ -53,7 +53,7 @@ const InvoicePreview = ({ invoice, productList, close }) => {
         <FaWindowClose />
       </button>
 
-      <div ref={printRef} className="text-black">
+      <div ref={printRef} className="text-primary-900">
         <h2 className="text-2xl font-bold text-center mb-2">INVOICE</h2>
 
         {/* Meta Info */}

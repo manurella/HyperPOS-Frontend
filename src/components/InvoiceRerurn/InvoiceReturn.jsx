@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import CartTable from "./CartTable";
 import Header from "./Header";
@@ -5,8 +6,8 @@ import SummaryFooter from "./SummaryFooter";
 import Controls from "./Controls";
 import { returnSale, getSaleById, getSale } from "../../API/APISale";
 import { getProducts } from "../../API/APIProducts";
-import { a } from "framer-motion/client";
 import InvoicePreview from "./InvoicePreview";
+
 function InvoiceReturn() {
   const [invoiceData, setInvoiceData] = useState({});
   const [printInvoice, setPrintInvoice] = useState(null);
@@ -44,6 +45,7 @@ function InvoiceReturn() {
   useEffect(() => {
     getAllProducts();
   }, []);
+  
   useEffect(() => {
     setCartItems(invoiceData?.items);
     setCash(invoiceData?.invoice?.total);
@@ -55,7 +57,7 @@ function InvoiceReturn() {
       setProductList(response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || "An error occurred";
-      alert("Error :", errorMessage);
+      toast.error("Error :" + errorMessage);
       console.error("Error fetching products:", error);
     }
   };
@@ -67,15 +69,15 @@ function InvoiceReturn() {
 
     } catch (error) {
       const errorMessage = error.response?.data?.message || "An error occurred";
-      alert("Invoice Not Found", errorMessage);
+      toast.error("Invoice Not Found: " + errorMessage);
       console.error("Error fetching invoice:", error);
       setInvoiceData({});
     }
   };
 
   const handleSubmitInvoice = async () => {
-    if (cartItems.length === 0) {
-      alert("Please add items to the cart before submitting the invoice.");
+    if (cartItems?.length === 0) {
+      toast.error("Please add items to the cart before submitting the invoice.");
       return;
     }
     console.log("invoice Items", cartItems);
@@ -90,14 +92,13 @@ function InvoiceReturn() {
         invoiceForSubmit
       );
       setPrintInvoice(response);
-      alert("Invoice submitted successfully!");
+      toast.success("Invoice submitted successfully!");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message || "Something went wrong";
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error submitting invoice:", error);
     }
-    setInvoiceForSubmit(invoiceData?.invoice, cartItems);
   };
   const handleQuantityChange = (id, quantity) => {
     setCartItems((prev) =>
@@ -128,15 +129,23 @@ function InvoiceReturn() {
   };
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] bg-gradient-to-br from-[#2d0147] via-[#10022d] to-black text-white p-4 w-full cashier-app">
-      <div className="max-w-screen-xl mx-auto cashier-container">
+    <div className="space-y-5">
+
+        {/* Page title */}
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">Invoice Return</h1>
+          <p className="text-sm text-zinc-600 mt-1">Process and manage customer invoice returns</p>
+        </div>
+
         <Header invoice={invoiceData?.invoice} selectInvoice={selectInvoice} />
         {printInvoice && (
-          <InvoicePreview
-            invoice={printInvoice}
-            productList={productList}
-            close={() => setPrintInvoice(null)}
-          />
+          <div className="w-full flex justify-center">
+            <InvoicePreview
+              invoice={printInvoice}
+              productList={productList}
+              close={() => setPrintInvoice(null)}
+            />
+          </div>
         )}
         <CartTable
           cartItems={cartItems}
@@ -154,7 +163,6 @@ function InvoiceReturn() {
           clear={() => setInvoiceData({})}
           onSubmitInvoice={handleSubmitInvoice}
         />
-      </div>
     </div>
   );
 }
