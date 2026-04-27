@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { MdStorefront } from "react-icons/md";
 import { IoCalculator, IoPersonAdd } from "react-icons/io5";
 import { FaExchangeAlt } from "react-icons/fa";
 import { HiChevronLeft, HiChevronRight, HiOutlineLogout } from "react-icons/hi";
@@ -61,12 +60,12 @@ function SideBar({ isExpanded: propIsExpanded, toggleSidebar: propToggleSidebar,
       
       {/* Store Logo and Name*/}
       <div className={`px-4 py-5 border-b border-[#f5c2ff] ${isExpanded ? 'flex items-center' : 'flex flex-col items-center'}`}>
-        <div className="h-10 w-10 flex-shrink-0 bg-white rounded-full flex items-center justify-center">
-          <MdStorefront className="text-[#70317d] text-2xl" />
+        <div className="flex items-center gap-2.5">
+          <img src="/HyperPOS.svg" alt="HyperPOS" className="w-8 h-8 object-contain" />
         </div>
         {isExpanded && (
-          <div className="ml-3 flex items-center">
-            <h2 className="text-white font-bold text-lg">{org?.name}</h2>
+          <div className="ml-2">
+            <h2 className="text-white font-bold text-sm">{org?.name || 'HyperPOS'}</h2>
           </div>
         )}
       </div>

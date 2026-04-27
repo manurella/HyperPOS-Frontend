@@ -2,20 +2,22 @@ import { useState, useEffect } from "react";
 import { Eye, SlidersHorizontal, X } from "lucide-react";
 import { getUserData } from "../data/userData";
 import FetchLoader from './FetchLoader';
+
+import { toast } from "react-hot-toast";
 import { setActive, setRole as setRoleMethod } from "../../../API/APIUser";
 
-/* ── Shared modal shell ─────────────────────────────────────── */
+/* -- Shared modal shell --------------------------------------- */
 function ModalShell({ title, onClose, children, footer }) {
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-floating w-full max-w-lg overflow-hidden animate-fade-in">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-          <h2 className="text-base font-semibold text-slate-800">{title}</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100/10">
+          <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-700/80 hover:bg-zinc-100 transition-colors"
           >
             <X size={18} />
           </button>
@@ -28,7 +30,7 @@ function ModalShell({ title, onClose, children, footer }) {
 
         {/* Footer */}
         {footer && (
-          <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+          <div className="px-6 py-4 bg-zinc-100/30 border-t border-zinc-100/10 flex justify-end gap-3">
             {footer}
           </div>
         )}
@@ -38,21 +40,21 @@ function ModalShell({ title, onClose, children, footer }) {
   );
 }
 
-/* ── Info row ───────────────────────────────────────────────── */
+/* -- Info row ------------------------------------------------- */
 function InfoRow({ label, children }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{label}</span>
-      <div className="text-sm text-slate-700">{children}</div>
+      <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">{label}</span>
+      <div className="text-sm text-zinc-700">{children}</div>
     </div>
   );
 }
 
-/* ── Section block ──────────────────────────────────────────── */
+/* -- Section block -------------------------------------------- */
 function InfoSection({ title, children }) {
   return (
     <div className="mb-5">
-      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-1 border-b border-slate-100">
+      <h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">
         {title}
       </h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -62,22 +64,22 @@ function InfoSection({ title, children }) {
   );
 }
 
-/* ── ViewModal ──────────────────────────────────────────────── */
+/* -- ViewModal ------------------------------------------------ */
 function ViewModal({ user, onClose, refreshData }) {
   const [isActive, setIsActive] = useState(user?.isActive ?? false);
   const [role, setRole]         = useState(user?.role || "USER");
   const [isChanged, setIsChanged] = useState(false);
 
-  const formatDate = (d) => d ? new Date(d).toLocaleString() : "—";
+  const formatDate = (d) => d ? new Date(d).toLocaleString() : "�";
 
   const handleIsActive = async () => {
     setIsChanged(true);
     try {
       const res = await setActive(user.id, !isActive);
-      alert(res.message);
+      toast.error(res.message);
       setIsActive(v => !v);
     } catch (err) {
-      alert(err.response?.data?.message || "An error occurred");
+      toast.error(err.response?.data?.message || "An error occurred");
     }
   };
 
@@ -86,10 +88,10 @@ function ViewModal({ user, onClose, refreshData }) {
     setIsChanged(true);
     try {
       const res = await setRoleMethod(user.id, newRole);
-      alert(res.message);
+      toast.error(res.message);
       setRole(newRole);
     } catch (err) {
-      alert(err.response?.data?.message || "An error occurred");
+      toast.error(err.response?.data?.message || "An error occurred");
     }
   };
 
@@ -138,8 +140,8 @@ function ViewModal({ user, onClose, refreshData }) {
       </InfoSection>
 
       <InfoSection title="Contact">
-        <InfoRow label="Email">{user.email || "—"}</InfoRow>
-        <InfoRow label="Phone">{user.phone || "—"}</InfoRow>
+        <InfoRow label="Email">{user.email || "N/A"}</InfoRow>
+        <InfoRow label="Phone">{user.phone || "N/A"}</InfoRow>
       </InfoSection>
 
       <InfoSection title="Timestamps">
@@ -150,7 +152,7 @@ function ViewModal({ user, onClose, refreshData }) {
   );
 }
 
-/* ── FilterModal ────────────────────────────────────────────── */
+/* -- FilterModal ---------------------------------------------- */
 function FilterModal({ onClose, onApply, currentFilters, roles }) {
   const [username, setUsername] = useState(currentFilters.username || "");
   const [email,    setEmail]    = useState(currentFilters.email    || "");
@@ -173,22 +175,22 @@ function FilterModal({ onClose, onApply, currentFilters, roles }) {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Username</label>
-          <input value={username} onChange={e => setUsername(e.target.value)} className="pos-input" placeholder="Search username…" />
+          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Username</label>
+          <input value={username} onChange={e => setUsername(e.target.value)} className="pos-input" placeholder="Search username" />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Email</label>
-          <input value={email} onChange={e => setEmail(e.target.value)} className="pos-input" placeholder="Search email…" />
+          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Email</label>
+          <input value={email} onChange={e => setEmail(e.target.value)} className="pos-input" placeholder="Search email" />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Role</label>
+          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Role</label>
           <select value={role} onChange={e => setRole(e.target.value)} className="pos-input">
             <option value="">All Roles</option>
             {roles.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Status</label>
+          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Status</label>
           <select value={status} onChange={e => setStatus(e.target.value)} className="pos-input">
             <option value="">All</option>
             <option value="active">Active</option>
@@ -200,7 +202,7 @@ function FilterModal({ onClose, onApply, currentFilters, roles }) {
   );
 }
 
-/* ── UserPage ───────────────────────────────────────────────── */
+/* -- UserPage ------------------------------------------------- */
 function UserPage() {
   const [selectedUser,     setSelectedUser]     = useState(null);
   const [searchTerm,       setSearchTerm]       = useState("");
@@ -211,7 +213,7 @@ function UserPage() {
   const [error,            setError]            = useState(null);
   const [isFetching,       setIsFetching]       = useState(true);
 
-  const formatDate = (d) => d ? new Date(d).toLocaleDateString() : "—";
+  const formatDate = (d) => d ? new Date(d).toLocaleDateString() : "�";
 
   const fetchData = async () => {
     try {
@@ -249,8 +251,8 @@ function UserPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800">User Management</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{userData.length} total users</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">User Management</h1>
+          <p className="text-sm text-zinc-600 mt-0.5">{userData.length} total users</p>
         </div>
       </div>
 
@@ -258,7 +260,7 @@ function UserPage() {
       <div className="flex flex-col sm:flex-row gap-3">
         <input
           type="text"
-          placeholder="Search users…"
+          placeholder="Search users"
           value={searchTerm}
           onChange={e => setSearchTerm(e.target.value)}
           className="pos-input sm:max-w-xs"
@@ -273,11 +275,11 @@ function UserPage() {
       </div>
 
       {/* Table card */}
-      <div className="bg-white border border-slate-200 rounded-xl shadow-card overflow-hidden">
+      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
         {isFetching ? (
           <FetchLoader />
         ) : loading ? (
-          <div className="p-8 text-center text-slate-500">Loading…</div>
+          <div className="p-8 text-center text-zinc-600">Loading�</div>
         ) : error ? (
           <div className="p-8 text-center text-red-500">{error}</div>
         ) : (
@@ -297,11 +299,11 @@ function UserPage() {
               <tbody>
                 {filteredData.length > 0 ? filteredData.map(u => (
                   <tr key={u.id}>
-                    <td className="font-medium text-slate-500 text-xs">{u.id}</td>
-                    <td className="font-medium text-slate-800">{u.username}</td>
-                    <td className="hidden sm:table-cell text-slate-500">{u.email || "—"}</td>
+                    <td className="font-medium text-zinc-600 text-xs">{u.id}</td>
+                    <td className="font-medium text-zinc-900">{u.username}</td>
+                    <td className="hidden sm:table-cell text-zinc-600">{u.email || "�"}</td>
                     <td className="hidden md:table-cell">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-zinc-50 text-blue-700 border border-zinc-100">
                         {u.role}
                       </span>
                     </td>
@@ -310,11 +312,11 @@ function UserPage() {
                         {u.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
-                    <td className="hidden lg:table-cell text-slate-500">{formatDate(u.createdAt)}</td>
+                    <td className="hidden lg:table-cell text-zinc-600">{formatDate(u.createdAt)}</td>
                     <td className="text-center">
                       <button
                         onClick={() => setSelectedUser(u)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors"
+                        className="p-1.5 rounded-lg text-zinc-500 hover:text-blue-600 hover:bg-zinc-50 transition-colors"
                         aria-label="View user"
                       >
                         <Eye size={16} />
@@ -323,7 +325,7 @@ function UserPage() {
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan="7" className="py-12 text-center text-slate-400">No users found</td>
+                    <td colSpan="7" className="py-12 text-center text-zinc-500">No users found</td>
                   </tr>
                 )}
               </tbody>

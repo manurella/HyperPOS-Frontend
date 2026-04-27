@@ -24,17 +24,17 @@ import { getUserData }     from "../data/userData";
 
 import HyperPOSLoader from "../../UI/HyperPOSLoader";
 
-/* ── Reusable section card ─────────────────────────────────── */
+/* -- Reusable section card ----------------------------------- */
 function ChartCard({ title, children, className = "" }) {
   return (
-    <div className={`bg-white border border-slate-200 rounded-xl shadow-card p-5 sm:p-6 ${className}`}>
+    <div className={`bg-white border border-zinc-200 rounded-xl shadow-sm p-5 sm:p-6 ${className}`}>
       <h2 className="pos-section-title mb-4">{title}</h2>
       {children}
     </div>
   );
 }
 
-/* ── Main component ────────────────────────────────────────── */
+/* -- Main component ------------------------------------------ */
 function DashboardHome() {
 
   const [dateRange,    setDateRange]    = useState({ startDate: "", endDate: "" });
@@ -76,7 +76,7 @@ function DashboardHome() {
     fetchData();
   }, []);
 
-  /* ── Date filtering ── */
+  /* -- Date filtering -- */
   const filterByDate = (data, dateKey = "createdAt") => {
     if (!dateRange.startDate || !dateRange.endDate) return data;
     const start = new Date(dateRange.startDate);
@@ -97,11 +97,11 @@ function DashboardHome() {
   return (
     <div className="space-y-6">
 
-      {/* ── Page header ── */}
+      {/* -- Page header -- */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800">Dashboard</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Overview of your business performance</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Dashboard</h1>
+          <p className="text-sm text-zinc-600 mt-0.5">Overview of your business performance</p>
         </div>
         <DateRangeSelector
           onRangeChange={(newRange) => setDateRange(newRange)}
@@ -111,53 +111,61 @@ function DashboardHome() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center min-h-[60vh] bg-white rounded-xl border border-slate-200 shadow-card">
-          <HyperPOSLoader size="lg" text="Loading dashboard data…" />
+        <div className="flex items-center justify-center min-h-[60vh] bg-white rounded-xl border border-zinc-200 shadow-sm">
+          <HyperPOSLoader size="lg" text="Loading dashboard data..." />
         </div>
       ) : (
         <>
-          {/* ── KPI cards ── */}
+          {/* -- KPI cards -- */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
             <SummaryCard
               title="Total Sales"
-              value={filteredInvoiceData.length > 0 ? `Rs ${totalSales.toLocaleString()}` : "—"}
+              value={filteredInvoiceData.length > 0 ? `Rs ${totalSales.toLocaleString()}` : "-"}
               subtitle="From invoices"
-              accentColor="bg-indigo-500"
-              icon={<TrendingUp size={18} />}
+              accentColor="bg-purple-500"
+              iconColor="text-purple-600"
+              iconBgColor="bg-purple-100"
+              icon={<TrendingUp size={20} />}
               isLoading={isLoading}
             />
 
             <SummaryCard
               title="Total Purchases"
-              value={filteredGRNData.length > 0 ? `Rs ${totalPurchases.toLocaleString()}` : "—"}
+              value={filteredGRNData.length > 0 ? `Rs ${totalPurchases.toLocaleString()}` : "-"}
               subtitle="From GRNs"
-              accentColor="bg-sky-500"
-              icon={<ShoppingCart size={18} />}
+              accentColor="bg-blue-500"
+              iconColor="text-blue-600"
+              iconBgColor="bg-blue-100"
+              icon={<ShoppingCart size={20} />}
               isLoading={isLoading}
             />
 
             <SummaryCard
               title="Active Customers"
-              value={customerData.filter(c => c.isActive !== false).length || "—"}
+              value={customerData.filter(c => c.isActive !== false).length || "-"}
               subtitle="Registered accounts"
               accentColor="bg-emerald-500"
-              icon={<Users size={18} />}
+              iconColor="text-emerald-600"
+              iconBgColor="bg-emerald-100"
+              icon={<Users size={20} />}
               isLoading={isLoading}
             />
 
             <SummaryCard
               title="Active Products"
-              value={productData.filter(p => p.isActive !== false).length || "—"}
+              value={productData.filter(p => p.isActive !== false).length || "-"}
               subtitle="In inventory"
               accentColor="bg-amber-500"
-              icon={<Package size={18} />}
+              iconColor="text-amber-600"
+              iconBgColor="bg-amber-100"
+              icon={<Package size={20} />}
               isLoading={isLoading}
             />
 
           </div>
 
-          {/* ── Sales vs Purchases ── */}
+          {/* -- Sales vs Purchases -- */}
           <ChartCard title="Sales vs Purchases">
             <div className="h-64 sm:h-80 lg:h-96">
               <SalesPurchasesComparisonChart
@@ -168,7 +176,7 @@ function DashboardHome() {
             </div>
           </ChartCard>
 
-          {/* ── 2-column charts ── */}
+          {/* -- 2-column charts -- */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
             <ChartCard title="Sales Trend">
@@ -197,14 +205,14 @@ function DashboardHome() {
 
           </div>
 
-          {/* ── User Activity ── */}
+          {/* -- User Activity -- */}
           <ChartCard title="User Activity">
             <div className="h-64 sm:h-72">
               <UserActivity userData={userData} invoiceData={filteredInvoiceData} isLoading={isLoading} />
             </div>
           </ChartCard>
 
-          {/* ── Recent tables ── */}
+          {/* -- Recent tables -- */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
             <ChartCard title="Recent Sales">
@@ -221,7 +229,7 @@ function DashboardHome() {
 
           </div>
 
-          {/* ── Revenue Growth ── */}
+          {/* -- Revenue Growth -- */}
           <ChartCard title="Revenue Growth">
             <div className="h-64 sm:h-80 lg:h-96">
               <RevenueGrowthChart invoiceData={filteredInvoiceData} isLoading={isLoading} />

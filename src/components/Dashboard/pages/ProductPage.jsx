@@ -5,20 +5,20 @@ import FetchLoader from './FetchLoader';
 import { getCategories } from "../../../API/APICategory";
 import { billUrl } from "../../../API/APILinks";
 
-/* ── Shared helpers (same pattern across all pages) ─────────── */
+/* -- Shared helpers (same pattern across all pages) ----------- */
 function ModalShell({ title, onClose, children, footer }) {
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-floating w-full max-w-lg overflow-hidden animate-fade-in">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
-          <h2 className="text-base font-semibold text-slate-800">{title}</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100/10">
+          <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-700/80 hover:bg-zinc-100 transition-colors">
             <X size={18} />
           </button>
         </div>
         <div className="max-h-[65vh] overflow-y-auto px-6 py-5">{children}</div>
         {footer && (
-          <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">{footer}</div>
+          <div className="px-6 py-4 bg-zinc-100/30 border-t border-zinc-100/10 flex justify-end gap-3">{footer}</div>
         )}
       </div>
     </div>
@@ -28,7 +28,7 @@ function ModalShell({ title, onClose, children, footer }) {
 function InfoSection({ title, children }) {
   return (
     <div className="mb-5">
-      <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 pb-1 border-b border-slate-100">{title}</h3>
+      <h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">{title}</h3>
       <div className="grid grid-cols-2 gap-3">{children}</div>
     </div>
   );
@@ -37,13 +37,13 @@ function InfoSection({ title, children }) {
 function InfoRow({ label, children, full }) {
   return (
     <div className={`flex flex-col gap-1 ${full ? "col-span-2" : ""}`}>
-      <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">{label}</span>
-      <div className="text-sm text-slate-700">{children}</div>
+      <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">{label}</span>
+      <div className="text-sm text-zinc-700">{children}</div>
     </div>
   );
 }
 
-/* ── ViewModal ──────────────────────────────────────────────── */
+/* -- ViewModal ------------------------------------------------ */
 function ViewModal({ product, onClose }) {
   return (
     <ModalShell
@@ -54,12 +54,12 @@ function ViewModal({ product, onClose }) {
       {/* Image & name */}
       <div className="flex flex-col items-center mb-5 gap-3">
         {product.image ? (
-          <img src={`${billUrl}/${product.image}`} alt={product.name} className="max-h-40 rounded-xl object-contain border border-slate-100 shadow-sm" />
+          <img src={`${billUrl}/${product.image}`} alt={product.name} className="max-h-40 rounded-xl object-contain border border-zinc-100/10 shadow-sm" />
         ) : (
-          <div className="w-24 h-24 rounded-xl bg-slate-100 flex items-center justify-center text-slate-300 text-3xl">📦</div>
+          <div className="w-24 h-24 rounded-xl bg-zinc-100/50 flex items-center justify-center text-zinc-700/30 text-3xl">📦</div>
         )}
         <div className="text-center">
-          <p className="text-base font-bold text-slate-800">{product.name}</p>
+          <p className="text-base font-bold text-zinc-900">{product.name}</p>
           <span className={product.isActive ? "pos-badge-success" : "pos-badge-danger"}>
             {product.isActive ? "Active" : "Inactive"}
           </span>
@@ -68,7 +68,7 @@ function ViewModal({ product, onClose }) {
 
       <InfoSection title="Basic Information">
         <InfoRow label="Product ID">{product.id}</InfoRow>
-        <InfoRow label="Barcode"><span className="font-mono">{product.barcode || "—"}</span></InfoRow>
+        <InfoRow label="Barcode"><span className="font-mono">{product.barcode || "-"}</span></InfoRow>
         <InfoRow label="Category">{product.categoryId}</InfoRow>
         <InfoRow label="Unit">{product.unit}</InfoRow>
       </InfoSection>
@@ -86,7 +86,7 @@ function ViewModal({ product, onClose }) {
       {product.description && (
         <InfoSection title="Description">
           <InfoRow label="" full>
-            <p className="text-slate-600 leading-relaxed">{product.description}</p>
+            <p className="text-zinc-700/80 leading-relaxed">{product.description}</p>
           </InfoRow>
         </InfoSection>
       )}
@@ -94,7 +94,7 @@ function ViewModal({ product, onClose }) {
   );
 }
 
-/* ── FilterModal ────────────────────────────────────────────── */
+/* -- FilterModal ---------------------------------------------- */
 function FilterModal({ onClose, onApply, currentFilters, categories, units }) {
   const [name,        setName]        = useState(currentFilters.name        || "");
   const [barcode,     setBarcode]     = useState(currentFilters.barcode     || "");
@@ -117,33 +117,33 @@ function FilterModal({ onClose, onApply, currentFilters, categories, units }) {
     >
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Name</label><input value={name} onChange={e => setName(e.target.value)} className="pos-input" placeholder="Filter by name" /></div>
-          <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Barcode</label><input value={barcode} onChange={e => setBarcode(e.target.value)} className="pos-input" placeholder="Filter by barcode" /></div>
-          <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Category</label>
+          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Name</label><input value={name} onChange={e => setName(e.target.value)} className="pos-input" placeholder="Filter by name" /></div>
+          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Barcode</label><input value={barcode} onChange={e => setBarcode(e.target.value)} className="pos-input" placeholder="Filter by barcode" /></div>
+          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Category</label>
             <select value={categoryId} onChange={e => setCategoryId(e.target.value)} className="pos-input">
               <option value="">All</option>
               {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-          <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Unit</label>
+          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Unit</label>
             <select value={unit} onChange={e => setUnit(e.target.value)} className="pos-input">
               <option value="">All</option>
               {units.map(u => <option key={u} value={u}>{u}</option>)}
             </select>
           </div>
-          <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Status</label>
+          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Status</label>
             <select value={status} onChange={e => setStatus(e.target.value)} className="pos-input">
               <option value="">All</option><option value="active">Active</option><option value="inactive">Inactive</option>
             </select>
           </div>
         </div>
 
-        <div><p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 pb-1 border-b border-slate-100">Price Range</p>
+        <div><p className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-2 pb-1 border-b border-zinc-100/10">Price Range</p>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Min Price</label><input type="number" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="pos-input" placeholder="0" /></div>
-            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Max Price</label><input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="pos-input" placeholder="Any" /></div>
-            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Min Discount %</label><input type="number" value={minDiscount} onChange={e => setMinDiscount(e.target.value)} className="pos-input" placeholder="0" /></div>
-            <div><label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">Max Discount %</label><input type="number" value={maxDiscount} onChange={e => setMaxDiscount(e.target.value)} className="pos-input" placeholder="100" /></div>
+            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Min Price</label><input type="number" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="pos-input" placeholder="0" /></div>
+            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Max Price</label><input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="pos-input" placeholder="Any" /></div>
+            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Min Discount %</label><input type="number" value={minDiscount} onChange={e => setMinDiscount(e.target.value)} className="pos-input" placeholder="0" /></div>
+            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Max Discount %</label><input type="number" value={maxDiscount} onChange={e => setMaxDiscount(e.target.value)} className="pos-input" placeholder="100" /></div>
           </div>
         </div>
       </div>
@@ -151,7 +151,7 @@ function FilterModal({ onClose, onApply, currentFilters, categories, units }) {
   );
 }
 
-/* ── ProductPage ────────────────────────────────────────────── */
+/* -- ProductPage ---------------------------------------------- */
 function ProductPage() {
   const [selectedProduct,  setSelectedProduct]  = useState(null);
   const [searchTerm,       setSearchTerm]       = useState("");
@@ -205,21 +205,21 @@ function ProductPage() {
     <div className="space-y-5">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold text-slate-800">Product Management</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{productData.length} total products</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Product Management</h1>
+          <p className="text-sm text-zinc-600 mt-0.5">{productData.length} total products</p>
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
-        <input type="text" placeholder="Search products…" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pos-input sm:max-w-xs" />
+        <input type="text" placeholder="Search products" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pos-input sm:max-w-xs" />
         <button onClick={() => setShowFilterModal(true)} className="pos-btn-secondary flex items-center gap-2">
           <SlidersHorizontal size={15} /> Filters
         </button>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-xl shadow-card overflow-hidden">
+      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
         {isFetching ? <FetchLoader />
-          : loading ? <div className="p-8 text-center text-slate-500">Loading…</div>
+          : loading ? <div className="p-8 text-center text-zinc-600">Loading�</div>
           : error   ? <div className="p-8 text-center text-red-500">{error}</div>
           : (
             <div className="overflow-x-auto">
@@ -237,9 +237,9 @@ function ProductPage() {
                 <tbody>
                   {filteredData.length > 0 ? filteredData.map(p => (
                     <tr key={p.id}>
-                      <td className="font-medium text-slate-500 text-xs">{p.id}</td>
-                      <td className="font-medium text-slate-800">{p.name}</td>
-                      <td className="hidden sm:table-cell text-slate-500">{getCategoryName(p.categoryId)}</td>
+                      <td className="font-medium text-zinc-600 text-xs">{p.id}</td>
+                      <td className="font-medium text-zinc-900">{p.name}</td>
+                      <td className="hidden sm:table-cell text-zinc-600">{getCategoryName(p.categoryId)}</td>
                       <td className="hidden md:table-cell">
                         <div className="flex flex-col">
                           <span className="text-emerald-600 font-semibold">Rs {p.price.toLocaleString()}</span>
@@ -252,13 +252,13 @@ function ProductPage() {
                         </span>
                       </td>
                       <td className="text-center">
-                        <button onClick={() => setSelectedProduct(p)} className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors" aria-label="View product">
+                        <button onClick={() => setSelectedProduct(p)} className="p-1.5 rounded-lg text-zinc-500 hover:text-blue-600 hover:bg-zinc-50 transition-colors" aria-label="View product">
                           <Eye size={16} />
                         </button>
                       </td>
                     </tr>
                   )) : (
-                    <tr><td colSpan="6" className="py-12 text-center text-slate-400">No products found</td></tr>
+                    <tr><td colSpan="6" className="py-12 text-center text-zinc-500">No products found</td></tr>
                   )}
                 </tbody>
               </table>

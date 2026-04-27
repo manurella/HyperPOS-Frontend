@@ -33,33 +33,23 @@ function BaseScreenLayout() {
   if (loading) return <Loader />;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-100">
+    <div className="flex h-screen overflow-hidden bg-zinc-100">
 
-      {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-20 lg:hidden"
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
           onClick={closeSidebar}
           aria-hidden="true"
         />
       )}
 
-      {/* Sidebar */}
-      <Sidebar
-        isMobileOpen={sidebarOpen}
-        onCloseMobile={closeSidebar}
-        org={org}
-      />
+      <Sidebar isMobileOpen={sidebarOpen} onCloseMobile={closeSidebar} org={org} />
 
-      {/* Right column */}
-      <div className="flex flex-col flex-1 overflow-hidden">
-
+      <div className="flex flex-col flex-1 overflow-hidden bg-white border-l border-zinc-200">
         <Topbar org={org} onMenuToggle={toggleSidebar} />
-
-        <main className="flex-1 overflow-auto p-4 sm:p-6 bg-slate-50">
+        <main className="flex-1 overflow-auto p-6 sm:p-8 bg-zinc-100">
           <Outlet />
         </main>
-
       </div>
 
     </div>
