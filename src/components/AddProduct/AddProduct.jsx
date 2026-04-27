@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import React, { useState, useRef, useEffect } from "react";
 import {
   saveProduct,
@@ -6,14 +7,14 @@ import {
   getProducts,
 } from "../../API/APIProducts";
 import { getCategories } from "../../API/APICategory";
-import { FiCamera } from "react-icons/fi";
-import { BiBarcode } from "react-icons/bi";
+import { PackagePlus, Upload, Barcode } from "lucide-react";
 
 const AddProduct = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [isUpdate, setIsUpdate] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [logoPreview, setLogoPreview] = useState(null);
 
   const unitList = [
     "KG", "GRAM", "MILLIGRAM", "LITRE", "MILLILITRE", "PIECE", "PACKET", "BAG", "BOX", "BOTTLE", "CAN", "BUNCH", "METER", "ROLL", "SET", "PAIR", "DOZEN", "CARTON", "SHEET", "TON", "GALLON", "BARREL", "CUBIC_METER", "YARD", "FOOT", "INCH", "SLAB", "REEL", "LOAF", "TUBE", "SACHET",
@@ -43,7 +44,7 @@ const AddProduct = () => {
       const response = await getCategories();
       setCategories(response);
     } catch (error) {
-      alert(error.response?.data?.message || error?.message);
+      toast.error(error.response?.data?.message || error?.message);
     }
   };
 
@@ -52,7 +53,7 @@ const AddProduct = () => {
       const response = await getProducts();
       setProducts(response);
     } catch (error) {
-      alert(error.response?.data?.message || error?.message);
+      toast.error(error.response?.data?.message || error?.message);
     }
   };
 
@@ -69,6 +70,7 @@ const AddProduct = () => {
         description: "",
         photo: null,
       });
+      setLogoPreview(null);
       setIsUpdate(false);
       return;
     }
@@ -84,6 +86,7 @@ const AddProduct = () => {
       description: product.description,
       photo: null,
     });
+    setLogoPreview(null);
     setIsUpdate(true);
   };
 
@@ -91,6 +94,7 @@ const AddProduct = () => {
     const { name, value, files } = e.target;
     if (name === "photo") {
       setForm({ ...form, photo: files[0] });
+      setLogoPreview(URL.createObjectURL(files[0]));
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -99,13 +103,13 @@ const AddProduct = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!form.barcode.trim()) newErrors.barcode = "Barcode is required.";
-    if (!form.name.trim()) newErrors.name = "Product name is required.";
-    if (!form.unit) newErrors.unit = "Unit must be selected.";
-    if (!form.price || isNaN(form.price)) newErrors.price = "Valid price is required.";
-    if (!form.categoryId) newErrors.categoryId = "Please select a category.";
-    if (form.discount < 0) newErrors.discount = "Discount cannot be negative.";
-    if (form.discount > 100) newErrors.discount = "Discount cannot be more than 100%.";
+    if (!form.barcode.trim()) newErrors.barcode = "Barcode is required";
+    if (!form.name.trim()) newErrors.name = "Product name is required";
+    if (!form.unit) newErrors.unit = "Unit must be selected";
+    if (!form.price || isNaN(form.price)) newErrors.price = "Valid price is required";
+    if (!form.categoryId) newErrors.categoryId = "Please select a category";
+    if (form.discount < 0) newErrors.discount = "Discount cannot be negative";
+    if (form.discount > 100) newErrors.discount = "Discount cannot be more than 100%";
     return newErrors;
   };
 
@@ -123,24 +127,16 @@ const AddProduct = () => {
     setIsLoading(true);
     let pid = null;
     let image = form?.photo;
-    if (isUpdate) {
-      try {
+    
+    try {
+      if (isUpdate) {
         const response = await updateProduct(form?.id, form);
         pid = response?.id;
-        alert("Product updated successfully!");
-        getAllProducts();
-      } catch (error) {
-        alert(error.response?.data?.message || error?.message);
-      } finally {
-        setIsLoading(false);
-      }
-      return;
-    } else {
-      try {
+        toast.success("Product updated successfully!");
+      } else {
         const response = await saveProduct(form);
         pid = response?.id;
-        alert("Product added successfully!");
-        barcodeRef.current.value = "";
+        toast.success("Product added successfully!");
         setForm({
           id: undefined,
           barcode: "",
@@ -152,50 +148,59 @@ const AddProduct = () => {
           description: "",
           photo: null,
         });
-        getAllProducts();
-      } catch (error) {
-        alert(error.response?.data?.message || error?.message);
-      } finally {
-        setIsLoading(false);
+        setLogoPreview(null);
       }
+      getAllProducts();
+    } catch (error) {
+      toast.error(error.response?.data?.message || error?.message);
+    } finally {
+      setIsLoading(false);
     }
-    // Handle image upload after adding product
+    
+    // Handle image upload after adding/updating product
     if (pid && image) {
       try {
         await saveProductImage(pid, image);
-        alert("Image saved successfully");
       } catch (error) {
-        alert(error.response?.data?.message || error?.message);
+        toast.error(error.response?.data?.message || error?.message);
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 py-6 sm:px-6 md:px-8">
-      {/* Add background effect, particles or scanlines if you like */}
-      <div className="absolute inset-0 hyper-bg -z-10"></div>
+    <div className="space-y-5">
+      {/* Page header */}
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
+          {isUpdate ? "Update Product" : "Add Product"}
+        </h1>
+        <p className="text-sm text-zinc-600 mt-0.5">
+          {isUpdate ? "Edit an existing product's details" : "Add a new product to the inventory"}
+        </p>
+      </div>
 
-      <div className="relative w-full max-w-sm md:max-w-2xl mx-auto z-10">
-        <div className="relative bg-white backdrop-blur-md p-6 sm:p-8 rounded-lg border border-slate-200 shadow-lg overflow-hidden">
-          <div className="text-center mb-6">
-            <h2 className="text-3xl sm:text-4xl font-bold hyper-text-glow text-slate-800 mb-1 sm:mb-2">
-              {isUpdate ? "UPDATE" : "ADD"} <span className="text-[#f472b6]">PRODUCT</span>
-            </h2>
-            <p className="text-slate-700/70 text-xs tracking-wider">
-              Fill the product details below
-            </p>
+      {/* Form card */}
+      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
+        {/* Card header */}
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
+          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+            <PackagePlus size={16} className="text-blue-600" />
           </div>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Product Select */}
+          <h2 className="text-sm font-semibold text-zinc-700">Product Details</h2>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="px-6 py-6 space-y-5">
+            {/* Select existing product */}
             <div>
-              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                SELECT PRODUCT (For update)
+              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                Select Product (For update)
               </label>
               <select
                 name="id"
                 value={form.id || "New Product"}
                 onChange={setProductToUpdate}
-                className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                className="pos-input"
               >
                 <option value="New Product">New Product</option>
                 {products.map((product) => (
@@ -205,66 +210,93 @@ const AddProduct = () => {
                 ))}
               </select>
             </div>
+
             {/* Barcode */}
             <div>
-              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                BARCODE
+              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                Barcode <span className="text-red-500">*</span>
               </label>
               <div className="relative">
                 <input
                   type="text"
                   name="barcode"
-                  placeholder="Scan Barcode"
+                  placeholder="Scan or enter barcode"
                   ref={barcodeRef}
                   value={form.barcode}
                   onChange={handleChange}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") e.preventDefault();
                   }}
-                  className="w-full px-10 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className={`pos-input pl-10 ${errors.barcode ? 'border-red-400' : ''}`}
                 />
-                <BiBarcode
-                  className="absolute left-3 top-3 text-xl text-purple-400 cursor-pointer"
-                  onClick={() => barcodeRef.current?.focus()}
-                />
-                <span
-                  className="absolute right-3 top-2.5 text-xs bg-[#f472b6] px-3 py-1 rounded-full text-slate-800 cursor-pointer hover:bg-pink-600"
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-700/40">
+                  <Barcode size={18} />
+                </div>
+                <button
+                  type="button"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-xs bg-blue-50 text-blue-600 font-medium px-3 py-1 rounded-md border border-zinc-200 hover:bg-zinc-100 transition-colors"
                   onClick={() => barcodeRef.current?.focus()}
                 >
                   Scan
-                </span>
+                </button>
               </div>
               {errors.barcode && (
-                <p className="hyper-warning-text text-xs mt-1">{errors.barcode}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.barcode}</p>
               )}
             </div>
-            {/* Name & Unit */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            {/* Name & Category */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                  PRODUCT NAME
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                  Product Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   name="name"
-                  placeholder="Enter Product Name"
+                  placeholder="Enter product name"
                   value={form.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className={`pos-input ${errors.name ? 'border-red-400' : ''}`}
                 />
                 {errors.name && (
-                  <p className="hyper-warning-text text-xs mt-1">{errors.name}</p>
+                  <p className="text-xs text-red-500 mt-1">{errors.name}</p>
                 )}
               </div>
               <div>
-                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                  UNIT
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                  Category <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="categoryId"
+                  value={form.categoryId}
+                  onChange={handleChange}
+                  className={`pos-input ${errors.categoryId ? 'border-red-400' : ''}`}
+                >
+                  <option value="">Choose the Category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.categoryId && (
+                  <p className="text-xs text-red-500 mt-1">{errors.categoryId}</p>
+                )}
+              </div>
+            </div>
+
+            {/* Unit, Price & Discount */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                  Unit <span className="text-red-500">*</span>
                 </label>
                 <select
                   name="unit"
                   value={form.unit}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className={`pos-input ${errors.unit ? 'border-red-400' : ''}`}
                 >
                   <option value="">Select unit</option>
                   {unitList.map((unit) => (
@@ -274,153 +306,149 @@ const AddProduct = () => {
                   ))}
                 </select>
                 {errors.unit && (
-                  <p className="hyper-warning-text text-xs mt-1">{errors.unit}</p>
+                  <p className="text-xs text-red-500 mt-1">{errors.unit}</p>
                 )}
               </div>
-            </div>
-            {/* Price & Discount */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                  PRICE
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                  Price <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="number"
                   name="price"
-                  placeholder="Enter Price"
+                  placeholder="0.00"
                   value={form.price}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className={`pos-input ${errors.price ? 'border-red-400' : ''}`}
                 />
                 {errors.price && (
-                  <p className="hyper-warning-text text-xs mt-1">{errors.price}</p>
+                  <p className="text-xs text-red-500 mt-1">{errors.price}</p>
                 )}
               </div>
               <div>
-                <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                  DISCOUNT (%)
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                  Discount (%)
                 </label>
                 <input
                   type="number"
                   name="discount"
-                  placeholder="Enter discount"
+                  placeholder="0"
                   value={form.discount}
                   onChange={handleChange}
-                  className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                  className={`pos-input ${errors.discount ? 'border-red-400' : ''}`}
                 />
                 {errors.discount && (
-                  <p className="hyper-warning-text text-xs mt-1">{errors.discount}</p>
+                  <p className="text-xs text-red-500 mt-1">{errors.discount}</p>
                 )}
               </div>
             </div>
-            {/* Category */}
-            <div>
-              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                CATEGORY
-              </label>
-              <select
-                name="categoryId"
-                value={form.categoryId}
-                onChange={handleChange}
-                className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-              >
-                <option value="">Choose the Category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              {errors.categoryId && (
-                <p className="hyper-warning-text text-xs mt-1">{errors.categoryId}</p>
-              )}
-            </div>
+
             {/* Description */}
             <div>
-              <label className="hyper-text text-slate-700 text-sm font-medium mb-1 block">
-                DESCRIPTION
+              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                Description
               </label>
               <textarea
                 name="description"
-                placeholder="Enter Description"
+                placeholder="Enter product description"
                 value={form.description}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-3 py-2.5 rounded-sm bg-white border border-slate-200 text-slate-800 placeholder-purple-300/50 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
-              ></textarea>
+                className="pos-input resize-none"
+              />
               {errors.description && (
-                <p className="hyper-warning-text text-xs mt-1">{errors.description}</p>
+                <p className="text-xs text-red-500 mt-1">{errors.description}</p>
               )}
             </div>
-            {/* Image Upload & Preview */}
-            <div className="flex flex-col md:flex-row md:items-center gap-4">
-              <div className="flex-1">
-                <label
-                  htmlFor="photo-upload"
-                  className="flex items-center justify-center gap-3 px-4 py-3 bg-[#3a2a55] text-purple-200 rounded-lg cursor-pointer hover:bg-[#4b3b6e] transition"
-                >
-                  <FiCamera className="text-xl" />
-                  <span>{form.photo ? form.photo.name : "Choose Picture"}</span>
-                  <input
-                    id="photo-upload"
-                    type="file"
-                    name="photo"
-                    accept="image/*"
-                    onChange={handleChange}
-                    className="hidden"
-                  />
-                </label>
-                {errors.photo && (
-                  <p className="hyper-warning-text text-xs mt-1">{errors.photo}</p>
-                )}
-              </div>
-              {/* Image Preview */}
-              {form.photo && (
-                <div className="text-center">
-                  <img
-                    src={URL.createObjectURL(form.photo)}
-                    alt="Preview"
-                    className="w-32 h-32 object-cover mx-auto rounded-lg border border-[#f472b6] shadow-md"
-                  />
+
+            {/* Product Image */}
+            <div>
+              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                Product Image
+              </label>
+              <label className="flex items-center gap-3 w-full px-4 py-3 border border-zinc-200 border-dashed rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors">
+                <Upload size={16} className="text-zinc-700/40 shrink-0" />
+                <span className="text-sm text-zinc-600">
+                  {form.photo ? form.photo.name : "Click to upload an image"}
+                </span>
+                <input
+                  type="file"
+                  name="photo"
+                  accept="image/*"
+                  onChange={handleChange}
+                  className="sr-only"
+                />
+              </label>
+              {logoPreview && (
+                <div className="mt-3 flex items-center gap-4">
+                  <div className="h-20 w-20 border border-zinc-200 rounded-xl flex items-center justify-center overflow-hidden bg-blue-50/20">
+                    <img src={logoPreview} alt="Preview" className="max-h-full max-w-full object-contain" />
+                  </div>
+                  <p className="text-xs text-zinc-600">Image preview</p>
                 </div>
               )}
+              {errors.photo && (
+                <p className="text-xs text-red-500 mt-1">{errors.photo}</p>
+              )}
             </div>
-            {/* Submit Button */}
-            <div className="mt-6">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="hyper-button w-full py-2.5 text-slate-800 uppercase tracking-wider text-sm font-medium relative overflow-hidden"
-              >
-                <span className="relative z-10 flex items-center justify-center">
-                  {isLoading ? (
-                    <>
-                      <svg
-                        aria-hidden="true"
-                        className="inline w-4 h-4 mr-2 text-gray-200 animate-spin fill-[#f472b6]"
-                        viewBox="0 0 100 101"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                          fill="currentColor"
-                        />
-                        <path
-                          d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                          fill="currentFill"
-                        />
-                      </svg>
-                      <span>{isUpdate ? "Updating..." : "Saving..."}</span>
-                    </>
-                  ) : (
-                    isUpdate ? "Update Product" : "Add Product"
-                  )}
-                </span>
-              </button>
-            </div>
-          </form>
-        </div>
+          </div>
+
+          {/* Footer actions */}
+          <div className="px-6 py-4 bg-blue-50/20 border-t border-zinc-200 flex justify-end gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                setForm({
+                  id: undefined,
+                  barcode: "",
+                  name: "",
+                  unit: "",
+                  price: "",
+                  categoryId: "",
+                  discount: 0,
+                  description: "",
+                  photo: null,
+                });
+                setLogoPreview(null);
+                setIsUpdate(false);
+                setErrors({});
+              }}
+              className="pos-btn-secondary"
+            >
+              Clear
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="pos-btn-primary flex items-center gap-2"
+            >
+              {isLoading ? (
+                <>
+                  <svg
+                    aria-hidden="true"
+                    className="w-4 h-4 animate-spin"
+                    viewBox="0 0 100 101"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="currentColor"
+                      opacity="0.3"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  {isUpdate ? "Updating..." : "Saving..."}
+                </>
+              ) : (
+                isUpdate ? "Update Product" : "Add Product"
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
