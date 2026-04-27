@@ -51,7 +51,7 @@ function Loader() {
           height: 40,
           borderRadius: '50%',
           border: '3px solid rgba(99,102,241,0.15)',
-          borderTopColor: '#6366f1',
+          borderTopColor: '#a855f7',
           animation: 'pos-spin 0.8s linear infinite',
         }} />
         <span style={{
@@ -61,7 +61,7 @@ function Loader() {
           fontWeight: 500,
           letterSpacing: '0.02em',
         }}>
-          Initializingâ€¦
+          Initializing…
         </span>
       </div>
 

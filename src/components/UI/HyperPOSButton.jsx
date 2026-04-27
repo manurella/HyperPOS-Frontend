@@ -18,8 +18,8 @@ const HyperPOSButton = ({
 }) => {
 
   const variantStyles = {
-    default   : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300',
-    primary   : 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700 shadow-sm',
+    default   : 'bg-white border-primary-100/20 text-primary-800 hover:bg-primary-50/20 hover:border-primary-100/20',
+    primary   : 'bg-primary-600 border-primary-600 text-white hover:bg-primary-700 shadow-sm',
     secondary : 'bg-slate-800 border-slate-800 text-white hover:bg-slate-900',
     danger    : 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100 hover:border-red-300',
   };

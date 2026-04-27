@@ -28,13 +28,13 @@ const HyperPOSLoader = ({ size = 'md', text = 'Loading data...', className = '' 
     <div className={`flex flex-col items-center justify-center gap-4 ${className}`}>
 
       {/* Spinner */}
-      <div className={`${spinnerClass} rounded-full border-slate-200 border-t-indigo-600 animate-spin`} />
+      <div className={`${spinnerClass} rounded-full border-primary-100/20 border-t-primary-600 animate-spin`} />
 
       {/* Text + progress bar */}
       <div className="flex flex-col items-center gap-2">
-        <span className={`${textClass} font-medium text-slate-500`}>{text}</span>
-        <div className="h-1 w-40 bg-slate-100 rounded-full overflow-hidden">
-          <div className="h-full bg-indigo-500 rounded-full animate-progress-indeterminate" />
+        <span className={`${textClass} font-medium text-primary-800/60`}>{text}</span>
+        <div className="h-1 w-40 bg-primary-100/50 rounded-full overflow-hidden">
+          <div className="h-full bg-primary-500 rounded-full animate-progress-indeterminate" />
         </div>
       </div>
 

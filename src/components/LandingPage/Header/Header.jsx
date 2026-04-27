@@ -23,13 +23,13 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur border-b border-slate-200">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-zinc-200">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
 
         {/* Brand */}
         <a href="#home" onClick={e => handleNavClick(e, "home")} className="flex items-center gap-2.5">
-          <img src="/HyperPOS.svg" alt="HyperPOS" className="w-8 h-8 object-contain" />
-          <span className="font-bold text-slate-800 text-lg tracking-tight">HyperPOS</span>
+          <img src="/HyperPOS.svg" alt="HyperPOS" className="w-7 h-7 object-contain" />
+          <span className="font-bold text-zinc-900 text-base tracking-tight">HyperPOS</span>
         </a>
 
         {/* Desktop nav */}
@@ -39,10 +39,10 @@ const Header = () => {
               key={id}
               href={`#${id}`}
               onClick={e => handleNavClick(e, id)}
-              className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+              className={`px-3.5 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeLink === id
-                  ? "text-indigo-600 bg-indigo-50"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                  ? "text-blue-600 bg-blue-50"
+                  : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
               }`}
             >
               {label}
@@ -52,14 +52,11 @@ const Header = () => {
 
         {/* CTA + mobile toggle */}
         <div className="flex items-center gap-3">
-          <button
-            onClick={() => navigate("/login")}
-            className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors shadow-sm"
-          >
+          <button onClick={() => navigate("/login")} className="pos-btn-primary">
             Sign In
           </button>
           <button
-            className="md:hidden p-2 rounded-lg text-slate-500 hover:bg-slate-100 transition-colors"
+            className="md:hidden p-2 rounded-md text-zinc-500 hover:bg-zinc-100 transition-colors"
             onClick={() => setMobileOpen(v => !v)}
             aria-label="Toggle menu"
           >
@@ -71,17 +68,17 @@ const Header = () => {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 pb-4">
+        <div className="md:hidden border-t border-zinc-100 bg-white px-4 pb-4">
           <nav className="flex flex-col gap-1 pt-3">
             {NAV_ITEMS.map(({ id, label }) => (
               <a
                 key={id}
                 href={`#${id}`}
                 onClick={e => handleNavClick(e, id)}
-                className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                className={`px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                   activeLink === id
-                    ? "text-indigo-600 bg-indigo-50"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
+                    ? "text-blue-600 bg-blue-50"
+                    : "text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
                 }`}
               >
                 {label}

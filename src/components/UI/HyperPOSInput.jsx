@@ -26,7 +26,7 @@ const HyperPOSInput = ( {
     <div className = { `mb-4 ${ className }` }>
       
       { label && (
-        <label className = "block mb-2 text-sm text-slate-700 font-medium">
+        <label className = "block mb-1.5 text-xs font-semibold text-primary-800/60 uppercase tracking-wide">
           { label }
         </label>
       ) }
@@ -38,7 +38,7 @@ const HyperPOSInput = ( {
           value = { value }
           onChange = { onChange }
           placeholder = { placeholder }
-          className = "w-full bg-white border border-slate-300 text-slate-800 p-2 rounded focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+          className = "w-full bg-white border border-primary-100/20 text-primary-900 px-3.5 py-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5"
           { ...props }
         />
         

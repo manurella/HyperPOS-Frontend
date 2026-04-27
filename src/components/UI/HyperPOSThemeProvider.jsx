@@ -49,7 +49,7 @@ const HyperPOSThemeProvider = ( {
             {particles && (
 
                 <div className = "absolute inset-0 -z-5 pointer-events-none">
-                    <ParticleBackground count = { chartMode ? 8 : 15 } color = "#f472b6" opacity = { 0.1 } />
+                    <ParticleBackground count = { chartMode ? 8 : 15 } color = "#a855f7" opacity = { 0.1 } />
                 </div>
 
             ) }
@@ -74,10 +74,10 @@ const HyperPOSThemeProvider = ( {
                             style = { {
                                 top : `${ i * 10 }%`,
                                 opacity : 0.6,
-                                background : i % 2 === 0 ? '#f0abfc' : '#c026d3',
+                                background : i % 2 === 0 ? '#d8b4fe' : '#9333ea',
                                 boxShadow: i % 2 === 0 
-                                    ? '0 0 10px 1px #f0abfc, 0 0 20px 1px #f0abfc' 
-                                    : '0 0 10px 1px #c026d3, 0 0 20px 1px #c026d3',
+                                    ? '0 0 10px 1px #d8b4fe, 0 0 20px 1px #d8b4fe' 
+                                    : '0 0 10px 1px #9333ea, 0 0 20px 1px #9333ea',
                             }}
                         >                         
                         </div>
@@ -97,7 +97,7 @@ const HyperPOSThemeProvider = ( {
 
                         <div 
                             key = { i }
-                            className = "absolute left-0 right-0 border-t border-dashed border-pink-500/20"
+                            className = "absolute left-0 right-0 border-t border-dashed border-primary-500/20"
                             style = { {
                                 top: `${ ( i + 1 ) * 20 }%`,
                             } }
@@ -110,7 +110,7 @@ const HyperPOSThemeProvider = ( {
 
                         <div 
                             key = { i }
-                            className = "absolute top-0 bottom-0 border-l border-dashed border-pink-500/20"
+                            className = "absolute top-0 bottom-0 border-l border-dashed border-primary-500/20"
                             style = { {
                                 left: `${ ( i + 1 ) * 20 }%`,
                             } }

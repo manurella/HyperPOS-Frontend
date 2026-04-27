@@ -12,11 +12,11 @@ const HyperPOSCard = ({ children, title, className = '' }) => {
 
   return (
 
-    <div className={`bg-white border border-slate-200 rounded-xl shadow-card overflow-hidden ${className}`}>
+    <div className={`bg-white border border-primary-100/20 rounded-xl shadow-card overflow-hidden ${className}`}>
 
       { title && (
-        <div className="border-b border-slate-100 px-5 py-4">
-          <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
+        <div className="border-b border-primary-100/10 px-5 py-4">
+          <h3 className="text-sm font-semibold text-primary-800 uppercase tracking-wide">
             { title }
           </h3>
         </div>
