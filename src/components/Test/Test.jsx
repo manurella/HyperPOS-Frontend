@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import {
   submitSale,
   returnSale,
@@ -28,7 +29,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -39,7 +40,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -50,7 +51,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -61,7 +62,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -73,7 +74,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -84,7 +85,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -95,7 +96,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -106,7 +107,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -117,7 +118,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -128,7 +129,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -139,7 +140,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };
@@ -150,7 +151,7 @@ function Test() {
       console.log("Response:", response);
     } catch (error) {
       const errorMessage = error.response?.data?.message || error?.message;
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.error("Error:", errorMessage);
     }
   };

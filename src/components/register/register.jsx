@@ -1,3 +1,4 @@
+import { toast } from "react-hot-toast";
 import { useState, useEffect, useRef } from "react";
 import {
   getSuppliers,
@@ -55,7 +56,7 @@ const SupplierRegistration = () => {
       const response = await getSuppliers();
       setSuppliers(response);
     } catch (error) {
-      alert(error.response?.data?.message || error?.message);
+      toast.error(error.response?.data?.message || error?.message);
     }
   };
 
@@ -90,20 +91,20 @@ const SupplierRegistration = () => {
     if (isUpdate) {
       try {
         const response = await updateSupplier(formData.id, formData);
-        alert("Supplier updated: " + response?.name);
+        toast.error("Supplier updated: " + response?.name);
         getAllSuppliers();
       } catch (error) {
-        alert(error.response?.data?.message || error?.message);
+        toast.error(error.response?.data?.message || error?.message);
       } finally {
         setIsLoading(false);
       }
     } else {
       try {
         const response = await saveSupplier(formData);
-        alert("Supplier saved: " + response?.name);
+        toast.error("Supplier saved: " + response?.name);
         getAllSuppliers();
       } catch (error) {
-        alert(error.response?.data?.message || error?.message);
+        toast.error(error.response?.data?.message || error?.message);
       } finally {
         setIsLoading(false);
       }
@@ -114,22 +115,22 @@ const SupplierRegistration = () => {
     <div className="space-y-5">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-bold text-slate-800">
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
           {isUpdate ? "Update Supplier" : "Register Supplier"}
         </h1>
-        <p className="text-sm text-slate-500 mt-0.5">
+        <p className="text-sm text-zinc-600 mt-0.5">
           {isUpdate ? "Edit an existing supplier's details" : "Add a new supplier to the system"}
         </p>
       </div>
 
       {/* Form card */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
         {/* Card header */}
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-slate-100">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-            <Truck size={16} className="text-indigo-600" />
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
+          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+            <Truck size={16} className="text-blue-600" />
           </div>
-          <h2 className="text-sm font-semibold text-slate-700">Supplier Details</h2>
+          <h2 className="text-sm font-semibold text-zinc-700">Supplier Details</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -137,7 +138,7 @@ const SupplierRegistration = () => {
             {/* Select / Name row */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                   Select Supplier
                 </label>
                 <select
@@ -155,7 +156,7 @@ const SupplierRegistration = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                   Supplier Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -175,7 +176,7 @@ const SupplierRegistration = () => {
 
             {/* Address */}
             <div>
-              <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                 Address <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -195,7 +196,7 @@ const SupplierRegistration = () => {
             {/* Email & Phone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -212,7 +213,7 @@ const SupplierRegistration = () => {
                 )}
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -232,7 +233,7 @@ const SupplierRegistration = () => {
           </div>
 
           {/* Footer actions */}
-          <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+          <div className="px-6 py-4 bg-blue-50/20 border-t border-zinc-200 flex justify-end gap-3">
             <button
               type="button"
               onClick={() => {

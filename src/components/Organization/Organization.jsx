@@ -96,8 +96,8 @@ function Organization() {
     <div className="space-y-5">
       {/* Page header */}
       <div>
-        <h1 className="text-xl font-bold text-slate-800">Organization Settings</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Manage your organization profile and details</p>
+        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Organization Settings</h1>
+        <p className="text-sm text-zinc-600 mt-0.5">Manage your organization profile and details</p>
       </div>
 
       {/* Alerts */}
@@ -113,19 +113,19 @@ function Organization() {
       )}
 
       {/* Form card */}
-      <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
         {/* Card header */}
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-slate-100">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-            <Building2 size={16} className="text-indigo-600" />
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
+          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+            <Building2 size={16} className="text-blue-600" />
           </div>
-          <h2 className="text-sm font-semibold text-slate-700">Organization Profile</h2>
+          <h2 className="text-sm font-semibold text-zinc-700">Organization Profile</h2>
         </div>
 
         <div className="px-6 py-6 space-y-5">
           {/* Org Name */}
           <div>
-            <label htmlFor="name" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label htmlFor="name" className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Organization Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -142,7 +142,7 @@ function Organization() {
 
           {/* Address */}
           <div>
-            <label htmlFor="address" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label htmlFor="address" className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Address <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -160,7 +160,7 @@ function Organization() {
           {/* Phone & Email */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="phone" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              <label htmlFor="phone" className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                 Phone Number <span className="text-red-500">*</span>
               </label>
               <input
@@ -175,7 +175,7 @@ function Organization() {
               {errors.phone && <p className="text-xs text-red-500 mt-1">{errors.phone}</p>}
             </div>
             <div>
-              <label htmlFor="email" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              <label htmlFor="email" className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
@@ -194,7 +194,7 @@ function Organization() {
           {/* Website & Employee Count */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="website" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              <label htmlFor="website" className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                 Website
               </label>
               <input
@@ -208,7 +208,7 @@ function Organization() {
               />
             </div>
             <div>
-              <label htmlFor="employeeCount" className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+              <label htmlFor="employeeCount" className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
                 Number of Employees <span className="text-red-500">*</span>
               </label>
               <input
@@ -227,12 +227,12 @@ function Organization() {
 
           {/* Logo Upload */}
           <div>
-            <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1.5">
+            <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
               Organization Logo
             </label>
-            <label className="flex items-center gap-3 w-full px-4 py-3 border border-slate-200 border-dashed rounded-xl cursor-pointer hover:border-indigo-400 hover:bg-indigo-50/30 transition-colors">
-              <Upload size={16} className="text-slate-400 shrink-0" />
-              <span className="text-sm text-slate-500">Click to upload an image</span>
+            <label className="flex items-center gap-3 w-full px-4 py-3 border border-zinc-200 border-dashed rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors">
+              <Upload size={16} className="text-zinc-700/40 shrink-0" />
+              <span className="text-sm text-zinc-600">Click to upload an image</span>
               <input
                 type="file"
                 id="logo"
@@ -244,36 +244,36 @@ function Organization() {
             </label>
             {logoPreview && (
               <div className="mt-3 flex items-center gap-4">
-                <div className="h-20 w-20 border border-slate-200 rounded-xl flex items-center justify-center overflow-hidden bg-slate-50">
+                <div className="h-20 w-20 border border-zinc-200 rounded-xl flex items-center justify-center overflow-hidden bg-blue-50/20">
                   <img src={logoPreview} alt="Logo preview" className="max-h-full max-w-full object-contain" />
                 </div>
-                <p className="text-xs text-slate-500">Logo preview</p>
+                <p className="text-xs text-zinc-600">Logo preview</p>
               </div>
             )}
-            <p className="text-xs text-slate-400 mt-1.5">Accepted: PNG, JPG, SVG. Recommended: square format.</p>
+            <p className="text-xs text-zinc-700/40 mt-1.5">Accepted: PNG, JPG, SVG. Recommended: square format.</p>
           </div>
 
           {/* Active Status */}
-          <div className="flex items-center gap-3 py-3 px-4 bg-slate-50 rounded-xl border border-slate-200">
+          <div className="flex items-center gap-3 py-3 px-4 bg-blue-50/20 rounded-xl border border-zinc-200">
             <input
               type="checkbox"
               id="isActive"
               name="isActive"
               checked={orgData.isActive}
               onChange={handleChange}
-              className="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 cursor-pointer"
+              className="h-4 w-4 rounded border-zinc-200 text-blue-600 focus:ring-blue-500 cursor-pointer"
             />
             <div>
-              <label htmlFor="isActive" className="text-sm font-medium text-slate-700 cursor-pointer">
+              <label htmlFor="isActive" className="text-sm font-medium text-zinc-700 cursor-pointer">
                 Organization is Active
               </label>
-              <p className="text-xs text-slate-400 mt-0.5">Inactive organizations will be hidden from the system</p>
+              <p className="text-xs text-zinc-700/40 mt-0.5">Inactive organizations will be hidden from the system</p>
             </div>
           </div>
         </div>
 
         {/* Footer actions */}
-        <div className="px-6 py-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-3">
+        <div className="px-6 py-4 bg-blue-50/20 border-t border-zinc-200 flex justify-end gap-3">
           <button
             type="button"
             onClick={handleLoadData}
