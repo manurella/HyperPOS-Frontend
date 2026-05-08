@@ -1,4 +1,4 @@
-
+﻿
 import React from 'react';
 
 const GlowingLogo = ({ 
@@ -6,7 +6,7 @@ const GlowingLogo = ({
   className = ''
 }) => {
   return (
-    <h1 className={`text-blue-600 font-bold text-2xl ${className}`}>
+    <h1 className={`text-[#4F7A3F] font-bold text-2xl font-sans ${className}`}>
       {alt}
     </h1>
   );

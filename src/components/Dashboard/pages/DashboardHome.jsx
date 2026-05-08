@@ -1,4 +1,4 @@
-
+﻿
 import { useState, useEffect } from "react";
 import { TrendingUp, ShoppingCart, Users, Package } from "lucide-react";
 
@@ -27,8 +27,11 @@ import HyperPOSLoader from "../../UI/HyperPOSLoader";
 /* -- Reusable section card ----------------------------------- */
 function ChartCard({ title, children, className = "" }) {
   return (
-    <div className={`bg-white border border-zinc-200 rounded-xl shadow-sm p-5 sm:p-6 ${className}`}>
-      <h2 className="pos-section-title mb-4">{title}</h2>
+    <div
+      className={`bg-white border border-[#E8E5DC] rounded-[14px] p-5 sm:p-6 ${className}`}
+      style={{ boxShadow: '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)' }}
+    >
+      {title && <h2 className="text-[15px] font-semibold text-[#1A1915] mb-4">{title}</h2>}
       {children}
     </div>
   );
@@ -100,8 +103,8 @@ function DashboardHome() {
       {/* -- Page header -- */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Dashboard</h1>
-          <p className="text-sm text-zinc-600 mt-0.5">Overview of your business performance</p>
+          <h1 className="font-sans text-[30px] font-bold text-[#1A1915] tracking-[-0.02em]">Dashboard</h1>
+          <p className="text-[13px] text-[#8C8A82] mt-0.5">Overview of your business performance</p>
         </div>
         <DateRangeSelector
           onRangeChange={(newRange) => setDateRange(newRange)}
@@ -111,8 +114,9 @@ function DashboardHome() {
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center min-h-[60vh] bg-white rounded-xl border border-zinc-200 shadow-sm">
-          <HyperPOSLoader size="lg" text="Loading dashboard data..." />
+        <div className="flex items-center justify-center min-h-[60vh] bg-white rounded-[14px] border border-[#E8E5DC]"
+          style={{ boxShadow: '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)' }}>
+          <HyperPOSLoader size="lg" text="Loading dashboard data…" />
         </div>
       ) : (
         <>
@@ -123,9 +127,9 @@ function DashboardHome() {
               title="Total Sales"
               value={filteredInvoiceData.length > 0 ? `Rs ${totalSales.toLocaleString()}` : "-"}
               subtitle="From invoices"
-              accentColor="bg-purple-500"
-              iconColor="text-purple-600"
-              iconBgColor="bg-purple-100"
+              accentColor="#4F7A3F"
+              iconColor="#4F7A3F"
+              iconBgColor="#E6F0E1"
               icon={<TrendingUp size={20} />}
               isLoading={isLoading}
             />
@@ -134,9 +138,9 @@ function DashboardHome() {
               title="Total Purchases"
               value={filteredGRNData.length > 0 ? `Rs ${totalPurchases.toLocaleString()}` : "-"}
               subtitle="From GRNs"
-              accentColor="bg-blue-500"
-              iconColor="text-blue-600"
-              iconBgColor="bg-blue-100"
+              accentColor="#4A7FA5"
+              iconColor="#4A7FA5"
+              iconBgColor="#E5EFF7"
               icon={<ShoppingCart size={20} />}
               isLoading={isLoading}
             />
@@ -145,9 +149,9 @@ function DashboardHome() {
               title="Active Customers"
               value={customerData.filter(c => c.isActive !== false).length || "-"}
               subtitle="Registered accounts"
-              accentColor="bg-emerald-500"
-              iconColor="text-emerald-600"
-              iconBgColor="bg-emerald-100"
+              accentColor="#3D7A5C"
+              iconColor="#3D7A5C"
+              iconBgColor="#E2F0EA"
               icon={<Users size={20} />}
               isLoading={isLoading}
             />
@@ -156,9 +160,9 @@ function DashboardHome() {
               title="Active Products"
               value={productData.filter(p => p.isActive !== false).length || "-"}
               subtitle="In inventory"
-              accentColor="bg-amber-500"
-              iconColor="text-amber-600"
-              iconBgColor="bg-amber-100"
+              accentColor="#B5860D"
+              iconColor="#B5860D"
+              iconBgColor="#FBF3D5"
               icon={<Package size={20} />}
               isLoading={isLoading}
             />

@@ -56,15 +56,15 @@ function RecentInvoices({ invoiceData }) {
 
   return (
     <div className="w-full">
-      <div className="overflow-x-auto rounded-lg border border-zinc-200 bg-white">
+      <div className="overflow-x-auto rounded-lg border border-[#E8E5DC] bg-white">
         <table className="min-w-full text-xs sm:text-sm text-left">
-          <thead className="bg-zinc-100/30 border-b border-zinc-200">
+          <thead className="bg-[#EEECE5]/30 border-b border-[#E8E5DC]">
             <tr>
-              <th className="p-3 font-semibold text-zinc-700/80">Invoice ID</th>
-              <th className="p-3 font-semibold text-zinc-700/80">Customer</th>
-              <th className="p-3 font-semibold text-zinc-700/80 hidden sm:table-cell">Date</th>
-              <th className="p-3 font-semibold text-zinc-700/80 hidden md:table-cell">Payment Method</th>
-              <th className="p-3 font-semibold text-zinc-700/80 text-right">Amount</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80">Invoice ID</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80">Customer</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80 hidden sm:table-cell">Date</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80 hidden md:table-cell">Payment Method</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80 text-right">Amount</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -72,24 +72,24 @@ function RecentInvoices({ invoiceData }) {
               recentInvoices.map((invoice) => (
                 <tr 
                   key={invoice.id || Math.random().toString(36).substr(2, 9)} 
-                  className="hover:bg-zinc-100/30 transition-colors"
+                  className="hover:bg-[#EEECE5]/30 transition-colors"
                 >
-                  <td className="p-3 font-medium text-zinc-900">{invoice.id || "—"}</td>
-                  <td className="p-3 text-zinc-700/80">{invoice.customerId || "—"}</td>
-                  <td className="p-3 text-zinc-600 hidden sm:table-cell">
+                  <td className="p-3 font-medium text-[#1A1915]">{invoice.id || "—"}</td>
+                  <td className="p-3 text-[#1A1915]/80">{invoice.customerId || "—"}</td>
+                  <td className="p-3 text-[#5C5A54] hidden sm:table-cell">
                     {formatDate(invoice.createdAt || invoice.updatedAt)}
                   </td>
-                  <td className="p-3 text-zinc-600 hidden md:table-cell">
+                  <td className="p-3 text-[#5C5A54] hidden md:table-cell">
                     {invoice.paymentMethod || "—"}
                   </td>
-                  <td className="p-3 text-right font-semibold text-zinc-900">
+                  <td className="p-3 text-right font-semibold text-[#1A1915]">
                     Rs {formatCurrency(invoice.total)}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="5" className="p-6 text-center text-zinc-500">
+                <td colSpan="5" className="p-6 text-center text-[#8C8A82]">
                   No invoices found
                 </td>
               </tr>

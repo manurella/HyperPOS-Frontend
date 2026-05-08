@@ -56,14 +56,14 @@ function RecentPurchases({ grnData }) {
 
   return (
     <div className="w-full">
-      <div className="overflow-x-auto rounded-lg border border-zinc-200 bg-white">
+      <div className="overflow-x-auto rounded-lg border border-[#E8E5DC] bg-white">
         <table className="min-w-full text-xs sm:text-sm text-left">
-          <thead className="bg-zinc-100/30 border-b border-zinc-200">
+          <thead className="bg-[#EEECE5]/30 border-b border-[#E8E5DC]">
             <tr>
-              <th className="p-3 font-semibold text-zinc-700/80">GRN ID</th>
-              <th className="p-3 font-semibold text-zinc-700/80">Supplier ID</th>
-              <th className="p-3 font-semibold text-zinc-700/80 hidden sm:table-cell">Date</th>
-              <th className="p-3 font-semibold text-zinc-700/80 text-right">Amount</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80">GRN ID</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80">Supplier ID</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80 hidden sm:table-cell">Date</th>
+              <th className="p-3 font-semibold text-[#1A1915]/80 text-right">Amount</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -71,21 +71,21 @@ function RecentPurchases({ grnData }) {
               recentPurchases.map((grn) => (
                 <tr 
                   key={grn.id || Math.random().toString(36).substr(2, 9)} 
-                  className="hover:bg-zinc-100/30 transition-colors"
+                  className="hover:bg-[#EEECE5]/30 transition-colors"
                 >
-                  <td className="p-3 font-medium text-zinc-900">{grn.id || "—"}</td>
-                  <td className="p-3 text-zinc-700/80">{grn.supplierId || "—"}</td>
-                  <td className="p-3 text-zinc-600 hidden sm:table-cell">
+                  <td className="p-3 font-medium text-[#1A1915]">{grn.id || "—"}</td>
+                  <td className="p-3 text-[#1A1915]/80">{grn.supplierId || "—"}</td>
+                  <td className="p-3 text-[#5C5A54] hidden sm:table-cell">
                     {formatDate(grn.createdAt || grn.updatedAt)}
                   </td>
-                  <td className="p-3 text-right font-semibold text-zinc-900">
+                  <td className="p-3 text-right font-semibold text-[#1A1915]">
                     Rs {formatCurrency(grn.total)}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="4" className="p-6 text-center text-zinc-500">
+                <td colSpan="4" className="p-6 text-center text-[#8C8A82]">
                   No purchases found
                 </td>
               </tr>

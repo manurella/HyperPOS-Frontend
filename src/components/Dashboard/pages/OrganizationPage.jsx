@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Eye, SlidersHorizontal, Edit, Save, X } from "lucide-react";
 import { getOrgData, updateOrgData } from "../data/orgData";
 import FetchLoader from './FetchLoader';
@@ -6,14 +6,14 @@ import FetchLoader from './FetchLoader';
 /* -- Shared modal shell --------------------------------------- */
 function ModalShell({ title, onClose, children, footer, wide }) {
   return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className={`bg-white rounded-2xl shadow-floating w-full ${wide ? "max-w-2xl" : "max-w-lg"} overflow-hidden animate-fade-in`}>
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100/10">
-          <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-700/80 hover:bg-zinc-100 transition-colors"><X size={18} /></button>
+    <div className="fixed inset-0 bg-[rgba(26,25,21,0.45)] backdrop-blur-[4px] flex items-center justify-center z-50 p-4">
+      <div className={`bg-white rounded-[16px] w-full ${wide ? "max-w-2xl" : "max-w-lg"} overflow-hidden`}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E5DC]">
+          <h2 className="text-[15px] font-semibold text-[#1A1915]">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-[#8C8A82] hover:text-[#1A1915] hover:bg-[#EEECE5] transition-colors"><X size={18} /></button>
         </div>
         <div className="max-h-[65vh] overflow-y-auto px-6 py-5">{children}</div>
-        {footer && <div className="px-6 py-4 bg-zinc-100/30 border-t border-zinc-100/10 flex justify-end gap-3">{footer}</div>}
+        {footer && <div className="px-6 py-4 bg-[#FAFAF7] border-t border-[#E8E5DC] flex justify-end gap-3">{footer}</div>}
       </div>
     </div>
   );
@@ -23,7 +23,7 @@ function ModalShell({ title, onClose, children, footer, wide }) {
 function EditField({ label, name, value, onChange, type = "text", children }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">{label}</span>
+      <span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">{label}</span>
       {children || (
         <input
           type={type}
@@ -62,7 +62,7 @@ function ViewEditModal({ organization, onClose, onUpdate }) {
   };
 
   const InfoVal = ({ val }) => (
-    <span className="text-sm text-zinc-700 mt-0.5">{val || "�"}</span>
+    <span className="text-sm text-[#1A1915] mt-0.5">{val || "�"}</span>
   );
 
   return (
@@ -90,17 +90,17 @@ function ViewEditModal({ organization, onClose, onUpdate }) {
 
       <form id="org-edit-form" onSubmit={handleSubmit}>
         {/* Basic */}
-        <div className="mb-5"><h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">Basic Information</h3>
+        <div className="mb-5"><h3 className="text-xs font-bold text-[#5C5A54] uppercase tracking-wider mb-3 pb-1 border-b border-[#E8E5DC]">Basic Information</h3>
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">ID</span><InfoVal val={organization.id} /></div>
+            <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">ID</span><InfoVal val={organization.id} /></div>
             {isEditing
               ? <EditField label="Name" name="name" value={formData.name} onChange={handleChange} />
-              : <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Name</span><InfoVal val={organization.name} /></div>}
+              : <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Name</span><InfoVal val={organization.name} /></div>}
           </div>
         </div>
 
         {/* Contact */}
-        <div className="mb-5"><h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">Contact Information</h3>
+        <div className="mb-5"><h3 className="text-xs font-bold text-[#5C5A54] uppercase tracking-wider mb-3 pb-1 border-b border-[#E8E5DC]">Contact Information</h3>
           <div className="grid grid-cols-2 gap-3">
             {isEditing ? (
               <>
@@ -108,39 +108,39 @@ function ViewEditModal({ organization, onClose, onUpdate }) {
                 <EditField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
                 <EditField label="Website" name="website" type="url" value={formData.website} onChange={handleChange} />
                 <div className="col-span-2">
-                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide block mb-1">Address</span>
+                  <span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em] block mb-1">Address</span>
                   <textarea name="address" value={formData.address || ""} onChange={handleChange} rows={2} className="pos-input" />
                 </div>
               </>
             ) : (
               <>
-                <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Phone</span><InfoVal val={organization.phone} /></div>
-                <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Email</span><InfoVal val={organization.email} /></div>
-                <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Website</span><InfoVal val={organization.website} /></div>
-                <div className="flex flex-col col-span-2 gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Address</span><InfoVal val={organization.address} /></div>
+                <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Phone</span><InfoVal val={organization.phone} /></div>
+                <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Email</span><InfoVal val={organization.email} /></div>
+                <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Website</span><InfoVal val={organization.website} /></div>
+                <div className="flex flex-col col-span-2 gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Address</span><InfoVal val={organization.address} /></div>
               </>
             )}
           </div>
         </div>
 
         {/* Additional */}
-        <div className="mb-5"><h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">Additional Details</h3>
+        <div className="mb-5"><h3 className="text-xs font-bold text-[#5C5A54] uppercase tracking-wider mb-3 pb-1 border-b border-[#E8E5DC]">Additional Details</h3>
           <div className="grid grid-cols-2 gap-3">
             {isEditing ? (
               <>
                 <EditField label="Employee Count" name="employeeCount" type="number" value={formData.employeeCount} onChange={handleChange} />
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Status</span>
+                  <span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Status</span>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" name="isActive" checked={!!formData.isActive} onChange={handleChange} className="w-4 h-4 text-blue-600 rounded border-zinc-200 focus:ring-blue-500" />
-                    <span className="text-sm text-zinc-700">Active</span>
+                    <input type="checkbox" name="isActive" checked={!!formData.isActive} onChange={handleChange} className="w-4 h-4 text-[#4A7FA5] rounded border-[#E8E5DC] focus:ring-blue-500" />
+                    <span className="text-sm text-[#1A1915]">Active</span>
                   </label>
                 </div>
               </>
             ) : (
               <>
-                <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Employees</span><InfoVal val={organization.employeeCount ?? 0} /></div>
-                <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Status</span>
+                <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Employees</span><InfoVal val={organization.employeeCount ?? 0} /></div>
+                <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Status</span>
                   <span className={organization.isActive ? "pos-badge-success" : "pos-badge-danger"}>{organization.isActive ? "Active" : "Inactive"}</span>
                 </div>
               </>
@@ -149,12 +149,12 @@ function ViewEditModal({ organization, onClose, onUpdate }) {
         </div>
 
         {/* Timestamps */}
-        <div className="mb-2"><h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">Timestamps</h3>
+        <div className="mb-2"><h3 className="text-xs font-bold text-[#5C5A54] uppercase tracking-wider mb-3 pb-1 border-b border-[#E8E5DC]">Timestamps</h3>
           <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Created</span><InfoVal val={fmt(organization.createdAt)} /></div>
-            <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Updated</span><InfoVal val={fmt(organization.updatedAt)} /></div>
-            <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Created By</span><InfoVal val={organization.createdBy} /></div>
-            <div className="flex flex-col gap-1"><span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">Updated By</span><InfoVal val={organization.updatedBy} /></div>
+            <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Created</span><InfoVal val={fmt(organization.createdAt)} /></div>
+            <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Updated</span><InfoVal val={fmt(organization.updatedAt)} /></div>
+            <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Created By</span><InfoVal val={organization.createdBy} /></div>
+            <div className="flex flex-col gap-1"><span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">Updated By</span><InfoVal val={organization.updatedBy} /></div>
           </div>
         </div>
       </form>
@@ -173,15 +173,15 @@ function FilterModal({ onClose, onApply, currentFilters }) {
     <ModalShell title="Filter Organizations" onClose={onClose}
       footer={<><button onClick={reset} className="pos-btn-secondary">Reset</button><button onClick={() => { onApply({ name, isActive: isActive === "" ? undefined : isActive === "true", minEmployees: minEmployees === "" ? undefined : +minEmployees, maxEmployees: maxEmployees === "" ? undefined : +maxEmployees }); onClose(); }} className="pos-btn-primary">Apply</button></>}>
       <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2"><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Name</label><input value={name} onChange={e => setName(e.target.value)} className="pos-input" placeholder="Search name" /></div>
-        <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Status</label>
+        <div className="col-span-2"><label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Name</label><input value={name} onChange={e => setName(e.target.value)} className="pos-input" placeholder="Search name" /></div>
+        <div><label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Status</label>
           <select value={isActive} onChange={e => setIsActive(e.target.value)} className="pos-input">
             <option value="">All</option><option value="true">Active</option><option value="false">Inactive</option>
           </select>
         </div>
         <div></div>
-        <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Min Employees</label><input type="number" value={minEmployees} onChange={e => setMinEmployees(e.target.value)} className="pos-input" min="0" /></div>
-        <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Max Employees</label><input type="number" value={maxEmployees} onChange={e => setMaxEmployees(e.target.value)} className="pos-input" min="0" /></div>
+        <div><label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Min Employees</label><input type="number" value={minEmployees} onChange={e => setMinEmployees(e.target.value)} className="pos-input" min="0" /></div>
+        <div><label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Max Employees</label><input type="number" value={maxEmployees} onChange={e => setMaxEmployees(e.target.value)} className="pos-input" min="0" /></div>
       </div>
     </ModalShell>
   );
@@ -231,30 +231,30 @@ function OrganizationPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Organizations</h1>
-        <p className="text-sm text-zinc-600 mt-0.5">{organizations.length} total organizations</p>
+        <h1 className="font-sans text-[28px] font-bold text-[#1A1915] tracking-[-0.02em]">Organizations</h1>
+        <p className="text-[13px] text-[#8C8A82] mt-0.5">{organizations.length} total organizations</p>
       </div>
       <div className="flex flex-col sm:flex-row gap-3">
         <input type="text" placeholder="Search organizations" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pos-input sm:max-w-xs" />
         <button onClick={() => setShowFilterModal(true)} className="pos-btn-secondary flex items-center gap-2"><SlidersHorizontal size={15} /> Filters</button>
       </div>
-      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-        {isFetching ? <FetchLoader /> : loading ? <div className="p-8 text-center text-zinc-600">Loading�</div> : error ? <div className="p-8 text-center text-red-500">{error}</div> : (
+      <div className="bg-white border border-[#E8E5DC] rounded-[14px] overflow-hidden">
+        {isFetching ? <FetchLoader /> : loading ? <div className="p-8 text-center text-[#5C5A54]">Loading�</div> : error ? <div className="p-8 text-center text-[#C0392B]">{error}</div> : (
           <div className="overflow-x-auto">
             <table className="pos-table">
               <thead><tr><th>ID</th><th>Name</th><th className="hidden sm:table-cell">Email</th><th className="hidden md:table-cell">Phone</th><th className="hidden lg:table-cell">Employees</th><th>Status</th><th className="text-center">View</th></tr></thead>
               <tbody>
                 {filteredOrgs.length > 0 ? filteredOrgs.map(org => (
                   <tr key={org.id}>
-                    <td className="font-medium text-zinc-600 text-xs">{org.id}</td>
-                    <td className="font-medium text-zinc-900">{org.name}</td>
-                    <td className="hidden sm:table-cell text-zinc-600">{org.email || "�"}</td>
-                    <td className="hidden md:table-cell text-zinc-600">{org.phone || "�"}</td>
-                    <td className="hidden lg:table-cell text-zinc-600">{org.employeeCount ?? 0}</td>
+                    <td className="font-medium text-[#5C5A54] text-xs">{org.id}</td>
+                    <td className="font-medium text-[#1A1915]">{org.name}</td>
+                    <td className="hidden sm:table-cell text-[#5C5A54]">{org.email || "�"}</td>
+                    <td className="hidden md:table-cell text-[#5C5A54]">{org.phone || "�"}</td>
+                    <td className="hidden lg:table-cell text-[#5C5A54]">{org.employeeCount ?? 0}</td>
                     <td><span className={org.isActive ? "pos-badge-success" : "pos-badge-danger"}>{org.isActive ? "Active" : "Inactive"}</span></td>
-                    <td className="text-center"><button onClick={() => setSelectedOrg(org)} className="p-1.5 rounded-lg text-zinc-500 hover:text-blue-600 hover:bg-zinc-50 transition-colors" aria-label="View"><Eye size={16} /></button></td>
+                    <td className="text-center"><button onClick={() => setSelectedOrg(org)} className="p-1.5 rounded-lg text-[#8C8A82] hover:text-[#4A7FA5] hover:bg-[#FAFAF7] transition-colors" aria-label="View"><Eye size={16} /></button></td>
                   </tr>
-                )) : <tr><td colSpan="7" className="py-12 text-center text-zinc-500">No organizations found</td></tr>}
+                )) : <tr><td colSpan="7" className="py-12 text-center text-[#8C8A82]">No organizations found</td></tr>}
               </tbody>
             </table>
           </div>

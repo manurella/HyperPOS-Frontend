@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import Header from './Header'
 import CartTable from './CartTable';
 import Controls from './Controls';
@@ -103,8 +103,8 @@ function GrnReturn() {
 
             {/* Page title */}
             <div>
-              <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">Return Purchase / GRN</h1>
-              <p className="text-sm text-zinc-600 mt-1">Process purchase returns and manage GRN adjustments</p>
+              <h1 className="font-sans text-[30px] font-bold text-[#1A1915] tracking-[-0.02em]">Return Purchase / GRN</h1>
+              <p className="text-[13px] text-[#8C8A82] mt-0.5">Process purchase returns and manage GRN adjustments.</p>
             </div>
 
             <Header grn={grnData?.grn} selectGRN={selectGRN} />
@@ -121,8 +121,8 @@ function GrnReturn() {
                     onQuantityChange={handleQuantityChange}
                 />
 
-                <div className="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
-                    <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Remarks</label>
+                <div className="bg-white border border-[#E8E5DC] rounded-xl p-5 shadow-sm">
+                    <label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Remarks</label>
                     <textarea
                         value={remarks}
                         onChange={(e) => setRemarks(e.target.value)}

@@ -1,4 +1,4 @@
-import { toast } from "react-hot-toast";
+﻿import { toast } from "react-hot-toast";
 import React, { useState, useRef, useEffect } from "react";
 import {
   saveProduct,
@@ -171,29 +171,29 @@ const AddProduct = () => {
     <div className="space-y-5">
       {/* Page header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
+        <h1 className="font-sans text-[30px] font-bold text-[#1A1915] tracking-[-0.02em]">
           {isUpdate ? "Update Product" : "Add Product"}
         </h1>
-        <p className="text-sm text-zinc-600 mt-0.5">
-          {isUpdate ? "Edit an existing product's details" : "Add a new product to the inventory"}
+        <p className="text-[13px] text-[#8C8A82] mt-0.5">
+          {isUpdate ? "Edit an existing product's details." : "Add a new product to the inventory."}
         </p>
       </div>
 
       {/* Form card */}
-      <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden">
+      <div className="bg-white border border-[#E8E5DC] rounded-[14px] overflow-hidden" style={{ boxShadow: '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)' }}>
         {/* Card header */}
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-200">
-          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
-            <PackagePlus size={16} className="text-blue-600" />
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-[#E8E5DC]">
+          <div className="w-8 h-8 rounded-lg bg-[#E6F0E1] flex items-center justify-center">
+            <PackagePlus size={16} className="text-[#4F7A3F]" />
           </div>
-          <h2 className="text-sm font-semibold text-zinc-700">Product Details</h2>
+          <h2 className="text-sm font-semibold text-[#1A1915]">Product Details</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="px-6 py-6 space-y-5">
             {/* Select existing product */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                 Select Product (For update)
               </label>
               <select
@@ -213,7 +213,7 @@ const AddProduct = () => {
 
             {/* Barcode */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                 Barcode <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -229,12 +229,12 @@ const AddProduct = () => {
                   }}
                   className={`pos-input pl-10 ${errors.barcode ? 'border-red-400' : ''}`}
                 />
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-700/40">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C8A82]">
                   <Barcode size={18} />
                 </div>
                 <button
                   type="button"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-xs bg-blue-50 text-blue-600 font-medium px-3 py-1 rounded-md border border-zinc-200 hover:bg-zinc-100 transition-colors"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-xs bg-[#E6F0E1] text-[#4F7A3F] font-medium px-3 py-1 rounded-md border border-[#E8E5DC] hover:bg-[#EEECE5] transition-colors"
                   onClick={() => barcodeRef.current?.focus()}
                 >
                   Scan
@@ -248,7 +248,7 @@ const AddProduct = () => {
             {/* Name & Category */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                   Product Name <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -264,7 +264,7 @@ const AddProduct = () => {
                 )}
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                   Category <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -289,7 +289,7 @@ const AddProduct = () => {
             {/* Unit, Price & Discount */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                   Unit <span className="text-red-500">*</span>
                 </label>
                 <select
@@ -310,7 +310,7 @@ const AddProduct = () => {
                 )}
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                   Price <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -326,7 +326,7 @@ const AddProduct = () => {
                 )}
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                   Discount (%)
                 </label>
                 <input
@@ -345,7 +345,7 @@ const AddProduct = () => {
 
             {/* Description */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                 Description
               </label>
               <textarea
@@ -363,12 +363,12 @@ const AddProduct = () => {
 
             {/* Product Image */}
             <div>
-              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                 Product Image
               </label>
-              <label className="flex items-center gap-3 w-full px-4 py-3 border border-zinc-200 border-dashed rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50/30 transition-colors">
-                <Upload size={16} className="text-zinc-700/40 shrink-0" />
-                <span className="text-sm text-zinc-600">
+              <label className="flex items-center gap-3 w-full px-4 py-3 border border-[#E8E5DC] border-dashed rounded-xl cursor-pointer hover:border-[#4F7A3F] hover:bg-[#FAFAF7] transition-colors">
+                <Upload size={16} className="text-[#8C8A82] shrink-0" />
+                <span className="text-sm text-[#5C5A54]">
                   {form.photo ? form.photo.name : "Click to upload an image"}
                 </span>
                 <input
@@ -381,10 +381,10 @@ const AddProduct = () => {
               </label>
               {logoPreview && (
                 <div className="mt-3 flex items-center gap-4">
-                  <div className="h-20 w-20 border border-zinc-200 rounded-xl flex items-center justify-center overflow-hidden bg-blue-50/20">
+                  <div className="h-20 w-20 border border-[#E8E5DC] rounded-xl flex items-center justify-center overflow-hidden bg-[#FAFAF7]">
                     <img src={logoPreview} alt="Preview" className="max-h-full max-w-full object-contain" />
                   </div>
-                  <p className="text-xs text-zinc-600">Image preview</p>
+                  <p className="text-xs text-[#8C8A82]">Image preview</p>
                 </div>
               )}
               {errors.photo && (
@@ -394,7 +394,7 @@ const AddProduct = () => {
           </div>
 
           {/* Footer actions */}
-          <div className="px-6 py-4 bg-blue-50/20 border-t border-zinc-200 flex justify-end gap-3">
+          <div className="px-6 py-4 bg-[#FAFAF7] border-t border-[#E8E5DC] flex justify-end gap-3">
             <button
               type="button"
               onClick={() => {

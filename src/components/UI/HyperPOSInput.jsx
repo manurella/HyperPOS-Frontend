@@ -1,53 +1,36 @@
-
-/**
- * @param {Object} props
- * @param {string} props.label - Input label.
- * @param {string} props.type - Input type (text, password, etc.).
- * @param {string} props.value - Input value.
- * @param {function} props.onChange - Change handler.
- * @param {string} props.placeholder - Input placeholder.
- * @param {string} props.className - Additional classes to apply.
- * @param {Object} props.props - Additional props to pass to the input element.
- */
-const HyperPOSInput = ( { 
-
+﻿const HyperPOSInput = ({
   label,
   type = 'text',
   value,
   onChange,
   placeholder,
+  error,
   className = '',
   ...props
-
-} ) => {
-
-  return (
-
-    <div className = { `mb-4 ${ className }` }>
-      
-      { label && (
-        <label className = "block mb-1.5 text-xs font-semibold text-primary-800/60 uppercase tracking-wide">
-          { label }
-        </label>
-      ) }
-      
-      <div className = "relative">
-        
-        <input
-          type = { type }
-          value = { value }
-          onChange = { onChange }
-          placeholder = { placeholder }
-          className = "w-full bg-white border border-primary-100/20 text-primary-900 px-3.5 py-2.5 rounded-xl transition-all duration-200 focus:outline-none focus:border-primary-500/50 focus:ring-4 focus:ring-primary-500/5"
-          { ...props }
-        />
-        
-      </div>
-      
-    </div>
-
-  );
-  
-};
+}) => (
+  <div className={`${className}`}>
+    {label && (
+      <label className="block text-[11px] font-bold uppercase tracking-[0.07em] text-[#5C5A54] mb-1.5">
+        {label}
+      </label>
+    )}
+    <input
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      className={`w-full px-3.5 py-[10px] bg-white border-[1.5px] rounded-lg text-sm text-[#1A1915]
+        placeholder-[#8C8A82] outline-none transition-all duration-[120ms]
+        ${error
+          ? 'border-[#C0392B] focus:ring-[3px] focus:ring-[rgba(192,57,43,0.12)]'
+          : 'border-[#E8E5DC] focus:border-[#4F7A3F] focus:ring-[3px] focus:ring-[rgba(79,122,63,0.15)]'
+        }`}
+      {...props}
+    />
+    {error && (
+      <p className="text-[11.5px] text-[#C0392B] mt-1.5">{error}</p>
+    )}
+  </div>
+);
 
 export default HyperPOSInput;

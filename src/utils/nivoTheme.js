@@ -1,66 +1,73 @@
-
 export const nivoTheme = {
-
   background: 'transparent',
-  textColor:  '#71717a',
-  fontSize:   12,
+  textColor:  '#8C8A82',
+  fontSize:   11,
 
   axis: {
     domain: {
-      line: { stroke: '#e4e4e7', strokeWidth: 1 }
+      line: { stroke: '#E8E5DC', strokeWidth: 1 }
     },
     ticks: {
-      line: { stroke: '#e4e4e7', strokeWidth: 1 },
-      text: { fontSize: 12, fill: '#71717a' }
+      line: { stroke: '#E8E5DC', strokeWidth: 1 },
+      text: { fontSize: 11, fill: '#8C8A82' }
     },
     legend: {
-      text: { fontSize: 13, fontWeight: '600', fill: '#52525b' }
+      text: { fontSize: 12, fontWeight: '600', fill: '#5C5A54' }
     }
   },
 
   grid: {
-    line: { stroke: '#f4f4f5', strokeWidth: 1 }
+    line: { stroke: '#E8E5DC', strokeWidth: 1 }
   },
 
   legends: {
-    title: { text: { fontSize: 12, fill: '#52525b' } },
-    text:  { fontSize: 12, fill: '#71717a' },
+    title: { text: { fontSize: 11, fill: '#5C5A54' } },
+    text:  { fontSize: 11, fill: '#8C8A82' },
     ticks: {
       line: {},
-      text: { fontSize: 10, fill: '#71717a' }
+      text: { fontSize: 10, fill: '#8C8A82' }
     }
   },
 
   annotations: {
     text: {
-      fontSize: 13, fill: '#3f3f46',
-      outlineWidth: 2, outlineColor: '#ffffff', outlineOpacity: 1
+      fontSize: 13, fill: '#1A1915',
+      outlineWidth: 2, outlineColor: '#FFFFFF', outlineOpacity: 1
     },
     link: {
-      stroke: '#a1a1aa', strokeWidth: 1,
-      outlineWidth: 2, outlineColor: '#ffffff', outlineOpacity: 1
+      stroke: '#D4D0C4', strokeWidth: 1,
+      outlineWidth: 2, outlineColor: '#FFFFFF', outlineOpacity: 1
     },
     outline: {
-      stroke: '#a1a1aa', strokeWidth: 2,
-      outlineWidth: 2, outlineColor: '#ffffff', outlineOpacity: 1
+      stroke: '#D4D0C4', strokeWidth: 2,
+      outlineWidth: 2, outlineColor: '#FFFFFF', outlineOpacity: 1
     },
     symbol: {
-      fill: '#71717a',
-      outlineWidth: 2, outlineColor: '#ffffff', outlineOpacity: 1
+      fill: '#8C8A82',
+      outlineWidth: 2, outlineColor: '#FFFFFF', outlineOpacity: 1
     }
   },
 
   tooltip: {
     container: {
-      background: '#ffffff',
-      color: '#18181b',
+      background: '#FFFFFF',
+      color: '#1A1915',
       fontSize: 12,
-      borderRadius: 4,
-      boxShadow: '0 2px 8px rgba(0,0,0,0.12)'
+      borderRadius: 8,
+      border: '1.5px solid #E8E5DC',
+      boxShadow: '0 4px 16px rgba(26,25,21,0.10)'
     },
     basic:     { whiteSpace: 'pre', display: 'flex', alignItems: 'center' },
     table:     {},
     tableCell: { padding: '3px 5px' }
   }
+};
 
+// Pastel green palette for charts
+export const chartColors = {
+  green:      '#4F7A3F',
+  teal:       '#3D7A5C',
+  blue:       '#4A7FA5',
+  amber:      '#B5860D',
+  light:      '#E6F0E1',
 };

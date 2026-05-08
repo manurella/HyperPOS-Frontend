@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 
 const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
   const calculateTotal = (cost, quantity, discount) => {
@@ -7,7 +7,7 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
   };
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-5">
+    <div className="bg-white border border-[#E8E5DC] rounded-xl p-5">
       <h3 className="pos-section-title mb-4">Cart Items</h3>
       <div className="overflow-x-auto">
         <table className="pos-table">
@@ -47,18 +47,18 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
                             parseInt(e.target.value, 10) || 1
                           )
                         }
-                        className="w-16 px-2 py-1 border border-zinc-200 rounded-lg bg-blue-50/20 text-center text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="w-16 px-2 py-1 border border-[#E8E5DC] rounded-lg bg-[#FAFAF7] text-center text-sm focus:outline-none focus:ring-2 focus:ring-[#4F7A3F]"
                       />
                     </td>
                     <td>{item.unit}</td>
                     <td>{item.discount}%</td>
-                    <td className="font-semibold text-zinc-900">
+                    <td className="font-semibold text-[#1A1915]">
                       Rs. {Number(itemTotal).toFixed(2)}
                     </td>
                     <td>
                       <button
                         onClick={() => onRemove(item.productId)}
-                        className="p-1.5 rounded-lg text-zinc-700/40 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        className="p-1.5 rounded-lg text-[#1A1915]/40 hover:text-[#C0392B] hover:bg-[#FAEBE9] transition-colors"
                         title="Remove"
                       >
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,7 +71,7 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
               })
             ) : (
               <tr>
-                <td colSpan="8" className="text-center py-8 text-zinc-700/40">
+                <td colSpan="8" className="text-center py-8 text-[#1A1915]/40">
                   No items in cart. Add products above.
                 </td>
               </tr>

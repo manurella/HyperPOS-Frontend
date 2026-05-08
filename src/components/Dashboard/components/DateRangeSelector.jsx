@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
 
 function DateRangeSelector({ onRangeChange, initialStartDate, initialEndDate }) {
@@ -81,12 +81,12 @@ function DateRangeSelector({ onRangeChange, initialStartDate, initialEndDate }) 
   };
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-4 sm:p-5 flex flex-col items-center sm:items-end w-full sm:w-auto">
+    <div className="bg-white border border-[#E8E5DC] rounded-xl shadow-sm p-4 sm:p-5 flex flex-col items-center sm:items-end w-full sm:w-auto">
       
       <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
         {/* From Date */}
         <div className="relative w-full sm:w-auto">
-          <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C8A82]" />
           <input 
             type="date" 
             className="pos-input pl-9 text-sm py-2"
@@ -99,11 +99,11 @@ function DateRangeSelector({ onRangeChange, initialStartDate, initialEndDate }) 
           />
         </div>
       
-        <span className="text-zinc-500 text-sm hidden sm:block">to</span>
+        <span className="text-[#8C8A82] text-sm hidden sm:block">to</span>
       
         {/* To Date */}
         <div className="relative w-full sm:w-auto">
-          <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+          <Calendar size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C8A82]" />
           <input 
             type="date" 
             className="pos-input pl-9 text-sm py-2"
@@ -123,15 +123,15 @@ function DateRangeSelector({ onRangeChange, initialStartDate, initialEndDate }) 
             disabled={!startDate || !endDate}
             className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               (!startDate || !endDate) 
-                ? 'bg-zinc-100 text-zinc-500 cursor-not-allowed' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
+                ? 'bg-[#EEECE5] text-[#8C8A82] cursor-not-allowed' 
+                : 'bg-[#4F7A3F] hover:bg-[#3D6030] text-white'
             }`}
           >
             Apply
           </button>
           <button 
             onClick={handleReset}
-            className="flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium bg-zinc-100 border border-zinc-200 text-zinc-600 hover:bg-zinc-200 transition-colors"
+            className="flex-1 sm:flex-none px-4 py-2 rounded-lg text-sm font-medium bg-[#EEECE5] border border-[#E8E5DC] text-[#5C5A54] hover:bg-[#E4E1D8] transition-colors"
           >
             Reset
           </button>
@@ -151,8 +151,8 @@ function DateRangeSelector({ onRangeChange, initialStartDate, initialEndDate }) 
             onClick={preset.onClick}
             className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
               activePreset === preset.id 
-                ? 'bg-blue-50 text-blue-700 border border-blue-200' 
-                : 'bg-zinc-100 text-zinc-600 border border-zinc-200 hover:bg-zinc-200'
+                ? 'bg-[#E6F0E1] text-[#4F7A3F] border border-[rgba(79,122,63,0.3)]'
+                : 'bg-[#EEECE5] text-[#5C5A54] border border-[#E8E5DC] hover:bg-[#E4E1D8]'
             }`}
           >
             {preset.label}

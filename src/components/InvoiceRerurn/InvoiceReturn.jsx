@@ -1,4 +1,4 @@
-import { toast } from "react-hot-toast";
+﻿import { toast } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import CartTable from "./CartTable";
 import Header from "./Header";
@@ -133,8 +133,8 @@ function InvoiceReturn() {
 
         {/* Page title */}
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">Invoice Return</h1>
-          <p className="text-sm text-zinc-600 mt-1">Process and manage customer invoice returns</p>
+          <h1 className="font-sans text-[30px] font-bold text-[#1A1915] tracking-[-0.02em]">Invoice Return</h1>
+          <p className="text-[13px] text-[#8C8A82] mt-0.5">Process and manage customer invoice returns.</p>
         </div>
 
         <Header invoice={invoiceData?.invoice} selectInvoice={selectInvoice} />

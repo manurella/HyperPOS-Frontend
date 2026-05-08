@@ -6,61 +6,81 @@ export default {
     theme: {
       extend: {
         fontFamily: {
-            sans: ['Poppins', ...defaultTheme.fontFamily.sans],
+            sans:  ['Poppins', ...defaultTheme.fontFamily.sans],
+            serif: ['Poppins', ...defaultTheme.fontFamily.sans],
         },
         colors: {
-            primary: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              200: '#bfdbfe',
-              300: '#93c5fd',
-              400: '#60a5fa',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a',
-              950: '#172554',
+            // Background scale
+            cream: {
+              base:     '#F5F4EF',
+              surface:  '#FAFAF7',
+              elevated: '#FFFFFF',
             },
-            sidebar: {
-              bg: '#0c0c0e',
-              hover: 'rgba(255,255,255,0.05)',
-              active: 'rgba(37,99,235,0.12)',
-              border: 'rgba(255,255,255,0.07)',
-              text: '#71717a',
-              textActive: '#f4f4f5',
+            // Sidebar / dark panels
+            dark: {
+              base:  '#1A1915',
+              muted: '#242320',
+              hover: 'rgba(255,255,255,0.04)',
+              border:'#2E2C28',
             },
-            surface: {
-              light: '#f8fafc',
-              DEFAULT: '#ffffff',
-              dark: '#0c0c0e',
-              paper: '#18181b',
+            // Text scale
+            ink: {
+              primary:   '#1A1915',
+              secondary: '#5C5A54',
+              muted:     '#8C8A82',
+              'on-dark':       '#E8E6DF',
+              'on-dark-muted': '#7A786F',
             },
-            success: '#10b981',
-            danger: '#ef4444',
-            warning: '#f59e0b',
+            // Accent — pastel green
+            accent: {
+              DEFAULT: '#4F7A3F',
+              hover:   '#3D6030',
+              light:   '#E6F0E1',
+              text:    '#2D4A22',
+            },
+            // Semantic
+            success: {
+              DEFAULT: '#3D7A5C',
+              light:   '#E2F0EA',
+            },
+            danger: {
+              DEFAULT: '#C0392B',
+              light:   '#FAEBE9',
+            },
+            warning: {
+              DEFAULT: '#B5860D',
+              light:   '#FBF3D5',
+            },
+            // Borders
+            border: {
+              DEFAULT: '#E8E5DC',
+              strong:  '#D4D0C4',
+              dark:    '#2E2C28',
+            },
         },
         boxShadow: {
-            'card': '0 1px 2px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)',
-            'card-hover': '0 4px 12px rgba(0,0,0,0.08)',
-            'floating': '0 8px 24px rgba(0,0,0,0.10)',
-            'sidebar': '1px 0 0 rgba(255,255,255,0.06)',
+            'card':    '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)',
+            'elevated':'0 4px 16px rgba(26,25,21,0.10), 0 12px 40px rgba(26,25,21,0.08)',
+            'modal':   '0 8px 32px rgba(26,25,21,0.18)',
         },
         animation: {
-            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'spin-fast': 'spin 0.5s linear infinite',
-            'spin-slow': 'spin 8s linear infinite',
-            'fade-in': 'fadeIn 0.2s ease-out',
-            'slide-in': 'slideIn 0.2s ease-out',
+            'fade-up':    'fadeUp 0.2s ease-out',
+            'slide-in-r': 'slideInRight 0.2s ease-out',
+            'spin-slow':  'spin 0.8s linear infinite',
+            'shimmer':    'shimmer 1.4s ease infinite',
         },
         keyframes: {
-          fadeIn: {
-            '0%': { opacity: '0', transform: 'translateY(4px)' },
+          fadeUp: {
+            '0%':   { opacity: '0', transform: 'translateY(8px)' },
             '100%': { opacity: '1', transform: 'translateY(0)' },
           },
-          slideIn: {
-            '0%': { opacity: '0', transform: 'translateX(-8px)' },
+          slideInRight: {
+            '0%':   { opacity: '0', transform: 'translateX(8px)' },
             '100%': { opacity: '1', transform: 'translateX(0)' },
+          },
+          shimmer: {
+            '0%':   { backgroundPosition: '200% 0' },
+            '100%': { backgroundPosition: '-200% 0' },
           },
         },
       },

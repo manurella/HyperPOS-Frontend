@@ -1,74 +1,56 @@
-const NAV_ITEMS = [
-  { id: "home",     label: "Home" },
-  { id: "about",    label: "About Us" },
-  { id: "features", label: "Features" },
-  { id: "faq",      label: "FAQ" },
-];
+const LINKS = {
+  Product:  ["Features", "Pricing", "Changelog"],
+  Company:  ["About", "Blog", "Careers"],
+  Legal:    ["Privacy", "Terms", "Cookies"],
+};
 
-const Footer = () => {
-  const handleNavClick = (e, id) => {
-    e.preventDefault();
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-  };
+const Footer = () => (
+  <footer className="bg-[#1A1915]">
+    <div className="max-w-6xl mx-auto px-8 py-16">
 
-  return (
-    <footer className="bg-[#0c0c0e]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-[#2E2C28]">
 
-        <div className="flex flex-col md:flex-row items-start gap-12 mb-12 pb-12 border-b border-white/[0.07]">
-
-          {/* Brand */}
-          <div className="flex-1">
-            <div className="flex items-center gap-2.5 mb-4">
-              <img src="/HyperPOS.svg" alt="HyperPOS" className="w-7 h-7 brightness-0 invert object-contain" />
-              <span className="text-white font-semibold text-base">HyperPOS</span>
-            </div>
-            <p className="text-zinc-500 text-sm leading-relaxed max-w-xs">
-              Empowering modern businesses with intelligent, minimal, and
-              lightning-fast point-of-sale solutions.
-            </p>
+        {/* Brand column */}
+        <div>
+          <div className="flex items-center gap-2.5 mb-3">
+            <img src="/HyperPOS.svg" alt="HyperPOS" className="w-6 h-6 brightness-0 invert object-contain" />
+            <span className="text-[#E8E6DF] font-semibold text-[16px]">HyperPOS</span>
           </div>
+          <p className="text-[13px] text-[#7A786F] leading-relaxed mb-5">
+            Smarter retail, faster checkout.
+          </p>
+          <div className="flex gap-2">
+            {["GH", "X"].map((s) => (
+              <button key={s} className="w-9 h-9 rounded-lg flex items-center justify-center text-[#7A786F] hover:text-[#E8E6DF] transition-colors" style={{ background: "rgba(255,255,255,0.06)" }}>
+                <span className="text-[11px] font-bold">{s}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-          {/* Nav */}
-          <div>
-            <h3 className="text-zinc-400 font-semibold text-xs uppercase tracking-widest mb-4">Navigation</h3>
+        {/* Link columns */}
+        {Object.entries(LINKS).map(([group, items]) => (
+          <div key={group}>
+            <h4 className="text-[11px] font-bold uppercase tracking-widest text-[#7A786F] mb-4">{group}</h4>
             <ul className="space-y-2.5">
-              {NAV_ITEMS.map(({ id, label }) => (
-                <li key={id}>
-                  <a href={`#${id}`} onClick={e => handleNavClick(e, id)}
-                    className="text-zinc-500 hover:text-white text-sm transition-colors">
-                    {label}
+              {items.map(item => (
+                <li key={item}>
+                  <a href="#" className="text-[14px] text-[#8C8A82] hover:text-[#E8E6DF] transition-colors duration-[120ms]">
+                    {item}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
-
-          {/* Contact */}
-          <div>
-            <h3 className="text-zinc-400 font-semibold text-xs uppercase tracking-widest mb-4">Contact</h3>
-            <ul className="space-y-2.5 text-sm text-zinc-500">
-              <li>info@hyperpos.io</li>
-              <li>+1 (456) 789-1230</li>
-              <li>New York, USA</li>
-            </ul>
-          </div>
-
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-zinc-600">
-            &copy; {new Date().getFullYear()} HyperPOS. All rights reserved.
-          </p>
-          <div className="flex items-center gap-5">
-            <a href="#" className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors">Privacy Policy</a>
-            <a href="#" className="text-xs text-zinc-600 hover:text-zinc-400 transition-colors">Terms of Use</a>
-          </div>
-        </div>
-
+        ))}
       </div>
-    </footer>
-  );
-};
+
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6">
+        <p className="text-xs text-[#7A786F]">&copy; 2025 HyperPOS. All rights reserved.</p>
+        <p className="text-xs text-[#7A786F]">Made with ♥ in Sri Lanka</p>
+      </div>
+    </div>
+  </footer>
+);
 
 export default Footer;

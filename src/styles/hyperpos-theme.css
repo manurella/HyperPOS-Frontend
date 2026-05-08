@@ -57,12 +57,12 @@
   border: 1px solid transparent;
   cursor: pointer;
   transition: all 0.15s ease;
-  background: var(--accent, #a855f7);
+  background: var(--accent, #4F7A3F);
   color: #ffffff;
 }
 
 .hyper-button:hover {
-  background: var(--accent-hover, #9333ea);
+  background: var(--accent-hover, #3D6030);
 }
 
 .hyper-button::before {
@@ -81,8 +81,8 @@
 }
 
 .hyper-menu-active {
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc !important;
+  background: rgba(79, 122, 63, 0.12);
+  color: #4F7A3F !important;
   font-weight: 500;
 }
 
@@ -138,27 +138,27 @@
 }
 
 .hyperpos-calendar .react-calendar__tile--now {
-  background: #faf5ff !important;
-  color: #9333ea !important;
+  background: #E6F0E1 !important;
+  color: #4F7A3F !important;
   font-weight: 600 !important;
 }
 
 .hyperpos-calendar .react-calendar__tile--active {
-  background: #a855f7 !important;
+  background: #4F7A3F !important;
   color: #ffffff !important;
 }
 
 .hyperpos-calendar .react-calendar__tile:enabled:hover {
-  background: #f3e8ff !important;
+  background: #FAFAF7 !important;
 }
 
 .hyperpos-calendar .react-calendar__navigation button:enabled:hover,
 .hyperpos-calendar .react-calendar__navigation button:enabled:focus {
-  background: #f3e8ff !important;
+  background: #FAFAF7 !important;
 }
 
 .hyperpos-calendar .react-calendar__month-view__days__day--weekend {
-  color: #a855f7 !important;
+  color: #4F7A3F !important;
 }
 
 .hyperpos-calendar .react-calendar__navigation {
@@ -174,7 +174,7 @@
 
 .hyperpos-calendar .react-calendar__month-view__weekdays__weekday abbr {
   text-decoration: none !important;
-  color: #a855f7 !important;
+  color: #4F7A3F !important;
   font-weight: 600 !important;
 }
 
@@ -234,11 +234,11 @@
   background: transparent;
 }
 .hyper-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(168, 85, 247, 0.25);
+  background: rgba(79, 122, 63, 0.25);
   border-radius: 9999px;
 }
 .hyper-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(168, 85, 247, 0.45);
+  background: rgba(79, 122, 63, 0.45);
 }
 
 /* ─── Animations ─── */
@@ -384,249 +384,4 @@
   display: none;
 }
 
-/* ─── Page section headings ─── */
-.pos-section-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #130b2b;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.pos-section-title::before {
-  content: '';
-  display: block;
-  width: 4px;
-  height: 1.25em;
-  background: linear-gradient(to bottom, #a855f7, #7e22ce);
-  border-radius: 9999px;
-  flex-shrink: 0;
-}
-
-/* ─── Professional card ─── */
-.pos-card {
-  background: #ffffff;
-  border: 1px solid #f8f6ff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px -2px rgba(168, 85, 247, 0.03);
-  padding: 1.5rem;
-}
-
-/* ─── Status badges ─── */
-.pos-badge-success {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: #f3e8ff;
-  color: #7e22ce;
-  border: 1px solid #d8b4fe;
-}
-
-.pos-badge-danger {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: #fee2e2;
-  color: #b91c1c;
-  border: 1px solid #fecaca;
-}
-
-.pos-badge-warning {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  background: #fef3c7;
-  color: #b45309;
-  border: 1px solid #fde68a;
-}
-
-/* ─── Table styles ─── */
-.pos-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 0.25rem;
-  font-size: 0.875rem;
-}
-
-.pos-table thead tr {
-  background: transparent;
-}
-
-.pos-table thead th {
-  padding: 0.75rem 1rem;
-  font-weight: 600;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #9333ea;
-  border-bottom: 1px solid #f8f6ff;
-  white-space: nowrap;
-}
-
-.pos-table tbody tr {
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(168, 85, 247, 0.01);
-  transition: all 0.2s ease;
-  border-radius: 0.5rem;
-}
-
-.pos-table tbody tr:hover {
-  background: #fcfaff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.04);
-}
-
-.pos-table tbody td {
-  padding: 1rem 1rem;
-  color: #130b2b;
-  vertical-align: middle;
-}
-
-.pos-table tbody td:first-child {
-  border-top-left-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
-}
-
-.pos-table tbody td:last-child {
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-}
-
-/* ─── Input field ─── */
-.pos-input {
-  width: 100%;
-  border: 1.5px solid #d4d4d8;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  font-family: 'Poppins', sans-serif;
-  color: #18181b;
-  background: #ffffff;
-  transition: all 0.15s ease;
-  outline: none;
-  font-weight: 500;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-/* Fix for padding overlaps - only apply default padding if no Tailwind pl-/pr- classes are used */
-.pos-input:not([class*="pl-"]) {
-  padding-left: 0.875rem;
-}
-.pos-input:not([class*="pr-"]) {
-  padding-right: 0.875rem;
-}
-.pos-input:not([class*="py-"]) {
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
-}
-
-.pos-input:hover {
-  border-color: #a1a1aa;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.pos-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 1px 2px rgba(0, 0, 0, 0.05);
-}
-
-.pos-input::placeholder {
-  color: #a1a1aa;
-}
-
-/* ─── Primary button ─── */
-.pos-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
-  color: #ffffff;
-  border: none;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
-}
-
-.pos-btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(168, 85, 247, 0.35);
-  background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
-}
-
-.pos-btn-primary:active {
-  transform: translateY(1px);
-  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.25);
-}
-
-.pos-btn-primary:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-/* ─── Secondary button ─── */
-.pos-btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: #ffffff;
-  color: #581c87;
-  border: 1px solid #f3efff;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.pos-btn-secondary:hover {
-  background: #fafaff;
-  color: #2e1065;
-  border-color: #e9d5ff;
-}
-
-/* ─── Danger button ─── */
-.pos-btn-danger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  background: #fef2f2;
-  color: #dc2626;
-  border: 1.5px solid #fecaca;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.pos-btn-danger:hover {
-  background: #fee2e2;
-  border-color: #ef4444;
-  color: #b91c1c;
-}
+/* pos-* component classes are defined in index.css — do not redefine here */

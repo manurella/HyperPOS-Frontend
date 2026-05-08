@@ -1,47 +1,28 @@
+﻿const spinnerSz = { sm: 'w-5 h-5', md: 'w-8 h-8', lg: 'w-12 h-12' };
 
-/**
- * Clean professional inline loader.
- * @param {Object} props
- * @param {'sm'|'md'|'lg'} props.size
- * @param {string} props.text
- * @param {string} props.className
- */
-const HyperPOSLoader = ({ size = 'md', text = 'Loading data...', className = '' }) => {
+const HyperPOSLoader = ({ size = 'md', text = 'Loading…', className = '' }) => (
+  <div className={`flex flex-col items-center justify-center gap-3 ${className}`}>
+    <svg
+      className={`${spinnerSz[size] ?? spinnerSz.md} animate-spin`}
+      viewBox="0 0 24 24" fill="none"
+    >
+      <circle
+        className="opacity-20" cx="12" cy="12" r="10"
+        stroke="#4F7A3F" strokeWidth="3"
+      />
+      <path
+        className="opacity-90" fill="#4F7A3F"
+        d="M4 12a8 8 0 018-8v3a5 5 0 00-5 5H4z"
+      />
+    </svg>
+    {text && <span className="text-sm text-[#8C8A82]">{text}</span>}
+  </div>
+);
 
-  const spinnerSizes = {
-    sm: 'w-8 h-8 border-2',
-    md: 'w-12 h-12 border-2',
-    lg: 'w-16 h-16 border-[3px]',
-  };
-
-  const textSizes = {
-    sm: 'text-xs',
-    md: 'text-sm',
-    lg: 'text-base',
-  };
-
-  const spinnerClass = spinnerSizes[size] || spinnerSizes.md;
-  const textClass   = textSizes[size]   || textSizes.md;
-
-  return (
-
-    <div className={`flex flex-col items-center justify-center gap-4 ${className}`}>
-
-      {/* Spinner */}
-      <div className={`${spinnerClass} rounded-full border-primary-100/20 border-t-primary-600 animate-spin`} />
-
-      {/* Text + progress bar */}
-      <div className="flex flex-col items-center gap-2">
-        <span className={`${textClass} font-medium text-primary-800/60`}>{text}</span>
-        <div className="h-1 w-40 bg-primary-100/50 rounded-full overflow-hidden">
-          <div className="h-full bg-primary-500 rounded-full animate-progress-indeterminate" />
-        </div>
-      </div>
-
-    </div>
-
-  );
-
-};
+export const PageLoader = ({ text }) => (
+  <div className="flex items-center justify-center min-h-[300px]">
+    <HyperPOSLoader size="lg" text={text} />
+  </div>
+);
 
 export default HyperPOSLoader;

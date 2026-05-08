@@ -1,4 +1,4 @@
-import { toast } from "react-hot-toast";
+﻿import { toast } from "react-hot-toast";
 import { useState, useEffect, useRef } from "react";
 import { saveCustomer, updateCustomer, getCustomers } from "../../API/APICustomer";
 import { UserPlus } from "lucide-react";
@@ -80,27 +80,27 @@ const CustomerRegister = () => {
     <div className="space-y-5">
 
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">
+          <h1 className="font-sans text-[30px] font-bold text-[#1A1915] tracking-[-0.02em]">
             {isUpdate ? "Update Customer" : "Register Customer"}
           </h1>
-          <p className="text-sm text-zinc-600 mt-1">
-            {isUpdate ? "Edit an existing customer's details" : "Add a new customer to the system"}
+          <p className="text-[13px] text-[#8C8A82] mt-0.5">
+            {isUpdate ? "Edit an existing customer's details." : "Add a new customer to the system."}
           </p>
         </div>
 
-        <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-zinc-100">
-          <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-            <UserPlus size={16} className="text-blue-600" />
+        <div className="bg-white border border-[#E8E5DC] rounded-xl shadow-sm overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 border-b border-[#E8E5DC]">
+          <div className="w-8 h-8 rounded-lg bg-[#E6F0E1] flex items-center justify-center flex-shrink-0">
+            <UserPlus size={16} className="text-[#4F7A3F]" />
           </div>
-          <h2 className="text-sm font-semibold text-zinc-700">Customer Details</h2>
+          <h2 className="text-sm font-semibold text-[#1A1915]">Customer Details</h2>
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="px-6 py-6 space-y-5">
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                 Select Customer
               </label>
               <select
@@ -114,11 +114,11 @@ const CustomerRegister = () => {
                   <option key={c.id} value={c.id}>{c.name}</option>
                 ))}
               </select>
-              <p className="text-xs text-zinc-400 mt-1">Select an existing customer to update, or leave as "New Customer" to register.</p>
+              <p className="text-xs text-[#8C8A82] mt-1">Select an existing customer to update, or leave as "New Customer" to register.</p>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                 Full Name <span className="text-red-500">*</span>
               </label>
               <input
@@ -132,7 +132,7 @@ const CustomerRegister = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -144,7 +144,7 @@ const CustomerRegister = () => {
                 {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email}</p>}
               </div>
               <div>
-                <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
+                <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                   Phone Number <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -158,7 +158,7 @@ const CustomerRegister = () => {
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
+              <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
                 Address <span className="text-red-500">*</span>
               </label>
               <textarea
@@ -172,7 +172,7 @@ const CustomerRegister = () => {
 
           </div>
 
-          <div className="px-6 py-4 bg-zinc-50 border-t border-zinc-100 flex justify-end gap-3">
+          <div className="px-6 py-4 bg-[#FAFAF7] border-t border-[#E8E5DC] flex justify-end gap-3">
             <button
               type="button"
               onClick={() => { setFormData({ id: undefined, name: "", email: "", phone: "", address: "" }); setIsUpdate(false); setErrors({}); }}

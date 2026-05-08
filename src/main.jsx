@@ -21,7 +21,7 @@ import UserPage from "./components/Dashboard/pages/UserPage.jsx";
 import CustomerPage from "./components/Dashboard/pages/CustomerPage.jsx";
 import ProductPage from "./components/Dashboard/pages/ProductPage.jsx";
 import SalePage from "./components/Dashboard/pages/SalePage.jsx";
-import Test from './components/Test/Test';
+// import Test from './components/Test/Test';
 import PurchasePage from "./components/Dashboard/pages/PurchasePage.jsx";
 import Organization from "./components/Organization/Organization.jsx";
 //import OrganizationPage from "./components/Dashboard/pages/OrganizationPage.jsx";
@@ -64,7 +64,7 @@ const router = createBrowserRouter ( [
         ]
       },
 
-      { path : "test" , element: <Test /> },
+      // { path : "test" , element: <Test /> },
       { path : "customerregister" , element : <Customerregister /> },
       { path : "supplierregister" , element : <SupplierRegistration /> },
       { path : "invoicereturn" , element : <InvoiceReturn /> },

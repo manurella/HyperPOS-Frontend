@@ -33,11 +33,11 @@ function BaseScreenLayout() {
   if (loading) return <Loader />;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-100">
+    <div className="flex h-screen overflow-hidden bg-[#F5F4EF]">
 
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          className="fixed inset-0 bg-[rgba(26,25,21,0.55)] z-40 lg:hidden"
           onClick={closeSidebar}
           aria-hidden="true"
         />
@@ -45,10 +45,12 @@ function BaseScreenLayout() {
 
       <Sidebar isMobileOpen={sidebarOpen} onCloseMobile={closeSidebar} org={org} />
 
-      <div className="flex flex-col flex-1 overflow-hidden bg-white border-l border-zinc-200">
+      <div className="flex flex-col flex-1 overflow-hidden border-l border-[#E8E5DC]">
         <Topbar org={org} onMenuToggle={toggleSidebar} />
-        <main className="flex-1 overflow-auto p-6 sm:p-8 bg-zinc-100">
-          <Outlet />
+        <main className="flex-1 overflow-auto p-7 bg-[#F5F4EF]">
+          <div className="max-w-[1280px] mx-auto">
+            <Outlet />
+          </div>
         </main>
       </div>
 

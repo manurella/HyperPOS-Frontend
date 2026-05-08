@@ -1,11 +1,11 @@
-const CartTable = ({ cartItems, onQuantityChange, productList }) => {
+﻿const CartTable = ({ cartItems, onQuantityChange, productList }) => {
   const calculateTotal = (price, quantity, discount) => {
     const total = price * quantity * (1 - discount / 100);
     return total > 0 ? total : 0;
   };
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-5">
+    <div className="bg-white border border-[#E8E5DC] rounded-xl shadow-sm p-5">
       <h3 className="pos-section-title mb-4">Return Items</h3>
       <div className="overflow-x-auto">
         <table className="pos-table">
@@ -36,12 +36,12 @@ const CartTable = ({ cartItems, onQuantityChange, productList }) => {
                         type="number" min="0"
                         value={item?.quantity}
                         onChange={e => onQuantityChange(item?.id, parseInt(e.target.value, 10) || 0)}
-                        className="w-16 px-2 py-1 border border-zinc-200 rounded-lg bg-white text-center text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-50"
+                        className="w-16 px-2 py-1 border border-[#E8E5DC] rounded-lg bg-white text-center text-sm focus:outline-none focus:border-[#4F7A3F] focus:ring-1 focus:ring-[rgba(79,122,63,0.15)]"
                       />
                     </td>
                     <td>{productList?.find(p => p?.id === item?.productId)?.unit}</td>
                     <td>{item?.discount}%</td>
-                    <td className="font-semibold text-zinc-900">
+                    <td className="font-semibold text-[#1A1915]">
                       Rs. {Number(itemTotal).toFixed(2)}
                     </td>
                   </tr>
@@ -49,7 +49,7 @@ const CartTable = ({ cartItems, onQuantityChange, productList }) => {
               })
             ) : (
               <tr>
-                <td colSpan="7" className="text-center py-8 text-zinc-400">
+                <td colSpan="7" className="text-center py-8 text-[#8C8A82]">
                   Search for an invoice above to load return items.
                 </td>
               </tr>

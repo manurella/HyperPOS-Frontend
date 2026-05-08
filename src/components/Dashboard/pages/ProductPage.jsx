@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react";
-import { Eye, SlidersHorizontal, X } from "lucide-react";
+﻿import { useState, useEffect } from "react";
+import { Eye, SlidersHorizontal, X, Search } from "lucide-react";
 import { getProductData } from "../data/productData";
 import FetchLoader from './FetchLoader';
 import { getCategories } from "../../../API/APICategory";
 import { billUrl } from "../../../API/APILinks";
 
-/* -- Shared helpers (same pattern across all pages) ----------- */
+/* -- Shared helpers ------------------------------------------- */
 function ModalShell({ title, onClose, children, footer }) {
   return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-floating w-full max-w-lg overflow-hidden animate-fade-in">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100/10">
-          <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-700/80 hover:bg-zinc-100 transition-colors">
-            <X size={18} />
+    <div className="fixed inset-0 bg-[rgba(26,25,21,0.45)] backdrop-blur-[4px] flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-[16px] w-full max-w-lg overflow-hidden" style={{ boxShadow: '0 8px 32px rgba(26,25,21,0.18)' }}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E5DC]">
+          <h2 className="text-[15px] font-semibold text-[#1A1915]">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-[#8C8A82] hover:text-[#1A1915] hover:bg-[#EEECE5] transition-colors">
+            <X size={17} />
           </button>
         </div>
         <div className="max-h-[65vh] overflow-y-auto px-6 py-5">{children}</div>
         {footer && (
-          <div className="px-6 py-4 bg-zinc-100/30 border-t border-zinc-100/10 flex justify-end gap-3">{footer}</div>
+          <div className="px-6 py-4 bg-[#FAFAF7] border-t border-[#E8E5DC] flex justify-end gap-3">{footer}</div>
         )}
       </div>
     </div>
@@ -28,7 +28,7 @@ function ModalShell({ title, onClose, children, footer }) {
 function InfoSection({ title, children }) {
   return (
     <div className="mb-5">
-      <h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">{title}</h3>
+      <h3 className="text-[10px] font-bold text-[#8C8A82] uppercase tracking-[0.09em] mb-3 pb-1.5 border-b border-[#E8E5DC]">{title}</h3>
       <div className="grid grid-cols-2 gap-3">{children}</div>
     </div>
   );
@@ -37,8 +37,8 @@ function InfoSection({ title, children }) {
 function InfoRow({ label, children, full }) {
   return (
     <div className={`flex flex-col gap-1 ${full ? "col-span-2" : ""}`}>
-      <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">{label}</span>
-      <div className="text-sm text-zinc-700">{children}</div>
+      <span className="text-[10.5px] font-semibold text-[#8C8A82] uppercase tracking-wide">{label}</span>
+      <div className="text-[13px] text-[#1A1915]">{children}</div>
     </div>
   );
 }
@@ -49,18 +49,17 @@ function ViewModal({ product, onClose }) {
     <ModalShell
       title="Product Details"
       onClose={onClose}
-      footer={<button onClick={onClose} className="pos-btn-primary">Close</button>}
+      footer={<button onClick={onClose} className="btn-primary">Close</button>}
     >
-      {/* Image & name */}
       <div className="flex flex-col items-center mb-5 gap-3">
         {product.image ? (
-          <img src={`${billUrl}/${product.image}`} alt={product.name} className="max-h-40 rounded-xl object-contain border border-zinc-100/10 shadow-sm" />
+          <img src={`${billUrl}/${product.image}`} alt={product.name} className="max-h-32 rounded-[10px] object-contain border border-[#E8E5DC]" />
         ) : (
-          <div className="w-24 h-24 rounded-xl bg-zinc-100/50 flex items-center justify-center text-zinc-700/30 text-3xl">📦</div>
+          <div className="w-20 h-20 rounded-[10px] bg-[#FAFAF7] border border-[#E8E5DC] flex items-center justify-center text-3xl">📦</div>
         )}
         <div className="text-center">
-          <p className="text-base font-bold text-zinc-900">{product.name}</p>
-          <span className={product.isActive ? "pos-badge-success" : "pos-badge-danger"}>
+          <p className="text-[17px] font-bold text-[#1A1915]">{product.name}</p>
+          <span className={product.isActive ? "badge-success mt-1 inline-flex" : "badge-danger mt-1 inline-flex"}>
             {product.isActive ? "Active" : "Inactive"}
           </span>
         </div>
@@ -74,10 +73,10 @@ function ViewModal({ product, onClose }) {
       </InfoSection>
 
       <InfoSection title="Pricing">
-        <InfoRow label="Base Price">Rs {product.price.toLocaleString()}</InfoRow>
-        <InfoRow label="Discount">{product.discount}%</InfoRow>
+        <InfoRow label="Base Price"><span className="text-[#3D7A5C] font-semibold">Rs {product.price?.toLocaleString()}</span></InfoRow>
+        <InfoRow label="Discount"><span className="text-[#B5860D]">{product.discount}%</span></InfoRow>
         <InfoRow label="Final Price" full>
-          <span className="text-emerald-600 font-bold text-base">
+          <span className="text-[18px] font-bold text-[#3D7A5C]">
             Rs {(product.price * (1 - product.discount / 100)).toLocaleString()}
           </span>
         </InfoRow>
@@ -86,7 +85,7 @@ function ViewModal({ product, onClose }) {
       {product.description && (
         <InfoSection title="Description">
           <InfoRow label="" full>
-            <p className="text-zinc-700/80 leading-relaxed">{product.description}</p>
+            <p className="text-[#5C5A54] leading-relaxed">{product.description}</p>
           </InfoRow>
         </InfoSection>
       )}
@@ -109,41 +108,53 @@ function FilterModal({ onClose, onApply, currentFilters, categories, units }) {
   const handleApply = () => { onApply({ name, barcode, categoryId, unit, minPrice, maxPrice, minDiscount, maxDiscount, status }); onClose(); };
   const handleReset = () => { setName(""); setBarcode(""); setCategoryId(""); setUnit(""); setMinPrice(""); setMaxPrice(""); setMinDiscount(""); setMaxDiscount(""); setStatus(""); };
 
+  const ic = "input";
+  const lc = "input-label";
+
   return (
     <ModalShell
       title="Filter Products"
       onClose={onClose}
-      footer={<><button onClick={handleReset} className="pos-btn-secondary">Reset</button><button onClick={handleApply} className="pos-btn-primary">Apply Filters</button></>}
+      footer={
+        <>
+          <button onClick={handleReset} className="btn-secondary">Reset</button>
+          <button onClick={handleApply} className="btn-primary">Apply Filters</button>
+        </>
+      }
     >
       <div className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Name</label><input value={name} onChange={e => setName(e.target.value)} className="pos-input" placeholder="Filter by name" /></div>
-          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Barcode</label><input value={barcode} onChange={e => setBarcode(e.target.value)} className="pos-input" placeholder="Filter by barcode" /></div>
-          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Category</label>
-            <select value={categoryId} onChange={e => setCategoryId(e.target.value)} className="pos-input">
+          <div><label className={lc}>Name</label><input value={name} onChange={e => setName(e.target.value)} className={ic} placeholder="Filter by name" /></div>
+          <div><label className={lc}>Barcode</label><input value={barcode} onChange={e => setBarcode(e.target.value)} className={ic} placeholder="Filter by barcode" /></div>
+          <div>
+            <label className={lc}>Category</label>
+            <select value={categoryId} onChange={e => setCategoryId(e.target.value)} className={ic}>
               <option value="">All</option>
               {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Unit</label>
-            <select value={unit} onChange={e => setUnit(e.target.value)} className="pos-input">
+          <div>
+            <label className={lc}>Unit</label>
+            <select value={unit} onChange={e => setUnit(e.target.value)} className={ic}>
               <option value="">All</option>
               {units.map(u => <option key={u} value={u}>{u}</option>)}
             </select>
           </div>
-          <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Status</label>
-            <select value={status} onChange={e => setStatus(e.target.value)} className="pos-input">
+          <div>
+            <label className={lc}>Status</label>
+            <select value={status} onChange={e => setStatus(e.target.value)} className={ic}>
               <option value="">All</option><option value="active">Active</option><option value="inactive">Inactive</option>
             </select>
           </div>
         </div>
 
-        <div><p className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-2 pb-1 border-b border-zinc-100/10">Price Range</p>
+        <div>
+          <p className="text-[10px] font-bold text-[#8C8A82] uppercase tracking-[0.09em] mb-2 pb-1 border-b border-[#E8E5DC]">Price Range</p>
           <div className="grid grid-cols-2 gap-3">
-            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Min Price</label><input type="number" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="pos-input" placeholder="0" /></div>
-            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Max Price</label><input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="pos-input" placeholder="Any" /></div>
-            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Min Discount %</label><input type="number" value={minDiscount} onChange={e => setMinDiscount(e.target.value)} className="pos-input" placeholder="0" /></div>
-            <div><label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Max Discount %</label><input type="number" value={maxDiscount} onChange={e => setMaxDiscount(e.target.value)} className="pos-input" placeholder="100" /></div>
+            <div><label className={lc}>Min Price</label><input type="number" value={minPrice} onChange={e => setMinPrice(e.target.value)} className={ic} placeholder="0" /></div>
+            <div><label className={lc}>Max Price</label><input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className={ic} placeholder="Any" /></div>
+            <div><label className={lc}>Min Discount %</label><input type="number" value={minDiscount} onChange={e => setMinDiscount(e.target.value)} className={ic} placeholder="0" /></div>
+            <div><label className={lc}>Max Discount %</label><input type="number" value={maxDiscount} onChange={e => setMaxDiscount(e.target.value)} className={ic} placeholder="100" /></div>
           </div>
         </div>
       </div>
@@ -153,15 +164,15 @@ function FilterModal({ onClose, onApply, currentFilters, categories, units }) {
 
 /* -- ProductPage ---------------------------------------------- */
 function ProductPage() {
-  const [selectedProduct,  setSelectedProduct]  = useState(null);
-  const [searchTerm,       setSearchTerm]       = useState("");
-  const [showFilterModal,  setShowFilterModal]  = useState(false);
-  const [filters,          setFilters]          = useState({});
-  const [productData,      setProductData]      = useState([]);
-  const [categories,       setCategories]       = useState([]);
-  const [loading,          setLoading]          = useState(true);
-  const [error,            setError]            = useState(null);
-  const [isFetching,       setIsFetching]       = useState(true);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [searchTerm,      setSearchTerm]      = useState("");
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [filters,         setFilters]         = useState({});
+  const [productData,     setProductData]     = useState([]);
+  const [categories,      setCategories]      = useState([]);
+  const [loading,         setLoading]         = useState(true);
+  const [error,           setError]           = useState(null);
+  const [isFetching,      setIsFetching]      = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -203,24 +214,39 @@ function ProductPage() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Product Management</h1>
-          <p className="text-sm text-zinc-600 mt-0.5">{productData.length} total products</p>
-        </div>
+
+      {/* Header */}
+      <div>
+        <h1 className="font-sans text-[28px] font-bold text-[#1A1915] tracking-[-0.02em]">Product Management</h1>
+        <p className="text-[13px] text-[#8C8A82] mt-0.5">{productData.length} total products</p>
       </div>
 
+      {/* Toolbar */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <input type="text" placeholder="Search products" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="pos-input sm:max-w-xs" />
-        <button onClick={() => setShowFilterModal(true)} className="pos-btn-secondary flex items-center gap-2">
+        <div className="relative sm:max-w-xs w-full">
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8C8A82]" />
+          <input
+            type="text" placeholder="Search products…"
+            value={searchTerm} onChange={e => setSearchTerm(e.target.value)}
+            className="input pl-9 w-full"
+          />
+        </div>
+        <button onClick={() => setShowFilterModal(true)} className="btn-secondary flex items-center gap-2">
           <SlidersHorizontal size={15} /> Filters
+          {Object.values(filters).filter(Boolean).length > 0 && (
+            <span className="w-4 h-4 rounded-full bg-[#4F7A3F] text-white text-[10px] font-bold flex items-center justify-center">
+              {Object.values(filters).filter(Boolean).length}
+            </span>
+          )}
         </button>
       </div>
 
-      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+      {/* Table card */}
+      <div className="bg-white border border-[#E8E5DC] rounded-[14px] overflow-hidden"
+        style={{ boxShadow: '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)' }}>
         {isFetching ? <FetchLoader />
-          : loading ? <div className="p-8 text-center text-zinc-600">Loading�</div>
-          : error   ? <div className="p-8 text-center text-red-500">{error}</div>
+          : loading ? <div className="p-8 text-center text-[#8C8A82]">Loading…</div>
+          : error   ? <div className="p-8 text-center text-[#C0392B]">{error}</div>
           : (
             <div className="overflow-x-auto">
               <table className="pos-table">
@@ -237,28 +263,39 @@ function ProductPage() {
                 <tbody>
                   {filteredData.length > 0 ? filteredData.map(p => (
                     <tr key={p.id}>
-                      <td className="font-medium text-zinc-600 text-xs">{p.id}</td>
-                      <td className="font-medium text-zinc-900">{p.name}</td>
-                      <td className="hidden sm:table-cell text-zinc-600">{getCategoryName(p.categoryId)}</td>
+                      <td className="font-mono text-[12px] text-[#8C8A82]">{p.id}</td>
+                      <td className="font-semibold text-[#1A1915]">{p.name}</td>
+                      <td className="hidden sm:table-cell text-[#5C5A54]">{getCategoryName(p.categoryId)}</td>
                       <td className="hidden md:table-cell">
                         <div className="flex flex-col">
-                          <span className="text-emerald-600 font-semibold">Rs {p.price.toLocaleString()}</span>
-                          {p.discount > 0 && <span className="text-xs text-amber-500">-{p.discount}%</span>}
+                          <span className="text-[#3D7A5C] font-semibold">Rs {p.price?.toLocaleString()}</span>
+                          {p.discount > 0 && <span className="text-[11px] text-[#B5860D]">-{p.discount}%</span>}
                         </div>
                       </td>
                       <td className="hidden lg:table-cell">
-                        <span className={p.isActive ? "pos-badge-success" : "pos-badge-danger"}>
+                        <span className={p.isActive ? "badge-success" : "badge-danger"}>
                           {p.isActive ? "Active" : "Inactive"}
                         </span>
                       </td>
                       <td className="text-center">
-                        <button onClick={() => setSelectedProduct(p)} className="p-1.5 rounded-lg text-zinc-500 hover:text-blue-600 hover:bg-zinc-50 transition-colors" aria-label="View product">
+                        <button
+                          onClick={() => setSelectedProduct(p)}
+                          className="p-2 rounded-[7px] text-[#8C8A82] hover:text-[#4F7A3F] hover:bg-[#E6F0E1] transition-colors"
+                        >
                           <Eye size={16} />
                         </button>
                       </td>
                     </tr>
                   )) : (
-                    <tr><td colSpan="6" className="py-12 text-center text-zinc-500">No products found</td></tr>
+                    <tr>
+                      <td colSpan="6" className="py-16 text-center text-[#5C5A54]">
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="text-[#D4D0C4] text-4xl">📦</div>
+                          <p className="font-semibold">No products found</p>
+                          <p className="text-[13px] text-[#8C8A82]">Try adjusting your filters.</p>
+                        </div>
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>

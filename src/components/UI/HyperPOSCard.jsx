@@ -1,35 +1,24 @@
-
 import React from 'react';
 
-/**
- * Clean professional card component.
- * @param {Object} props
- * @param {React.ReactNode} props.children - Card content.
- * @param {string} props.title - Optional card title.
- * @param {string} props.className - Additional classes.
- */
-const HyperPOSCard = ({ children, title, className = '' }) => {
+const HyperPOSCard = ({ children, title, action, className = '', elevated = false }) => {
+  const shadow = elevated
+    ? '0 4px 16px rgba(26,25,21,0.10), 0 12px 40px rgba(26,25,21,0.08)'
+    : '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)';
 
   return (
-
-    <div className={`bg-white border border-primary-100/20 rounded-xl shadow-card overflow-hidden ${className}`}>
-
-      { title && (
-        <div className="border-b border-primary-100/10 px-5 py-4">
-          <h3 className="text-sm font-semibold text-primary-800 uppercase tracking-wide">
-            { title }
-          </h3>
+    <div
+      className={`bg-white border border-[#E8E5DC] rounded-[14px] overflow-hidden ${className}`}
+      style={{ boxShadow: shadow }}
+    >
+      {title && (
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E5DC]">
+          <h3 className="text-[15px] font-semibold text-[#1A1915]">{title}</h3>
+          {action && <div>{action}</div>}
         </div>
-      ) }
-
-      <div>
-        { children }
-      </div>
-
+      )}
+      <div>{children}</div>
     </div>
-
   );
-
 };
 
 export default HyperPOSCard;

@@ -1,13 +1,13 @@
-import { ShoppingCart, Trash2 } from "lucide-react";
+﻿import { ShoppingCart, Trash2 } from "lucide-react";
 
 const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
   const calcTotal = (price, qty, disc) => Math.max(price * qty * (1 - disc / 100), 0);
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100">
+    <div className="bg-white border border-[#E8E5DC] rounded-xl shadow-sm overflow-hidden">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[#E8E5DC]">
         <h3 className="pos-section-title">Cart</h3>
-        <span className="text-xs font-semibold text-zinc-500 bg-zinc-100 px-2.5 py-1 rounded-full">
+        <span className="text-xs font-semibold text-[#8C8A82] bg-[#EEECE5] px-2.5 py-1 rounded-full">
           {cartItems.length} item{cartItems.length !== 1 ? "s" : ""}
         </span>
       </div>
@@ -32,25 +32,25 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
                 const total = calcTotal(item.unitPrice, item.quantity, item.discount);
                 return (
                   <tr key={idx}>
-                    <td className="text-center text-zinc-400 text-xs font-bold">{idx + 1}</td>
-                    <td className="font-medium text-zinc-900">{item.name}</td>
-                    <td className="text-zinc-600">Rs {Number(item.unitPrice).toFixed(2)}</td>
+                    <td className="text-center text-[#8C8A82] text-xs font-bold">{idx + 1}</td>
+                    <td className="font-medium text-[#1A1915]">{item.name}</td>
+                    <td className="text-[#5C5A54]">Rs {Number(item.unitPrice).toFixed(2)}</td>
                     <td>
                       <input
                         type="number" min="1" value={item.quantity}
                         onChange={e => onQuantityChange(item.id, parseInt(e.target.value, 10) || 1)}
-                        className="w-16 px-2 py-1 text-center text-sm border border-zinc-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-50 outline-none bg-white transition"
+                        className="w-16 px-2 py-1 text-center text-sm border border-[#E8E5DC] rounded-lg focus:border-[#4F7A3F] focus:ring-1 focus:ring-[rgba(79,122,63,0.15)] outline-none bg-white transition"
                       />
                     </td>
-                    <td className="hidden sm:table-cell text-zinc-500">{item.unit}</td>
+                    <td className="hidden sm:table-cell text-[#8C8A82]">{item.unit}</td>
                     <td className="hidden sm:table-cell">
                       <span className="pos-badge-warning">{item.discount}%</span>
                     </td>
-                    <td className="font-semibold text-emerald-600">Rs {total.toFixed(2)}</td>
+                    <td className="font-semibold text-[#3D7A5C]">Rs {total.toFixed(2)}</td>
                     <td className="text-center">
                       <button
                         onClick={() => onRemove(item.id)}
-                        className="p-1.5 rounded-lg text-zinc-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        className="p-1.5 rounded-lg text-[#8C8A82] hover:text-red-500 hover:bg-red-50 transition-colors"
                         aria-label="Remove"
                       >
                         <Trash2 size={15} />
@@ -62,8 +62,8 @@ const CartTable = ({ cartItems, onRemove, onQuantityChange }) => {
             ) : (
               <tr>
                 <td colSpan="8" className="py-12 text-center">
-                  <div className="flex flex-col items-center gap-2 text-zinc-400">
-                    <ShoppingCart size={28} className="text-zinc-300" />
+                  <div className="flex flex-col items-center gap-2 text-[#8C8A82]">
+                    <ShoppingCart size={28} className="text-[#D4D0C4]" />
                     <span className="text-sm">Cart is empty - add a product above</span>
                   </div>
                 </td>

@@ -47,7 +47,7 @@ const InvoicePreview = ({ invoice, productList, close }) => {
       {/* Close Button (hidden when printing) */}
       <button
         onClick={close}
-        className="absolute right-4 top-4 text-gray-600 hover:text-red-500 text-xl print:hidden"
+        className="absolute right-4 top-4 text-[#8C8A82] hover:text-[#C0392B] text-xl print:hidden"
         aria-label="Close"
       >
         <FaWindowClose />
@@ -80,9 +80,9 @@ const InvoicePreview = ({ invoice, productList, close }) => {
 
         {/* Table */}
         <div style={{maxHeight: '40vh', overflow: 'auto'}}>
-          <table className="w-full text-xs border-t border-b border-gray-300 my-2">
+          <table className="w-full text-xs border-t border-b border-[#E8E5DC] my-2">
             <thead>
-              <tr className="bg-gray-100">
+              <tr className="bg-[#FAFAF7]">
                 <th>Item</th>
                 <th>Qty</th>
                 <th>Unit</th>

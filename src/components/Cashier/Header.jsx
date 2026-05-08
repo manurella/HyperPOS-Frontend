@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import Select from "react-select";
 import { Receipt } from "lucide-react";
 
@@ -6,26 +6,27 @@ const selectStyles = {
   control: (base, state) => ({
     ...base,
     background: "#ffffff",
-    borderColor: state.isFocused ? "#3b82f6" : "#e4e4e7",
-    boxShadow: state.isFocused ? "0 0 0 2px rgba(59,130,246,0.1)" : "none",
-    borderRadius: "0.5rem",
+    borderColor: state.isFocused ? "#4F7A3F" : "#E8E5DC",
+    borderWidth: "1.5px",
+    boxShadow: state.isFocused ? "0 0 0 3px rgba(79,122,63,0.15)" : "none",
+    borderRadius: "8px",
     minHeight: 40,
     fontSize: "0.875rem",
-    "&:hover": { borderColor: "#a1a1aa" },
+    "&:hover": { borderColor: "#D4D0C4" },
   }),
-  singleValue: (base) => ({ ...base, color: "#18181b" }),
+  singleValue: (base) => ({ ...base, color: "#1A1915" }),
   menu: (base) => ({
-    ...base, background: "#ffffff", borderRadius: "0.5rem",
-    border: "1px solid #e4e4e7",
-    boxShadow: "0 4px 16px rgba(0,0,0,0.08)", zIndex: 20,
+    ...base, background: "#ffffff", borderRadius: "10px",
+    border: "1.5px solid #E8E5DC",
+    boxShadow: "0 4px 16px rgba(26,25,21,0.10)", zIndex: 20,
   }),
   option: (base, state) => ({
     ...base,
-    backgroundColor: state.isFocused ? "#f4f4f5" : "#ffffff",
-    color: "#18181b",
+    backgroundColor: state.isFocused ? "#FAFAF7" : "#ffffff",
+    color: "#1A1915",
     cursor: "pointer", fontSize: "0.875rem",
   }),
-  placeholder: (base) => ({ ...base, color: "#a1a1aa", fontSize: "0.875rem" }),
+  placeholder: (base) => ({ ...base, color: "#8C8A82", fontSize: "0.875rem" }),
 };
 
 const Header = ({ invoice, customers, setCustomer }) => {
@@ -46,29 +47,30 @@ const Header = ({ invoice, customers, setCustomer }) => {
   };
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl shadow-sm p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center">
+    <div className="bg-white border border-[#E8E5DC] rounded-[14px] p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center"
+      style={{ boxShadow: '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)' }}>
 
       {/* Invoice ID */}
       <div className="flex-1 min-w-0">
-        <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
+        <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
           Invoice ID
         </label>
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center flex-shrink-0">
-            <Receipt size={15} className="text-zinc-500" />
+          <div className="w-8 h-8 rounded-lg bg-[#EEECE5] flex items-center justify-center flex-shrink-0">
+            <Receipt size={15} className="text-[#8C8A82]" />
           </div>
           <input
             type="text"
             value={invoice?.id || "-"}
             readOnly
-            className="flex-1 px-3 py-2 rounded-lg border border-zinc-100 bg-zinc-50 text-sm font-semibold text-zinc-700 outline-none cursor-default"
+            className="flex-1 px-3 py-2 rounded-lg border border-[#E8E5DC] bg-[#FAFAF7] text-sm font-semibold text-[#1A1915] outline-none cursor-default"
           />
         </div>
       </div>
 
       {/* Customer selector */}
       <div className="flex-1 min-w-0 w-full">
-        <label className="block text-xs font-semibold text-zinc-500 uppercase tracking-wide mb-1.5">
+        <label className="block text-xs font-semibold text-[#8C8A82] uppercase tracking-wide mb-1.5">
           Customer
         </label>
         <Select

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { Eye, SlidersHorizontal, X } from "lucide-react";
 import { getUserData } from "../data/userData";
 import FetchLoader from './FetchLoader';
@@ -9,32 +9,18 @@ import { setActive, setRole as setRoleMethod } from "../../../API/APIUser";
 /* -- Shared modal shell --------------------------------------- */
 function ModalShell({ title, onClose, children, footer }) {
   return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-floating w-full max-w-lg overflow-hidden animate-fade-in">
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100/10">
-          <h2 className="text-base font-semibold text-zinc-900">{title}</h2>
-          <button
-            onClick={onClose}
-            className="p-1.5 rounded-lg text-zinc-500 hover:text-zinc-700/80 hover:bg-zinc-100 transition-colors"
-          >
-            <X size={18} />
+    <div className="fixed inset-0 bg-[rgba(26,25,21,0.45)] backdrop-blur-[4px] flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-[16px] w-full max-w-lg overflow-hidden" style={{ boxShadow: '0 8px 32px rgba(26,25,21,0.18)' }}>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E5DC]">
+          <h2 className="text-[15px] font-semibold text-[#1A1915]">{title}</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-[#8C8A82] hover:text-[#1A1915] hover:bg-[#EEECE5] transition-colors">
+            <X size={17} />
           </button>
         </div>
-
-        {/* Body */}
-        <div className="max-h-[65vh] overflow-y-auto px-6 py-5">
-          {children}
-        </div>
-
-        {/* Footer */}
+        <div className="max-h-[65vh] overflow-y-auto px-6 py-5">{children}</div>
         {footer && (
-          <div className="px-6 py-4 bg-zinc-100/30 border-t border-zinc-100/10 flex justify-end gap-3">
-            {footer}
-          </div>
+          <div className="px-6 py-4 bg-[#FAFAF7] border-t border-[#E8E5DC] flex justify-end gap-3">{footer}</div>
         )}
-
       </div>
     </div>
   );
@@ -44,8 +30,8 @@ function ModalShell({ title, onClose, children, footer }) {
 function InfoRow({ label, children }) {
   return (
     <div className="flex flex-col gap-1">
-      <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">{label}</span>
-      <div className="text-sm text-zinc-700">{children}</div>
+      <span className="text-[10.5px] font-bold text-[#8C8A82] uppercase tracking-[0.07em]">{label}</span>
+      <div className="text-[13px] text-[#1A1915]">{children}</div>
     </div>
   );
 }
@@ -54,12 +40,8 @@ function InfoRow({ label, children }) {
 function InfoSection({ title, children }) {
   return (
     <div className="mb-5">
-      <h3 className="text-xs font-bold text-zinc-600 uppercase tracking-wider mb-3 pb-1 border-b border-zinc-100/10">
-        {title}
-      </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {children}
-      </div>
+      <h3 className="text-[10px] font-bold text-[#8C8A82] uppercase tracking-[0.09em] mb-3 pb-1.5 border-b border-[#E8E5DC]">{title}</h3>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
     </div>
   );
 }
@@ -130,8 +112,8 @@ function ViewModal({ user, onClose, refreshData }) {
             onClick={handleIsActive}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
               isActive
-                ? "bg-red-50 text-red-600 border border-red-200 hover:bg-red-100"
-                : "bg-emerald-50 text-emerald-600 border border-emerald-200 hover:bg-emerald-100"
+                ? "bg-[#FAEBE9] text-[#C0392B] border border-[rgba(192,57,43,0.2)] hover:bg-[#F5D9D6]"
+                : "bg-[#E2F0EA] text-[#3D7A5C] border border-[rgba(61,122,92,0.2)] hover:bg-[#D0E9DC]"
             }`}
           >
             {isActive ? "Deactivate" : "Activate"}
@@ -175,22 +157,22 @@ function FilterModal({ onClose, onApply, currentFilters, roles }) {
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Username</label>
+          <label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Username</label>
           <input value={username} onChange={e => setUsername(e.target.value)} className="pos-input" placeholder="Search username" />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Email</label>
+          <label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Email</label>
           <input value={email} onChange={e => setEmail(e.target.value)} className="pos-input" placeholder="Search email" />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Role</label>
+          <label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Role</label>
           <select value={role} onChange={e => setRole(e.target.value)} className="pos-input">
             <option value="">All Roles</option>
             {roles.map(r => <option key={r} value={r}>{r}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">Status</label>
+          <label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">Status</label>
           <select value={status} onChange={e => setStatus(e.target.value)} className="pos-input">
             <option value="">All</option>
             <option value="active">Active</option>
@@ -251,8 +233,8 @@ function UserPage() {
       {/* Page header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">User Management</h1>
-          <p className="text-sm text-zinc-600 mt-0.5">{userData.length} total users</p>
+          <h1 className="font-sans text-[28px] font-bold text-[#1A1915] tracking-[-0.02em]">User Management</h1>
+          <p className="text-[13px] text-[#8C8A82] mt-0.5">{userData.length} total users</p>
         </div>
       </div>
 
@@ -275,11 +257,12 @@ function UserPage() {
       </div>
 
       {/* Table card */}
-      <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-[#E8E5DC] rounded-[14px] overflow-hidden"
+        style={{ boxShadow: '0 1px 3px rgba(26,25,21,0.06), 0 4px 12px rgba(26,25,21,0.04)' }}>
         {isFetching ? (
           <FetchLoader />
         ) : loading ? (
-          <div className="p-8 text-center text-zinc-600">Loading�</div>
+          <div className="p-8 text-center text-[#5C5A54]">Loading�</div>
         ) : error ? (
           <div className="p-8 text-center text-red-500">{error}</div>
         ) : (
@@ -299,11 +282,11 @@ function UserPage() {
               <tbody>
                 {filteredData.length > 0 ? filteredData.map(u => (
                   <tr key={u.id}>
-                    <td className="font-medium text-zinc-600 text-xs">{u.id}</td>
-                    <td className="font-medium text-zinc-900">{u.username}</td>
-                    <td className="hidden sm:table-cell text-zinc-600">{u.email || "�"}</td>
+                    <td className="font-mono text-[12px] text-[#8C8A82]">{u.id}</td>
+                    <td className="font-semibold text-[#1A1915]">{u.username}</td>
+                    <td className="hidden sm:table-cell text-[#5C5A54]">{u.email || "—"}</td>
                     <td className="hidden md:table-cell">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-zinc-50 text-blue-700 border border-zinc-100">
+                      <span className={`badge ${u.role === 'ADMIN' ? 'badge-accent' : 'badge-info'}`}>
                         {u.role}
                       </span>
                     </td>
@@ -312,12 +295,11 @@ function UserPage() {
                         {u.isActive ? "Active" : "Inactive"}
                       </span>
                     </td>
-                    <td className="hidden lg:table-cell text-zinc-600">{formatDate(u.createdAt)}</td>
+                    <td className="hidden lg:table-cell text-[12px] text-[#8C8A82]">{formatDate(u.createdAt)}</td>
                     <td className="text-center">
                       <button
                         onClick={() => setSelectedUser(u)}
-                        className="p-1.5 rounded-lg text-zinc-500 hover:text-blue-600 hover:bg-zinc-50 transition-colors"
-                        aria-label="View user"
+                        className="p-2 rounded-[7px] text-[#8C8A82] hover:text-[#4F7A3F] hover:bg-[#E6F0E1] transition-colors"
                       >
                         <Eye size={16} />
                       </button>
@@ -325,7 +307,7 @@ function UserPage() {
                   </tr>
                 )) : (
                   <tr>
-                    <td colSpan="7" className="py-12 text-center text-zinc-500">No users found</td>
+                    <td colSpan="7" className="py-12 text-center text-[#8C8A82]">No users found</td>
                   </tr>
                 )}
               </tbody>

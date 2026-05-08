@@ -97,9 +97,9 @@ const BaseScreen = ( ) => {
       <div className = "absolute inset-0 pointer-events-none">
         <ParticleBackground 
           count = { 20 } 
-          color = "#f472b6" 
-          opacity = { 0.05 } 
-          glowColor = "rgba( 192 , 38 , 211 , 0.3 )"
+          color = "#4F7A3F"
+          opacity = { 0.05 }
+          glowColor = "rgba( 79 , 122 , 63 , 0.3 )"
         />
       </div>
     </div>

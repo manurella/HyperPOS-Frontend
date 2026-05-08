@@ -21,22 +21,22 @@ const Header = ({ grn, suppliers, setSupplier }) => {
   };
 
   return (
-    <div className="bg-white border border-zinc-200 rounded-xl p-5">
+    <div className="bg-white border border-[#E8E5DC] rounded-xl p-5">
       <h3 className="pos-section-title mb-4">Purchase / GRN</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+          <label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">
             GRN ID
           </label>
           <input
             type="text"
             value={grn?.id || ""}
             readOnly
-            className="pos-input bg-blue-50/20"
+            className="pos-input bg-[#FAFAF7]"
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wide mb-1.5">
+          <label className="block text-xs font-semibold text-[#5C5A54] uppercase tracking-wide mb-1.5">
             Supplier
           </label>
           <Select

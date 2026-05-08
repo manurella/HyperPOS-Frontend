@@ -3,7 +3,7 @@ import React from "react";
 const GRNPreview = ({ grn, productList, close }) => {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white text-zinc-900 p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white text-[#1A1915] p-6 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold">GRN Preview</h2>
           <button
@@ -96,7 +96,7 @@ const GRNPreview = ({ grn, productList, close }) => {
 
         <div className="mt-4 border-t border-gray-200 pt-4">
           <p className="font-semibold">Remarks:</p>
-          <p className="text-gray-700">{grn?.grn?.remarks || "No remarks"}</p>
+          <p className="text-[#5C5A54]">{grn?.grn?.remarks || "No remarks"}</p>
         </div>
 
         <div className="mt-6 flex justify-center">

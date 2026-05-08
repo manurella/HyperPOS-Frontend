@@ -1,4 +1,4 @@
-import { toast } from "react-hot-toast";
+﻿import { toast } from "react-hot-toast";
 import { useState, useEffect } from "react";
 import Header        from "./Header";
 import ProductSearch from "./ProductSearch";
@@ -98,8 +98,8 @@ const CashierScreen = () => {
 
         {/* Page title */}
         <div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-zinc-900">Point of Sale</h1>
-          <p className="text-sm text-zinc-600 mt-1">Create and process customer invoices</p>
+          <h1 className="font-sans text-[30px] font-bold text-[#1A1915] tracking-[-0.02em]">Point of Sale</h1>
+          <p className="text-[13px] text-[#8C8A82] mt-0.5">Create and process customer invoices.</p>
         </div>
 
         {/* Invoice preview overlay */}

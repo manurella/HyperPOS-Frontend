@@ -1,14 +1,14 @@
-const CartTable = ({ cartItems, onQuantityChange, productList }) => {
+﻿const CartTable = ({ cartItems, onQuantityChange, productList }) => {
     const calculateTotal = (price, quantity, discount) => {
         const total = price * quantity * (1 - discount / 100);
         return total > 0 ? total : 0;
     };
 
     return (
-        <div className="bg-white border border-zinc-200 rounded-xl overflow-hidden shadow-sm">
+        <div className="bg-white border border-[#E8E5DC] rounded-xl overflow-hidden shadow-sm">
             <div className="overflow-x-auto max-h-[50vh]">
                 <table className="w-full text-sm text-left">
-                    <thead className="bg-blue-50/20 text-zinc-700/80 sticky top-0 border-b border-zinc-200">
+                    <thead className="bg-[#FAFAF7] text-[#1A1915]/80 sticky top-0 border-b border-[#E8E5DC]">
                         <tr>
                             <th className="px-4 py-3 font-semibold text-center">#</th>
                             <th className="px-4 py-3 font-semibold">Product Name</th>
@@ -19,7 +19,7 @@ const CartTable = ({ cartItems, onQuantityChange, productList }) => {
                             <th className="px-4 py-3 font-semibold text-right">Total</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 text-zinc-700">
+                    <tbody className="divide-y divide-slate-100 text-[#1A1915]">
                         {cartItems?.length > 0 ?
                             cartItems.map((item, index) => {
                                 const itemTotall = calculateTotal(
@@ -28,9 +28,9 @@ const CartTable = ({ cartItems, onQuantityChange, productList }) => {
                                     item?.discount
                                 );
                                 return (
-                                    <tr key={index} className="hover:bg-blue-50/20 transition-colors">
+                                    <tr key={index} className="hover:bg-[#FAFAF7] transition-colors">
                                         <td className="px-4 py-3 text-center">{index + 1}</td>
-                                        <td className="px-4 py-3 font-medium text-zinc-900">
+                                        <td className="px-4 py-3 font-medium text-[#1A1915]">
                                             {productList?.find((product) => product.id === item?.productId)?.name || "N/A"}
                                         </td>
                                         <td className="px-4 py-3 text-center">
@@ -47,7 +47,7 @@ const CartTable = ({ cartItems, onQuantityChange, productList }) => {
                                                         parseInt(e.target.value, 10) || 0
                                                     )
                                                 }
-                                                className="w-20 px-2 py-1 border border-zinc-200 rounded-md text-center focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                                                className="w-20 px-2 py-1 border border-[#E8E5DC] rounded-md text-center focus:outline-none focus:border-[#4F7A3F] focus:ring-1 focus:ring-[#4F7A3F] transition-all"
                                             />
                                         </td>
                                         <td className="px-4 py-3 text-center">{item?.discount}%</td>
@@ -58,7 +58,7 @@ const CartTable = ({ cartItems, onQuantityChange, productList }) => {
                             })
                             : (
                                 <tr>
-                                    <td className="px-4 py-8 text-center text-zinc-700/40" colSpan="7">
+                                    <td className="px-4 py-8 text-center text-[#1A1915]/40" colSpan="7">
                                         No items in the GRN return
                                     </td>
                                 </tr>
